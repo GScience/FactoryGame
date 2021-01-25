@@ -6,29 +6,29 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
-/// 建筑选择器
+/// 工厂建造器
 /// 移动、建造建筑时让建筑在鼠标位置
 /// </summary>
-public class BuildingPicker : MonoBehaviour
+public class FactoryBuilder : MonoBehaviour
 {
-    public static InstanceHelper<BuildingPicker> GlobalPicker;
+    public static InstanceHelper<FactoryBuilder> GlobalBuilder;
 
-    private Factory _pickedFactory;
+    private Building _pickedBuilding;
     private Action _onConfirm;
     private Action _onCancel;
 
     void Awake()
     {
-        GlobalPicker = new InstanceHelper<BuildingPicker>(this);
+        GlobalBuilder = new InstanceHelper<FactoryBuilder>(this);
     }
 
     void Update()
     {
-        if (_pickedFactory == null)
+        if (_pickedBuilding == null)
             return;
         
         var viewportPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        _pickedFactory.transform.position = new Vector3(viewportPos.x, viewportPos.y, 1);
+        _pickedBuilding.transform.position = new Vector3(viewportPos.x, viewportPos.y, 1);
 
         if (Input.GetMouseButton(0))
             OnConfirm();
@@ -36,34 +36,34 @@ public class BuildingPicker : MonoBehaviour
             OnCancel();
     }
 
-    public void Pick(Factory obj, Action onConfirm, Action onCancel)
+    public void Pick(Building obj, Action onConfirm, Action onCancel)
     {
-        if (_pickedFactory != null)
+        if (_pickedBuilding != null)
             OnCancel();
 
-        _pickedFactory = obj;
+        _pickedBuilding = obj;
         _onConfirm = onConfirm;
         _onCancel = onCancel;
 
-        BuildingInformationBoard.GlobalBuildingInformationBoard.Get().ShowInformation(_pickedFactory.factoryName);
+        BuildingInformationBoard.GlobalBuildingInformationBoard.Get().ShowInformation(_pickedBuilding);
     }
 
     void OnConfirm()
     {
-        if (_pickedFactory == null)
+        if (_pickedBuilding == null)
             return;
         _onConfirm?.Invoke();
-        _pickedFactory = null;
+        _pickedBuilding = null;
 
         BuildingInformationBoard.GlobalBuildingInformationBoard.Get().HideInformation();
     }
 
     void OnCancel()
     {
-        if (_pickedFactory == null)
+        if (_pickedBuilding == null)
             return;
         _onCancel?.Invoke();
-        _pickedFactory = null;
+        _pickedBuilding = null;
 
         BuildingInformationBoard.GlobalBuildingInformationBoard.Get().HideInformation();
     }

@@ -13,7 +13,11 @@ using UnityEngine.UI;
 public class BuildingInformationBoard : MonoBehaviour
 {
     public static InstanceHelper<BuildingInformationBoard> GlobalBuildingInformationBoard;
-    public Text factoryNameText;
+    public Text buildingNameText;
+    public Text buildingDescriptionText;
+    public Text buildingCostText;
+    public Text buildingPeopleText;
+    public Image buildingIconImage;
     private Collapse _collapse;
 
     void Awake()
@@ -22,10 +26,14 @@ public class BuildingInformationBoard : MonoBehaviour
         _collapse = GetComponent<Collapse>();
     }
 
-    public void ShowInformation(string factoryName)
+    public void ShowInformation(Building building)
     {
         _collapse.Open();
-        factoryNameText.text = factoryName;
+        buildingNameText.text = building.buildingName;
+        buildingDescriptionText.text = building.buildingDescription;
+        buildingCostText.text = "" + building.cost;
+        buildingPeopleText.text = "" + building.people;
+        buildingIconImage.sprite = building.icon;
     }
 
     public void HideInformation()
