@@ -111,6 +111,7 @@ public class GridElement : MonoBehaviour
                 if (newSize.y < 1)
                     newSize.y = 1;
                 _gridElement.Size = newSize;
+                EditorUtility.SetDirty(_gridElement);
             }
 
             if (newPos != _gridElement.CellPos)
