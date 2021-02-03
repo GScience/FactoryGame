@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +9,7 @@ using UnityEngine;
 public class BuildingElementSelector : MonoBehaviour
 {
     public static InstanceHelper<BuildingElementSelector> GlobalSelector;
+
     private Collapse _collapse;
 
     void Awake()
