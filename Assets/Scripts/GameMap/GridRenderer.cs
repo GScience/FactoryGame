@@ -11,7 +11,8 @@ public class GridRenderer : MonoBehaviour
     private Renderer _renderer;
     public Transform center;
     public Vector3 offset = new Vector3(0, 10, 0);
-    public Material meshMaterial;
+    public Material meshMaterialSelected;
+    public Material meshMaterialUnselected;
 
     void Awake()
     {
@@ -20,7 +21,7 @@ public class GridRenderer : MonoBehaviour
 
     void Start()
     {
-        _renderer.material = meshMaterial;
+        OnUnselected();
     }
 
     void Update()
@@ -28,13 +29,13 @@ public class GridRenderer : MonoBehaviour
         transform.position = center.position + offset;
     }
 
-    void OnEnable()
+    public void OnSelected()
     {
-        _renderer.enabled = true;
+        _renderer.material = meshMaterialSelected;
     }
 
-    void OnDisable()
+    public void OnUnselected()
     {
-        _renderer.enabled = false;
+        _renderer.material = meshMaterialUnselected;
     }
 }

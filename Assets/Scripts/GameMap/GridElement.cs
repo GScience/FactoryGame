@@ -70,6 +70,11 @@ public class GridElement : MonoBehaviour
             transform.localScale.z);
     }
 
+    void OnDisable()
+    {
+        LateUpdate();
+    }
+
     void LateUpdate()
     {
 #if UNITY_EDITOR
@@ -83,7 +88,6 @@ public class GridElement : MonoBehaviour
 
         _renderer.sortingOrder = -_cellPos.y;
     }
-
 #if UNITY_EDITOR
     [CustomEditor(typeof(GridElement))]
     class GridElementEditor : Editor

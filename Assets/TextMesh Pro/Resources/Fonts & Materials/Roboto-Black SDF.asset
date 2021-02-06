@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hashCode: 220891248
   material: {fileID: 21098970014090698}
-  materialHashCode: 417962747
+  materialHashCode: -2104674096
   m_Version: 1.1.0
   m_SourceFontFileGUID: 43631e0e91b686e4fbffb897db7ca8f5
-  m_SourceFontFile_EditorRef: {fileID: 0}
+  m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 43631e0e91b686e4fbffb897db7ca8f5,
+    type: 3}
   m_SourceFontFile: {fileID: 0}
   m_AtlasPopulationMode: 0
   m_FaceInfo:
@@ -1809,6 +1810,7 @@ MonoBehaviour:
   m_AtlasTextures:
   - {fileID: 28136749186432644}
   m_AtlasTextureIndex: 0
+  m_IsMultiAtlasTexturesEnabled: 0
   m_UsedGlyphRects:
   - m_X: 0
     m_Y: 0
@@ -2536,7 +2538,8 @@ MonoBehaviour:
   m_FontFeatureTable:
     m_GlyphPairAdjustmentRecords: []
   fallbackFontAssets: []
-  m_FallbackFontAssetTable: []
+  m_FallbackFontAssetTable:
+  - {fileID: 11400000, guid: 609087e99f10f974385bd9aff7cc043a, type: 2}
   m_CreationSettings:
     sourceFontFileName: 
     sourceFontFileGUID: 43631e0e91b686e4fbffb897db7ca8f5
@@ -2631,6 +2634,7 @@ Material:
     - _BumpFace: 0
     - _BumpOutline: 0
     - _ColorMask: 15
+    - _CullMode: 0
     - _Diffuse: 0.5
     - _FaceDilate: 0
     - _FaceUVSpeedX: 0
@@ -2702,6 +2706,8 @@ Texture2D:
   m_TextureFormat: 1
   m_MipCount: 1
   m_IsReadable: 1
+  m_IgnoreMasterTextureLimit: 0
+  m_IsPreProcessed: 0
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
   m_AlphaIsTransparency: 0

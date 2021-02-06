@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,10 +14,10 @@ using UnityEngine.UI;
 public class BuildingInformationBoard : MonoBehaviour
 {
     public static InstanceHelper<BuildingInformationBoard> GlobalBuildingInformationBoard;
-    public Text buildingNameText;
-    public Text buildingDescriptionText;
-    public Text buildingCostText;
-    public Text buildingPeopleText;
+    public TextMeshProUGUI buildingNameText;
+    public TextMeshProUGUI buildingDescriptionText;
+    public TextMeshProUGUI buildingCostText;
+    public TextMeshProUGUI buildingPeopleText;
     public Image buildingIconImage;
     private Collapse _collapse;
 
@@ -26,14 +27,14 @@ public class BuildingInformationBoard : MonoBehaviour
         _collapse = GetComponent<Collapse>();
     }
 
-    public void ShowInformation(Building building)
+    public void ShowInformation(BuildingBase building)
     {
         _collapse.Open();
-        buildingNameText.text = building.buildingName;
-        buildingDescriptionText.text = building.buildingDescription;
-        buildingCostText.text = "" + building.cost;
-        buildingPeopleText.text = "" + building.people;
-        buildingIconImage.sprite = building.icon;
+        buildingNameText.text = building.info.buildingName;
+        buildingDescriptionText.text = building.info.buildingDescription;
+        buildingCostText.text = "" + building.info.cost;
+        buildingPeopleText.text = "" + building.info.people;
+        buildingIconImage.sprite = building.info.icon;
     }
 
     public void HideInformation()

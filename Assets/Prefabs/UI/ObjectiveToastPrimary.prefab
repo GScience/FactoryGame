@@ -66,8 +66,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: description text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 75235aa91f2d0ac4e976ae351248a84d, type: 2}
-  m_sharedMaterial: {fileID: 21098970014090698, guid: 75235aa91f2d0ac4e976ae351248a84d,
+  m_fontAsset: {fileID: 11400000, guid: 106dddce1f2404b45bbfa40eab1b84ea, type: 2}
+  m_sharedMaterial: {fileID: 21649359081121634, guid: 106dddce1f2404b45bbfa40eab1b84ea,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -275,8 +275,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0/5
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 75235aa91f2d0ac4e976ae351248a84d, type: 2}
-  m_sharedMaterial: {fileID: 21098970014090698, guid: 75235aa91f2d0ac4e976ae351248a84d,
+  m_fontAsset: {fileID: 11400000, guid: 106dddce1f2404b45bbfa40eab1b84ea, type: 2}
+  m_sharedMaterial: {fileID: 21649359081121634, guid: 106dddce1f2404b45bbfa40eab1b84ea,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -592,8 +592,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: GKD! Finish the order
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 75235aa91f2d0ac4e976ae351248a84d, type: 2}
-  m_sharedMaterial: {fileID: 21098970014090698, guid: 75235aa91f2d0ac4e976ae351248a84d,
+  m_fontAsset: {fileID: 11400000, guid: 75063828274bdb145a55f6dd2f22e8b2, type: 2}
+  m_sharedMaterial: {fileID: 21098970014090698, guid: 75063828274bdb145a55f6dd2f22e8b2,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
