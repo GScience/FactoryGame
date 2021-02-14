@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,6 +8,7 @@ using System.Text;
 using UnityEditor;
 #endif
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// 地图元件，相当于所有Building的通用逻辑代码
@@ -50,4 +51,7 @@ public abstract class BuildingBase : MonoBehaviour
         _gridElement.enabled = false;
         IsPreviewMode = false;
     }
+
+    public abstract void OnMouseEnter();
+    public abstract void OnMouseLeave();
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +7,7 @@ using UnityEngine;
 
 public abstract class FactoryUpdaterBase : IBuildingUpdater
 {
-    private Factory GetFactory(BuildingBase building)
+    private static Factory GetFactory(BuildingBase building)
     {
         if (building is Factory factory)
             return factory;
@@ -39,18 +39,18 @@ public abstract class FactoryUpdaterBase : IBuildingUpdater
     {
         var factory = GetFactory(building);
 
-        if (factory.currentRecipe == null)
+        // 处理生产
+        if (factory.CurrentRecipe == null || !factory.IsManufacturing) 
             return;
 
-        if (factory.IsManufacturing)
-        {
-            var deltaTime = Time.time - factory.processingStartTime;
-            if (deltaTime > factory.currentRecipe.time)
-                factory.FinishManufacturing();
-            else
-                OnProcessing(factory, deltaTime / factory.currentRecipe.time);
-        }
-        else factory.TryManufacturing();
+        var deltaTime = Time.time - factory.processingStartTime;
+        if (deltaTime > factory.CurrentRecipe.time)
+            factory.FinishManufacturing();
+        else
+            OnProcessing(factory, deltaTime / factory.CurrentRecipe.time);
+
+        // 处理输出
+        factory.TryPopItem();
     }
 
     /// <summary>

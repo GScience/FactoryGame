@@ -1,11 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class Lathe : FactoryUpdaterBase
+/// <summary>
+/// 有基础UI的生产工厂刷新器
+/// </summary>
+public class SimpleFactoryUpdater : FactoryUpdaterBase
 {
     public override void OnProcessing(Factory factory, float percent)
     {

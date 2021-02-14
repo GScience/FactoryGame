@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2683b0bb3da06640980d5a96d60f846, type: 3}
   m_Name: Stealplate
   m_EditorClassIdentifier: 
-  requirement:
+  input:
   - item: {fileID: 11400000, guid: 73d8711183fbf04429ce102bc2e8fa9c, type: 2}
     count: 2
   output:

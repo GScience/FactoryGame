@@ -14,7 +14,7 @@ public class RecipeInfo : ScriptableObject
     /// <summary>
     /// 合成需求
     /// </summary>
-    public List<ItemStack> requirement;
+    public List<ItemStack> input;
 
     /// <summary>
     /// 合成输出

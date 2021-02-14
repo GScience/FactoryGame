@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +9,11 @@ using UnityEngine;
 /// 物品定义
 /// </summary>
 [CreateAssetMenu(fileName="New Item", menuName = "Game/Item")]
-public class Item : ScriptableObject
+public class ItemInfo : ScriptableObject
 {
     public string itemName;
     public int maxStackCount = 1;
+    public Sprite icon;
 
     public void OnValidate()
     {

@@ -1,15 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// 工厂
 /// 有配方和可以进行加工的建筑
 /// </summary>
-public class Factory : BuildingBase, IAcceptItemBuilding
+public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 {
     /// <summary>
     /// 加工开始的时间
@@ -26,69 +27,102 @@ public class Factory : BuildingBase, IAcceptItemBuilding
     /// <summary>
     /// 当前所选配方
     /// </summary>
-    [HideInInspector]
-    [NonSerialized]
-    public RecipeInfo currentRecipe;
+    public RecipeInfo CurrentRecipe { get; private set; }
 
-    // 输入物品缓存
-    public List<ItemStack> inputItemCache;
+    /// <summary>
+    /// 输入物品缓存
+    /// </summary>
+    private ItemStack[] _inputItemCache;
 
-    // 输出物品缓存
-    public List<ItemStack> outputItemCache;
+    /// <summary>
+    /// 输出物品缓存
+    /// </summary>
+    private ItemStack[] _outputItemCache;
+
+    /// <summary>
+    /// 是否正在加工
+    /// </summary>
+    public bool IsManufacturing
+    {
+        get => processingStartTime >= 0;
+        private set => processingStartTime = value ? Time.time : -1;
+    }
+
+    /// <summary>
+    /// 是否已经弹出所有物品
+    /// </summary>
+    public bool isAllItemPoped = true;
+
+    /// <summary>
+    /// 输出建筑
+    /// </summary>
+    public IBuildingCanInputItem outputBuilding;
 
     /// <summary>
     /// 尝试进行加工
     /// 如果容器内物品不够则不加工
     /// </summary>
     /// <returns></returns>
-    public bool TryManufacturing()
+    private void TryManufacturing()
     {
+        if (IsManufacturing)
+            return;
+
         // 计算缺少物品
-        var isItemEnough = true;
-        foreach (var itemStackRequire in currentRecipe.requirement)
-        {
-            var result = inputItemCache.FirstOrDefault(itemStack => itemStack.item == itemStackRequire.item);
-            var count = result?.count ?? 0;
+        if (_inputItemCache.Where((itemStack, i) => itemStack.count < CurrentRecipe.input[i].count).Any())
+            return;
 
-            // 尝试拿物品
-            if (count < itemStackRequire.count)
-            {
-                if (InputBuilding == null)
-                    isItemEnough = false;
-                else
-                    for (var i = count; i < itemStackRequire.count; ++i)
-                    {
-                        if (!InputBuilding.TryTakeItem(itemStackRequire.item))
-                        {
-                            isItemEnough = false;
-                            break;
-                        }
-
-                        ++count;
-                    }
-            }
-
-            if (result != null)
-                result.count = count;
-            else if (count != 0)
-                inputItemCache.Add(new ItemStack {count = count, item = itemStackRequire.item});
-        }
-
-        if (isItemEnough)
-        {
-            processingStartTime = Time.time;
-            Debug.Log("Factory " + id + " satisfy the condition");
-        }
-
-        return isItemEnough;
+        // 开始加工
+        IsManufacturing = true;
     }
 
     /// <summary>
-    /// 是否正在加工
+    /// 当建筑物品刷新
     /// </summary>
-    public bool IsManufacturing => processingStartTime > 0;
+    public void OnItemUpdate()
+    {
+        TryManufacturing();
+    }
 
-    public IAcceptItemBuilding InputBuilding { get; set; }
+    /// <summary>
+    /// 设置当前配方
+    /// </summary>
+    /// <param name="recipeId">配方ID</param>
+    public void SetCurrentRecipe(int recipeId)
+    {
+        if (recipeId < 0 || recipeId >= recipes.Length)
+        {
+            Debug.LogError("Recipe id should between 0 to " + (recipes.Length - 1));
+            return;
+        }
+
+        CurrentRecipe = recipes[recipeId];
+
+        // 根据配方分配缓冲区大小
+        _inputItemCache = new ItemStack[CurrentRecipe.input.Count];
+        _outputItemCache = new ItemStack[CurrentRecipe.output.Count];
+
+        // 设置对应的物品
+        for (var i = 0; i < CurrentRecipe.input.Count; ++i)
+        {
+            _inputItemCache[i] = new ItemStack()
+            {
+                count = 0,
+                item = CurrentRecipe.input[i].item
+            };
+        }
+
+        for (var i = 0; i < CurrentRecipe.output.Count; ++i)
+        {
+            _outputItemCache[i] = new ItemStack()
+            {
+                count = 0,
+                item = CurrentRecipe.output[i].item
+            };
+        }
+
+        IsManufacturing = false;
+    }
 
     /// <summary>
     /// 完成加工
@@ -97,45 +131,112 @@ public class Factory : BuildingBase, IAcceptItemBuilding
     {
         Debug.Log("Factory " + id + " finished");
 
-        currentRecipe.output.ForEach((i) => outputItemCache.Add(new ItemStack {item = i.item, count = i.count}));
-        inputItemCache.Clear();
-        processingStartTime = -1;
+        // 清空物品
+        foreach (var item in _inputItemCache)
+            item.count = 0;
+
+        // 生产物品
+        for (var i = 0; i < _outputItemCache.Length; ++i)
+            _outputItemCache[i].count += CurrentRecipe.output[i].count;
+
+        isAllItemPoped = false;
+        IsManufacturing = false;
     }
 
-    public bool HasItem(Item item)
+    /// <summary>
+    /// 尝试自动弹出物品
+    /// </summary>
+    public void TryPopItem()
     {
-        return outputItemCache.Any(itemStack => itemStack.item == item);
+        if (isAllItemPoped || outputBuilding == null)
+            return;
+
+        for (var i = 0; i < _outputItemCache.Length;)
+        {
+            // 某种物品已经放完
+            if (_outputItemCache[i].count <= 0)
+            {
+                ++i;
+                continue;
+            }
+
+            // 某种物品放不下了
+            if (!outputBuilding.TryPutOneItem(_outputItemCache[i].item))
+                return;
+
+            // 还是放下了
+            --_outputItemCache[i].count;
+        }
+
+        isAllItemPoped = true;
     }
 
-    public bool TryTakeItem(Item item)
+    public bool TryTakeOneItem(ItemInfo item)
     {
-        var result = outputItemCache.Count == 0 ? null : outputItemCache.FirstOrDefault(itemStack => itemStack.item == item);
+        foreach (var itemStack in _outputItemCache)
+        {
+            if (itemStack.item != item || itemStack.count <= 0)
+                continue;
+            --itemStack.count;
+            return true;
+        }
 
-        if (result == null)
-            return false;
-
-        --result.count;
-
-        if (result.count == 0)
-            outputItemCache.Remove(result);
-
-        Debug.Log("Factory " + id + "'s item is taken");
-
-        return true;
+        return false;
     }
 
-    public Item TakeAnyItem()
+    public ItemInfo TakeAnyOneItem()
     {
-        if (outputItemCache.Count == 0)
-            return null;
+        foreach (var itemStack in _outputItemCache)
+        {
+            if (itemStack.count <= 0)
+                continue;
+            --itemStack.count;
+            return itemStack.item;
+        }
 
-        var result = outputItemCache[0];
+        return null;
+    }
 
-        --result.count;
+    public bool TryPutOneItem(ItemInfo item)
+    {
+        for (var i = 0; i < _inputItemCache.Length;)
+        {
+            // 工厂的物品栏忽略堆叠
+            ++_inputItemCache[i].count;
+            OnItemUpdate();
+            return true;
+        }
 
-        if (result.count == 0)
-            outputItemCache.Remove(result);
+        return false;
+    }
 
-        return result.item;
+    public int GetInputCacheCount(int id)
+    {
+        return _inputItemCache[id].count;
+    }
+
+    public float GetProgressPercentage()
+    {
+        if (!IsManufacturing || CurrentRecipe == null)
+            return 0;
+
+        return (Time.time - processingStartTime) / CurrentRecipe.time;
+    }
+
+    private Bubble _popedUI;
+
+    public override void OnMouseEnter()
+    {
+        _popedUI = BubbleUILayer.GlobalBubbleUILayer.Get().Pop("FactoryManufacturingUI");
+        _popedUI.GetComponent<FactoryUI>().factory = this;
+    }
+
+    public override void OnMouseLeave()
+    {
+        if (_popedUI != null)
+        {
+            BubbleUILayer.GlobalBubbleUILayer.Get().Close(_popedUI);
+            _popedUI = null;
+        }
     }
 }
