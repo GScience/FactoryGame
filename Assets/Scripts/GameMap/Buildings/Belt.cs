@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
@@ -13,21 +14,25 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
     /// <summary>
     /// 传送带上的物品
     /// </summary>
+    [NonSerialized]
+    [HideInInspector]
     public ItemInfo cargo;
 
     /// <summary>
     /// 运送的百分比
     /// </summary>
+    [NonSerialized]
+    [HideInInspector]
     public float percentage;
 
     public override void OnMouseEnter()
     {
-        throw new NotImplementedException();
+
     }
 
     public override void OnMouseLeave()
     {
-        throw new NotImplementedException();
+
     }
 
     public ItemInfo TakeAnyOneItem()

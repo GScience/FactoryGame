@@ -14,7 +14,11 @@ public class BuildingBuilder : MonoBehaviour
 {
     public static InstanceHelper<BuildingBuilder> GlobalBuilder;
 
+    /// <summary>
+    /// 当前所选择的建筑
+    /// </summary>
     private BuildingBase _pickedBuilding;
+
     private Action _onConfirm;
     private Action _onCancel;
 

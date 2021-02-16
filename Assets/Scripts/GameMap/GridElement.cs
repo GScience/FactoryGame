@@ -85,8 +85,6 @@ public class GridElement : MonoBehaviour
         _cellPos = (Vector2Int)_grid.WorldToCell(transform.position - offset);
         var cellCenter = _grid.GetCellCenterWorld((Vector3Int)_cellPos);
         transform.position = cellCenter + offset;
-
-        _renderer.sortingOrder = -_cellPos.y;
     }
 
     /// <summary>
