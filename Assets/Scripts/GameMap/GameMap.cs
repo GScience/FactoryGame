@@ -129,6 +129,12 @@ public class GameMap : MonoBehaviour
         return newBuilding;
     }
 
+    public BuildingBase GetBuildingAt(Vector2Int pos)
+    {
+        if (_buildingMap.TryGetValue(pos, out var building))
+            return building;
+        return null;
+    }
     private void AddBuilding(BuildingBase building)
     {
         building.ExitPreviewMode();
@@ -178,11 +184,16 @@ public class GameMap : MonoBehaviour
                     building.OnMouseEnter();
                 }
             }
-            else if (_lastMouseOverBuilding != null)
+            else
             {
-                _lastMouseOverBuilding.OnMouseLeave();
+                _lastMouseOverBuilding?.OnMouseLeave();
                 _lastMouseOverBuilding = null;
             }
+        }
+        else
+        {
+            _lastMouseOverBuilding?.OnMouseLeave();
+            _lastMouseOverBuilding = null;
         }
     }
 

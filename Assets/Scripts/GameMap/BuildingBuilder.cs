@@ -24,6 +24,26 @@ public class BuildingBuilder : MonoBehaviour
 
     public GridRenderer gridRenderer;
 
+    /// <summary>
+    /// 用于显示是否能建造的小方块
+    /// </summary>
+    public BuildingGuideBlock buildingGuideBlock;
+
+    /// <summary>
+    /// 用于显示是否能建造
+    /// </summary>
+    private List<BuildingGuideBlock> _buildingGuidingBlocks = new List<BuildingGuideBlock>();
+
+    /// <summary>
+    /// 是否正在建造
+    /// </summary>
+    public bool IsBuilding => _pickedBuilding != null;
+
+    /// <summary>
+    /// 上一次的位置
+    /// </summary>
+    private Vector2Int _lastCellPos = new Vector2Int(int.MaxValue, int.MaxValue);
+
     void Awake()
     {
         GlobalBuilder = new InstanceHelper<BuildingBuilder>(this);
@@ -38,6 +58,11 @@ public class BuildingBuilder : MonoBehaviour
         if (_pickedBuilding == null)
             return;
 
+        // 锁定位置
+        transform.position = _pickedBuilding.transform.position;
+
+        UpdateGuidingBlock();
+
         var mousePos = (Vector2) Input.mousePosition;
         var viewportPos = _camera.ScreenToWorldPoint(mousePos);
         _pickedBuilding.transform.position = new Vector3(viewportPos.x, viewportPos.y, 1);
@@ -47,9 +72,23 @@ public class BuildingBuilder : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
             _downMousePos = mousePos;
         if (Input.GetMouseButtonUp(0) && _downMousePos.HasValue)
-            OnConfirm();
+        {
+            if (CanBuild(_pickedBuilding.GetComponent<GridElement>()))
+                OnConfirm();
+        }
         else if (Input.GetKey(KeyCode.Escape))
             OnCancel();
+    }
+
+    /// <summary>
+    /// 检测是否能建造
+    /// </summary>
+    /// <param name="gridElement"></param>
+    /// <returns></returns>
+    private static bool CanBuild(GridElement gridElement)
+    {
+        var collision = gridElement.GetCollidingElement();
+        return collision == null;
     }
 
     public void Pick(BuildingBase obj, Action onConfirm, Action onCancel)
@@ -67,6 +106,47 @@ public class BuildingBuilder : MonoBehaviour
 
         BuildingInformationBoard.GlobalBuildingInformationBoard.Get().ShowInformation(_pickedBuilding);
         gridRenderer.OnSelected();
+
+        GenerateGuidingBlock();
+    }
+
+    /// <summary>
+    /// 生成引导小方块
+    /// </summary>
+    void GenerateGuidingBlock()
+    {
+        var gridElement = _pickedBuilding.GetComponent<GridElement>();
+        for (var x = 0; x < gridElement.Size.x; ++x)
+        for (var y = 0; y < gridElement.Size.y; ++y)
+        {
+            var guideBlock = Instantiate(buildingGuideBlock);
+            _buildingGuidingBlocks.Add(guideBlock);
+            guideBlock.transform.SetParent(transform);
+            guideBlock.transform.localPosition = new Vector3(x - gridElement.Size.x / 2, y - gridElement.Size.y / 2);
+        }
+    }
+
+    /// <summary>
+    /// 刷新引导小方块
+    /// </summary>
+    void UpdateGuidingBlock()
+    {
+        var gridElement = _pickedBuilding.GetComponent<GridElement>();
+
+        if (_lastCellPos == gridElement.CellPos)
+            return;
+
+        var index = 0;
+        for (var x = 0; x < gridElement.Size.x; ++x)
+            for (var y = 0; y < gridElement.Size.y; ++y)
+            {
+                var guideBlock = _buildingGuidingBlocks[index++];
+                var pos = new Vector2Int(x + gridElement.CellPos.x, y + gridElement.CellPos.y);
+                guideBlock.SetCanPlace(GameMap.GlobalMap.Get().GetBuildingAt(pos) == null);
+            }
+
+
+        _lastCellPos = gridElement.CellPos;
     }
 
     void OnConfirm()
@@ -75,11 +155,7 @@ public class BuildingBuilder : MonoBehaviour
             return;
         _onConfirm?.Invoke();
         GameMap.GlobalMap.Get().PutBuildingOnMap(_pickedBuilding);
-        _pickedBuilding = null;
-
-        BuildingInformationBoard.GlobalBuildingInformationBoard.Get().HideInformation();
-
-        gridRenderer.OnUnselected();
+        OnFinished();
     }
 
     void OnCancel()
@@ -87,10 +163,19 @@ public class BuildingBuilder : MonoBehaviour
         if (_pickedBuilding == null)
             return;
         _onCancel?.Invoke();
+        OnFinished();
+    }
+
+    void OnFinished()
+    {
+        foreach (var sprite in _buildingGuidingBlocks)
+            Destroy(sprite.gameObject);
+        _buildingGuidingBlocks.Clear();
+
         _pickedBuilding = null;
-
         BuildingInformationBoard.GlobalBuildingInformationBoard.Get().HideInformation();
-
         gridRenderer.OnUnselected();
+
+        _lastCellPos = new Vector2Int(int.MaxValue, int.MaxValue);
     }
 }

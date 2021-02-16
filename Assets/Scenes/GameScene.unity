@@ -2678,7 +2678,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -3123,6 +3123,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridRenderer: {fileID: 1574496372}
+  buildingGuideBlock: {fileID: 2171554009294793933, guid: 06972355bda86124fb41217399a9c7e4,
+    type: 3}
 --- !u!4 &2086055635
 Transform:
   m_ObjectHideFlags: 0

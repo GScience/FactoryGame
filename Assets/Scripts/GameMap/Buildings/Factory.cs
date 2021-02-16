@@ -227,6 +227,9 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
     public override void OnMouseEnter()
     {
+        if (BuildingBuilder.GlobalBuilder.Get().IsBuilding)
+            return;
+
         _popedUI = BubbleUILayer.GlobalBubbleUILayer.Get().Pop("FactoryManufacturingUI");
         _popedUI.GetComponent<FactoryUI>().factory = this;
     }
