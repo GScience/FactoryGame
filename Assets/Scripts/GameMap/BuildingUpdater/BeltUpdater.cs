@@ -4,9 +4,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Scripts.GameMap.BuildingUpdater
+public class BeltUpdater : BeltUpdaterBase
 {
-    class BeltUpdater
+    public override float Speed => 1f;
+
+    public override void OnCarryingItem(Belt building, float process)
     {
+        
+    }
+
+    public override bool TryFinishItemCarrying(Belt building)
+    {
+        if (building.outputBuilding == null)
+            return false;
+
+        var output = building.outputBuilding;
+
+        return output.TryPutOneItem(building.cargo);
+    }
+
+    public override void OnBuilt(Belt building)
+    {
+        
+    }
+
+    public override void OnCrash(Belt building)
+    {
+        
+    }
+
+    public override void OnStart(Belt building)
+    {
+        
+    }
+
+    public override void OnStop(Belt building)
+    {
+        
     }
 }

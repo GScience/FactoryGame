@@ -39,6 +39,9 @@ public abstract class FactoryUpdaterBase : IBuildingUpdater
     {
         var factory = GetFactory(building);
 
+        // 处理输出
+        factory.TryPopItem();
+
         // 处理生产
         if (factory.CurrentRecipe == null || !factory.IsManufacturing) 
             return;
@@ -48,9 +51,6 @@ public abstract class FactoryUpdaterBase : IBuildingUpdater
             factory.FinishManufacturing();
         else
             OnProcessing(factory, deltaTime / factory.CurrentRecipe.time);
-
-        // 处理输出
-        factory.TryPopItem();
     }
 
     /// <summary>

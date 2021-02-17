@@ -28,17 +28,13 @@ public class BubbleUILayer : MonoBehaviour
     /// <summary>
     /// 弹出UI
     /// </summary>
-    /// <param name="prefab"></param>
-    public Bubble Pop(string name)
+    /// <param uiName="prefab"></param>
+    public Bubble Pop(string uiName)
     {
-        var prefab = bubbles.Where((bubble) => bubble.name == name).FirstOrDefault();
+        var prefab = bubbles.FirstOrDefault(bubble => bubble.name == uiName);
 
         var clone = Instantiate(prefab);
         clone.transform.SetParent(transform);
-        var pos = new Vector2(
-            Input.mousePosition.x,
-            Input.mousePosition.y + clone.GetComponent<RectTransform>().sizeDelta.y / 2);
-        clone.transform.position = pos;
 
         return clone;
     }

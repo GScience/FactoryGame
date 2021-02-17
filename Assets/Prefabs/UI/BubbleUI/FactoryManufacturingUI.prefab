@@ -85,6 +85,7 @@ GameObject:
   - component: {fileID: 2524145884141938673}
   - component: {fileID: 2524145884141938672}
   - component: {fileID: 8292767076164947233}
+  - component: {fileID: -1253965144765640621}
   m_Layer: 5
   m_Name: FactoryManufacturingUI
   m_TagString: Untagged
@@ -141,6 +142,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07927b700a9f61468ffdd6338868fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &-1253965144765640621
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2524145884141938670}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &2524145883133818338
 PrefabInstance:
   m_ObjectHideFlags: 0

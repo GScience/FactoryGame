@@ -85,9 +85,30 @@ public class GridElement : MonoBehaviour
         _cellPos = (Vector2Int)_grid.WorldToCell(transform.position - offset);
         var cellCenter = _grid.GetCellCenterWorld((Vector3Int)_cellPos);
         transform.position = cellCenter + offset;
-
-        _renderer.sortingOrder = -_cellPos.y;
     }
+
+    /// <summary>
+    /// 获取与当前GridElement所碰撞的元素
+    /// </summary>
+    /// <returns></returns>
+    public GridElement GetCollidingElement()
+    {
+        var gameMap = GameMap.GlobalMap.Get();
+
+        for (var x = 0; x < Size.x; ++x)
+            for (var y = 0; y < Size.y; ++y)
+            {
+                var building = gameMap.GetBuildingAt(new Vector2Int(CellPos.x + x, CellPos.y + y));
+                if (building == null)
+                    continue;
+                var gridElement = building.GetComponent<GridElement>();
+                if (gridElement != null)
+                    return gridElement;
+            }
+
+        return null;
+    }
+
 #if UNITY_EDITOR
     [CustomEditor(typeof(GridElement))]
     class GridElementEditor : Editor

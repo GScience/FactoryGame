@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: StealPlate
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemName: "\u94A2\u677F"
-  maxStackCount: 1
+  maxStackCount: 100
   icon: {fileID: 21300000, guid: 6ec34c1f3f3ee6e4eb234e1015505363, type: 3}
