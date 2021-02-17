@@ -337,6 +337,7 @@ public class BeltBuilder : MonoBehaviour
         _hasChosenStartPos = false;
         _endpointBuilding = null;
         _previewsBelts.Clear();
+        gridRenderer.OnUnselected();
         BuildingInformationBoard.GlobalBuildingInformationBoard.Get().HideInformation();
         _onFinished?.Invoke();
     }
