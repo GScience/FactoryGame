@@ -22,10 +22,6 @@ public class BuildingBuilder : MonoBehaviour
     private Action _onConfirm;
     private Action _onCancel;
 
-    private Camera _camera;
-
-    private Vector2? _downMousePos;
-
     public GridRenderer gridRenderer;
 
     /// <summary>
@@ -51,49 +47,40 @@ public class BuildingBuilder : MonoBehaviour
     void Awake()
     {
         GlobalBuilder = new InstanceHelper<BuildingBuilder>(this);
-        _camera = Camera.main;
     }
 
     void Update()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
-            return;
-
         if (_pickedBuilding == null)
             return;
 
         // 锁定位置
         transform.position = _pickedBuilding.transform.position;
 
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        // 刷新Guide Block
         UpdateGuidingBlock();
 
-        var mousePos = (Vector2) Input.mousePosition;
-        var viewportPos = _camera.ScreenToWorldPoint(mousePos);
-        _pickedBuilding.transform.position = new Vector3(viewportPos.x, viewportPos.y, 1);
+        // 按住鼠标的时候不需要移动
+        if (!Input.GetMouseButton(0))
+            _pickedBuilding.transform.position = PlayerInput.GetMousePosInWorld();
 
-        if (_downMousePos.HasValue && _downMousePos != mousePos)
-            _downMousePos = null;
-
-        if (Input.GetMouseButtonDown(0))
-            _downMousePos = mousePos;
-        if (Input.GetMouseButtonUp(0) && _downMousePos.HasValue)
+        if (PlayerInput.GetMouseClick(0))
         {
             if (CanBuild(_pickedBuilding.GetComponent<GridElement>()))
                 OnConfirm();
         }
-        else if (Input.GetKey(KeyCode.Escape))
+        else if (Input.GetKeyDown(KeyCode.Escape))
             OnCancel();
         else
         {
             // 滚动旋转
             if (Input.mouseScrollDelta.y > float.Epsilon)
-            {
-                _pickedBuilding.transform.Rotate(Vector3.forward, 90);
-            }
+                _pickedBuilding.ChangeToState(1);
             else if (Input.mouseScrollDelta.y < -float.Epsilon)
-            {
-                _pickedBuilding.transform.Rotate(Vector3.forward, -90);
-            }
+                _pickedBuilding.ChangeToState(-1);
 
         }
     }
@@ -118,9 +105,7 @@ public class BuildingBuilder : MonoBehaviour
         _onConfirm = onConfirm;
         _onCancel = onCancel;
 
-        var mousePos = (Vector2)Input.mousePosition;
-        var viewportPos = _camera.ScreenToWorldPoint(mousePos);
-        _pickedBuilding.transform.position = viewportPos;
+        _pickedBuilding.transform.position = PlayerInput.GetMousePosInWorld();
 
         BuildingInformationBoard.GlobalBuildingInformationBoard.Get().ShowInformation(_pickedBuilding);
         gridRenderer.OnSelected();

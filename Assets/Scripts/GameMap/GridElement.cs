@@ -28,19 +28,21 @@ public class GridElement : MonoBehaviour
         }
     }
 
-    private Vector2Int _cellPos = Vector2Int.zero;
     public Vector2Int CellPos
     {
-        get => _cellPos;
+        get
+        {
+            var offset = new Vector3((Size.x - 1) * _grid.cellSize.x / 2, (Size.y - 1) * _grid.cellSize.y / 2, 0);
+            return (Vector2Int)_grid.WorldToCell(transform.position - offset);
+        }
         set
         {
-            _cellPos = value;
 #if UNITY_EDITOR
             if (_grid == null)
                 return;
 #endif
             var offset = new Vector3((Size.x - 1) * _grid.cellSize.x / 2, (Size.y - 1) * _grid.cellSize.y / 2, 0);
-            var cellCenter = _grid.GetCellCenterWorld((Vector3Int)_cellPos);
+            var cellCenter = _grid.GetCellCenterWorld((Vector3Int)value);
             transform.position = cellCenter + offset;
         }
     }
@@ -82,8 +84,7 @@ public class GridElement : MonoBehaviour
             return;
 #endif
         var offset = new Vector3((Size.x - 1) * _grid.cellSize.x / 2, (Size.y - 1) * _grid.cellSize.y / 2, 0);
-        _cellPos = (Vector2Int)_grid.WorldToCell(transform.position - offset);
-        var cellCenter = _grid.GetCellCenterWorld((Vector3Int)_cellPos);
+        var cellCenter = _grid.GetCellCenterWorld((Vector3Int)CellPos);
         transform.position = cellCenter + offset;
     }
 

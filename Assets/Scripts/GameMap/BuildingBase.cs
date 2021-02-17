@@ -54,4 +54,16 @@ public abstract class BuildingBase : MonoBehaviour
 
     public abstract void OnMouseEnter();
     public abstract void OnMouseLeave();
+
+    /// <summary>
+    /// 当被放在地图上
+    /// </summary>
+    public abstract void OnPlace();
+
+    /// <summary>
+    /// 切换到下一个状态
+    /// </summary>
+    public virtual void ChangeToState(int offset)
+    {
+    }
 }

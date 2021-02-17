@@ -11,6 +11,31 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 {
+    public enum BeltState
+    {
+        Right2Left = 0,
+        Up2Down = 1,
+        Left2Right = 2,
+        Down2Up = 3,
+
+        Down2Left = 4,
+        Right2Down = 5,
+        Up2Right = 6,
+        Left2Up = 7,
+
+        Down2Right = 8,
+        Right2Up = 9,
+        Up2Left = 10,
+        Left2Down = 11
+    }
+
+    public enum BeltType
+    {
+        Straight = 0,
+        CornerCcw = 1,
+        CornerCw = 2
+    }
+
     /// <summary>
     /// 传送带上的物品
     /// </summary>
@@ -24,14 +49,21 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
     public SpriteRenderer cargoSpriteRenderer;
 
     /// <summary>
-    /// 是否为拐弯处
+    /// 传送带类型
     /// </summary>
-    public bool isCorner;
+    public BeltType beltType;
 
     /// <summary>
     /// 是否可见
     /// </summary>
     private bool _isVisible;
+
+    public BeltState State
+    {
+        get => _state;
+        set => SetBeltState(value);
+    }
+    private BeltState _state;
 
     /// <summary>
     /// 运送的百分比
@@ -49,7 +81,7 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 
     public override void OnMouseEnter()
     {
-        if (BuildingBuilder.GlobalBuilder.Get().IsBuilding)
+        if (PlayerInput.IsBuilding())
             return;
 
         _popedUI = BubbleUILayer.GlobalBubbleUILayer.Get().Pop("BeltUI");
@@ -63,6 +95,11 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
             BubbleUILayer.GlobalBubbleUILayer.Get().Close(_popedUI);
             _popedUI = null;
         }
+    }
+
+    public override void OnPlace()
+    {
+        
     }
 
     public ItemInfo TakeAnyOneItem()
@@ -115,5 +152,111 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
     void OnBecameInvisible()
     {
         _isVisible = false;
+    }
+
+    public override void ChangeToState(int offset)
+    {
+        offset %= 4;
+        var offsetState = (int)_state - (int) beltType * 4 + offset;
+        if (offsetState < 0)
+            offsetState += 4;
+        var value = offsetState % 4 + (int) beltType * 4;
+        SetBeltState((BeltState) value);
+    }
+
+    public void SetBeltState(BeltState state)
+    {
+        if (_state != state)
+            transform.rotation = Quaternion.AngleAxis(((int)state % 4) * 90, Vector3.forward);
+
+        _state = state;
+    }
+
+    public void SetBeltDirection(Vector2Int inDirection, Vector2Int outDirection)
+    {
+        if (beltType == BeltType.Straight)
+            Debug.LogError("Only corner belt support");
+    }
+
+    private void SetStraightDirection(Vector2Int direction)
+    {
+        switch (direction.x)
+        {
+            case 1:
+                SetBeltState(BeltState.Left2Right);
+                break;
+            case -1:
+                SetBeltState(BeltState.Right2Left);
+                break;
+        }
+        switch (direction.y)
+        {
+            case 1:
+                SetBeltState(BeltState.Down2Up);
+                break;
+            case -1:
+                SetBeltState(BeltState.Up2Down);
+                break;
+        }
+    }
+
+    private void SetCwDirection(Vector2Int direction)
+    {
+        switch (direction.x)
+        {
+            case 1:
+                SetBeltState(BeltState.Left2Down);
+                break;
+            case -1:
+                SetBeltState(BeltState.Right2Up);
+                break;
+        }
+        switch (direction.y)
+        {
+            case 1:
+                SetBeltState(BeltState.Down2Right);
+                break;
+            case -1:
+                SetBeltState(BeltState.Up2Left);
+                break;
+        }
+    }
+
+    private void SetCcwDirection(Vector2Int direction)
+    {
+        switch (direction.x)
+        {
+            case 1:
+                SetBeltState(BeltState.Left2Up);
+                break;
+            case -1:
+                SetBeltState(BeltState.Right2Down);
+                break;
+        }
+        switch (direction.y)
+        {
+            case 1:
+                SetBeltState(BeltState.Down2Left);
+                break;
+            case -1:
+                SetBeltState(BeltState.Up2Right);
+                break;
+        }
+    }
+
+    public void SetBeltDirection(Vector2Int direction)
+    {
+        switch (beltType)
+        {
+            case BeltType.Straight:
+                SetStraightDirection(direction);
+                break;
+            case BeltType.CornerCw:
+                SetCwDirection(direction);
+                break;
+            case BeltType.CornerCcw:
+                SetCcwDirection(direction);
+                break;
+        }
     }
 }
