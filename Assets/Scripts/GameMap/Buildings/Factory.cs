@@ -205,8 +205,8 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
     public bool TryPutOneItem(ItemInfo item)
     {
-        if (_canPlaceItem != null)
-            return _canPlaceItem.Value;
+        if (_canPlaceItem != null && _canPlaceItem == false)
+            return false;
 
         for (var i = 0; i < _inputItemCache.Length;)
         {
