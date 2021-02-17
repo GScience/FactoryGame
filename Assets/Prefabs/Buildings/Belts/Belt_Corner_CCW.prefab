@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 6088226497128999207}
   - component: {fileID: 6088226497128999200}
   m_Layer: 0
-  m_Name: Belt_Corner
+  m_Name: Belt_Corner_CCW
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -264,7 +264,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1a763974e213c6c40ba984c4bc866fb3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0da63f42cc822574cb47f686fa164c14, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
