@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// 传送带
 /// </summary>
-public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
+public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem, IBuildingCanOutputToOther
 {
     public enum BeltState
     {
@@ -111,7 +111,7 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 
     public bool TryPutOneItem(ItemInfo item)
     {
-        if (cargo != null)
+        if (cargo != null || IsPreviewMode)
             return false;
         cargo = item;
         return true;
@@ -258,5 +258,10 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
                 SetCcwDirection(direction);
                 break;
         }
+    }
+
+    public void OutputTo(IBuildingCanInputItem building)
+    {
+        outputBuilding = building;
     }
 }

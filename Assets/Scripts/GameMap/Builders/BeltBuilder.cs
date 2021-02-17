@@ -27,9 +27,14 @@ public class BeltBuilder : MonoBehaviour
     private int _lastLength;
 
     /// <summary>
-    /// 末端是否连接到建筑上
+    /// 末端连接的建筑
     /// </summary>
-    private bool _isEndpointConnectToBuilding;
+    private IBuildingCanInputItem _endpointBuilding;
+
+    /// <summary>
+    /// 开始端连接的建筑
+    /// </summary>
+    private IBuildingCanOutputToOther _startpointBuilding;
 
     /// <summary>
     /// 是否选择了起始地点
@@ -174,16 +179,24 @@ public class BeltBuilder : MonoBehaviour
                 // 首位两个传送带需要手动查找连接，可以是曲的，特殊处理
                 if (i == 0 || i == _previewsBelts.Count - 1)
                 {
-                    var findBuilding = false;
+                    IBuildingCanInputItem findBuilding = null;
 
                     foreach (var dir in directions)
                     {
-                        var building = FindBuildingInDirection<IBuildingCanOutputItem>(gridElement, dir);
-                        if (building == null)
-                            continue;
-
-                        if (i != 0)
-                            findBuilding = true;
+                        if (i == 0)
+                        {
+                            var building = FindBuildingInDirection<IBuildingCanOutputToOther>(gridElement, dir);
+                            if (building == null)
+                                continue;
+                            _startpointBuilding = building;
+                        }
+                        else
+                        {
+                            var building = FindBuildingInDirection<IBuildingCanInputItem>(gridElement, dir);
+                            if (building == null)
+                                continue;
+                            findBuilding = building;
+                        }
 
                         needResetToStraightFoundBuilding = false;
 
@@ -221,7 +234,7 @@ public class BeltBuilder : MonoBehaviour
                     }
 
                     if (i != 0)
-                        _isEndpointConnectToBuilding = findBuilding;
+                        _endpointBuilding = findBuilding;
                 }
 
                 // 其他位置全是直的
@@ -322,7 +335,7 @@ public class BeltBuilder : MonoBehaviour
 
         _straight = null;
         _hasChosenStartPos = false;
-        _isEndpointConnectToBuilding = false;
+        _endpointBuilding = null;
         _previewsBelts.Clear();
         BuildingInformationBoard.GlobalBuildingInformationBoard.Get().HideInformation();
         _onFinished?.Invoke();
@@ -336,11 +349,24 @@ public class BeltBuilder : MonoBehaviour
         var gameMap = GameMap.GlobalMap.Get();
 
         // 最后一个传送带还是预览
-        var continueDragging = !_isEndpointConnectToBuilding && _previewsBelts.Count > 1;
+        var continueDragging = _endpointBuilding == null && _previewsBelts.Count > 1;
 
         for (var i = 0; i < _previewsBelts.Count - (continueDragging ? 1 : 0); ++i)
         {
-            gameMap.PutBuildingOnMap(_previewsBelts[i].belt);
+            var belt = _previewsBelts[i].belt;
+            gameMap.PutBuildingOnMap(belt);
+
+            if (i != _previewsBelts.Count - 1)
+                belt.outputBuilding = _previewsBelts[i + 1].belt;
+            else
+                belt.outputBuilding = _endpointBuilding;
+
+            if (i == 0)
+            {
+                // TODO 更通用的方法
+                _startpointBuilding.OutputTo(_previewsBelts[0].belt);
+            }
+
             Destroy(_previewsBelts[i].guideBlock.gameObject);
         }
 

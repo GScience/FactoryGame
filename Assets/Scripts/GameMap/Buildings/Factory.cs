@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 /// 工厂
 /// 有配方和可以进行加工的建筑
 /// </summary>
-public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
+public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem, IBuildingCanOutputToOther
 {
     /// <summary>
     /// 加工开始的时间
@@ -258,5 +258,10 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     public override void OnPlace()
     {
         
+    }
+
+    public void OutputTo(IBuildingCanInputItem building)
+    {
+        outputBuilding = building;
     }
 }
