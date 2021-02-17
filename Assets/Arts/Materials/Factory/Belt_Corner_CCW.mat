@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Belt
+  m_Name: Belt_Corner_CCW
   m_Shader: {fileID: -6465566751694194690, guid: 9399a7327eae8e24aaa91c5cd8e6d128,
     type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
@@ -37,7 +37,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: bcc802a3f1bdecc418295c254a3cfaeb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -53,6 +53,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Boolean_9B352729: 1
+    - Boolean_BC10D6F1: 0
+    - Vector1_A12B3DFB: 1
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1

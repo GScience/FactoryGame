@@ -73,6 +73,7 @@ public class BuildingBuilder : MonoBehaviour
 
         if (_downMousePos.HasValue && _downMousePos != mousePos)
             _downMousePos = null;
+
         if (Input.GetMouseButtonDown(0))
             _downMousePos = mousePos;
         if (Input.GetMouseButtonUp(0) && _downMousePos.HasValue)
@@ -82,6 +83,19 @@ public class BuildingBuilder : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.Escape))
             OnCancel();
+        else
+        {
+            // 滚动旋转
+            if (Input.mouseScrollDelta.y > float.Epsilon)
+            {
+                _pickedBuilding.transform.Rotate(Vector3.forward, 90);
+            }
+            else if (Input.mouseScrollDelta.y < -float.Epsilon)
+            {
+                _pickedBuilding.transform.Rotate(Vector3.forward, -90);
+            }
+
+        }
     }
 
     /// <summary>
