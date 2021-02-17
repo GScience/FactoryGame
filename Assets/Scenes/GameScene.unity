@@ -869,6 +869,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testBuilding: {fileID: -2736672645113677320, guid: f73781ddc14796e4e948da9defcfe7cc,
     type: 3}
+  testBelt: {fileID: 6088226497128999200, guid: cd644109c838a304586c3a6ee692116c,
+    type: 3}
 --- !u!1 &409823066
 GameObject:
   m_ObjectHideFlags: 0
@@ -1878,6 +1880,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bubbles:
   - {fileID: 8292767076164947233, guid: de429fdfe9cf2bb48b990577e4c059e4, type: 3}
+  - {fileID: 1365005107510286133, guid: 5e42742cc1ca68d418f08b07c04d9597, type: 3}
 --- !u!223 &1019801401
 Canvas:
   m_ObjectHideFlags: 0
@@ -1895,7 +1898,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 1000
   m_TargetDisplay: 0

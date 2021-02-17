@@ -19,20 +19,50 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
     public ItemInfo cargo;
 
     /// <summary>
+    /// 显示运送的物品的精灵
+    /// </summary>
+    public SpriteRenderer cargoSpriteRenderer;
+
+    /// <summary>
+    /// 是否为拐弯处
+    /// </summary>
+    public bool isCorner;
+
+    /// <summary>
+    /// 是否可见
+    /// </summary>
+    private bool _isVisible;
+
+    /// <summary>
     /// 运送的百分比
     /// </summary>
     [NonSerialized]
     [HideInInspector]
     public float percentage;
 
+    private Bubble _popedUI;
+
+    /// <summary>
+    /// 输出建筑
+    /// </summary>
+    public IBuildingCanInputItem outputBuilding;
+
     public override void OnMouseEnter()
     {
+        if (BuildingBuilder.GlobalBuilder.Get().IsBuilding)
+            return;
 
+        _popedUI = BubbleUILayer.GlobalBubbleUILayer.Get().Pop("BeltUI");
+        _popedUI.GetComponent<BeltUI>().belt = this;
     }
 
     public override void OnMouseLeave()
     {
-
+        if (_popedUI != null)
+        {
+            BubbleUILayer.GlobalBubbleUILayer.Get().Close(_popedUI);
+            _popedUI = null;
+        }
     }
 
     public ItemInfo TakeAnyOneItem()
@@ -58,5 +88,32 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
             return true;
         }
         return false;
+    }
+
+    void Update()
+    {
+        if (!_isVisible)
+            return;
+
+        if (cargo == null)
+        {
+            cargoSpriteRenderer.sprite = null;
+            return;
+        }
+        cargoSpriteRenderer.sprite = cargo.icon;
+        cargoSpriteRenderer.transform.localPosition =
+            Vector2.Lerp(new Vector2(1, 0.5f), new Vector2(0, 0.5f), percentage) 
+            - (Vector2)_renderer.bounds.size / 2 
+            - Vector2.up * cargoSpriteRenderer.size.y / 3;
+    }
+
+    void OnBecameVisible()
+    {
+        _isVisible = true;
+    }
+
+    void OnBecameInvisible()
+    {
+        _isVisible = false;
     }
 }

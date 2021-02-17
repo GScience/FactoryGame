@@ -27,7 +27,7 @@ public abstract class BuildingBase : MonoBehaviour
     public BuildingInfo info;
     public UpdaterRef UpdaterRef;
     private GridElement _gridElement;
-    private Renderer _renderer;
+    protected Renderer _renderer;
 
     /// <summary>
     /// 是否在预览模式

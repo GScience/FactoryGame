@@ -59,6 +59,11 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     public IBuildingCanInputItem outputBuilding;
 
     /// <summary>
+    /// 是否能放物品
+    /// </summary>
+    private bool? _canPlaceItem;
+
+    /// <summary>
     /// 尝试进行加工
     /// 如果容器内物品不够则不加工
     /// </summary>
@@ -141,6 +146,7 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
         isAllItemPoped = false;
         IsManufacturing = false;
+        _canPlaceItem = null;
     }
 
     /// <summary>
@@ -199,14 +205,20 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
     public bool TryPutOneItem(ItemInfo item)
     {
+        if (_canPlaceItem != null)
+            return _canPlaceItem.Value;
+
         for (var i = 0; i < _inputItemCache.Length;)
         {
-            // 工厂的物品栏忽略堆叠
+            if (_inputItemCache[i].count >= CurrentRecipe.input[i].count)
+                continue;
             ++_inputItemCache[i].count;
             OnItemUpdate();
+            _canPlaceItem = true;
             return true;
         }
 
+        _canPlaceItem = false;
         return false;
     }
 

@@ -4,25 +4,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class BeltUpdater : IBuildingUpdater
+public class BeltUpdater : BeltUpdaterBase
 {
-    public void OnCrash(BuildingBase building)
+    public override float Speed => 1f;
+
+    public override void OnCarryingItem(Belt building, float process)
     {
+        
     }
 
-    public void OnBuilt(BuildingBase building)
+    public override bool TryFinishItemCarrying(Belt building)
     {
+        if (building.outputBuilding == null)
+            return false;
+
+        var output = building.outputBuilding;
+
+        return output.TryPutOneItem(building.cargo);
     }
 
-    public void OnStop(BuildingBase building)
+    public override void OnBuilt(Belt building)
     {
+        
     }
 
-    public void OnStart(BuildingBase building)
+    public override void OnCrash(Belt building)
     {
+        
     }
 
-    public void OnUpdate(BuildingBase building)
+    public override void OnStart(Belt building)
     {
+        
+    }
+
+    public override void OnStop(Belt building)
+    {
+        
     }
 }
