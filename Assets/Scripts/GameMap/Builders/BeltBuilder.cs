@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -336,6 +336,7 @@ public class BeltBuilder : MonoBehaviour
         _straight = null;
         _hasChosenStartPos = false;
         _endpointBuilding = null;
+        _startpointBuilding = null;
         _previewsBelts.Clear();
         gridRenderer.OnUnselected();
         BuildingInformationBoard.GlobalBuildingInformationBoard.Get().HideInformation();
@@ -365,7 +366,7 @@ public class BeltBuilder : MonoBehaviour
             if (i == 0)
             {
                 // TODO 更通用的方法
-                _startpointBuilding.OutputTo(_previewsBelts[0].belt);
+                _startpointBuilding?.OutputTo(_previewsBelts[0].belt);
             }
 
             Destroy(_previewsBelts[i].guideBlock.gameObject);
@@ -399,6 +400,8 @@ public class BeltBuilder : MonoBehaviour
         }
 
         _hasChosenStartPos = false;
+        _endpointBuilding = null;
+        _startpointBuilding = null;
         _previewsBelts.Clear();
         _previewsBelts.Add(beginBelt);
     }
