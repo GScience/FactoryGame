@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
-/// 传送带刷新基类
+/// 浼犻�佸甫鍒锋柊鍩虹被
 /// </summary>
 public abstract class BeltUpdaterBase : IBuildingUpdater
 {
     /// <summary>
-    /// 传送带刷新速度
+    /// 浼犻�佸甫鍒锋柊閫熷害
     /// </summary>
     public abstract float Speed { get; }
 
@@ -65,13 +65,13 @@ public abstract class BeltUpdaterBase : IBuildingUpdater
     }
 
     /// <summary>
-    /// 当运送物品时调用
+    /// 褰撹繍閫佺墿鍝佹椂璋冪敤
     /// </summary>
     /// <param name="process"></param>
     public abstract void OnCarryingItem(Belt building, float process);
 
     /// <summary>
-    /// 尝试结束
+    /// 灏濊瘯缁撴潫
     /// </summary>
     public abstract bool TryFinishItemCarrying(Belt building);
 

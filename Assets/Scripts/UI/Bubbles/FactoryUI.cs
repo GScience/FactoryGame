@@ -21,6 +21,16 @@ public class FactoryUI : MonoBehaviour
 
     void Update()
     {
+        UpdateRecipe();
+    }
+
+    private void Start()
+    {
+        UpdateRecipe();
+    }
+
+    private void UpdateRecipe()
+    {
         if (recipeUI == null)
             return;
 

@@ -97,6 +97,11 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem,
         }
     }
 
+    public override void OnClick()
+    {
+
+    }
+
     public override void OnPlace()
     {
         

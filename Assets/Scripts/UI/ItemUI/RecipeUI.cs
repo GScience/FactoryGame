@@ -29,11 +29,12 @@ public class RecipeUI : MonoBehaviour
             // 为空的话清空
             if (recipe == null || i >= recipe.input.Count)
             {
-                itemRequirementUIs[i].needItem = null;
+                itemRequirementUIs[i].gameObject.SetActive(false);
                 continue;
             }
 
             var requirement = recipe.input[i];
+            itemRequirementUIs[i].gameObject.SetActive(true);
             itemRequirementUIs[i].needItem = requirement.item;
             itemRequirementUIs[i].requireCount = requirement.count;
         }
@@ -42,9 +43,10 @@ public class RecipeUI : MonoBehaviour
         {
             if (recipe == null || i >= recipe.output.Count)
             {
-                itemOutputUIs[i].ItemStack = null;
+                itemOutputUIs[i].gameObject.SetActive(false);
                 continue;
             }
+            itemOutputUIs[i].gameObject.SetActive(true);
             itemOutputUIs[i].ItemStack = recipe.output[i];
         }
     }

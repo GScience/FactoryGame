@@ -20,11 +20,6 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     public float processingStartTime;
 
     /// <summary>
-    /// 合成配方
-    /// </summary>
-    public RecipeInfo[] recipes;
-
-    /// <summary>
     /// 当前所选配方
     /// </summary>
     public RecipeInfo CurrentRecipe { get; private set; }
@@ -95,9 +90,26 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     /// <param name="recipeId">配方ID</param>
     public void SetCurrentRecipe(int recipeId)
     {
-        if (recipeId < 0 || recipeId >= recipes.Length)
+        var factoryInfo = info as FactoryInfo;
+        if (factoryInfo == null)
+            return;
+
+        var recipes = factoryInfo.recipes;
+
+        if (recipeId < 0)
         {
-            Debug.LogError("Recipe id should between 0 to " + (recipes.Length - 1));
+            if (CurrentRecipe != null)
+            {
+                _inputItemCache = null;
+                _outputItemCache = null;
+            }
+            CurrentRecipe = null;
+            return;
+        }
+
+        if (recipeId >= recipes.Length)
+        {
+            Debug.LogError("Recipe id should between negative to " + (recipes.Length - 1));
             return;
         }
 
@@ -127,6 +139,7 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         }
 
         IsManufacturing = false;
+        _canPlaceItem = true;
     }
 
     /// <summary>
@@ -208,8 +221,13 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         if (_canPlaceItem != null && _canPlaceItem == false)
             return false;
 
-        for (var i = 0; i < _inputItemCache.Length;)
+        if (_inputItemCache == null)
+            return false;
+
+        for (var i = 0; i < _inputItemCache.Length; ++i)
         {
+            if (_inputItemCache[i].item != item)
+                continue;
             if (_inputItemCache[i].count >= CurrentRecipe.input[i].count)
                 continue;
             ++_inputItemCache[i].count;
@@ -255,6 +273,12 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         }
     }
 
+    public override void OnClick()
+    {
+        var popMenu = PopMenuLayer.GlobalPopMenuLayer.Get().Pop("FactoryPopMenu");
+        popMenu.GetComponent<FactoryPopMenu>().factory = this;
+    }
+
     public override void OnPlace()
     {
         
@@ -263,5 +287,19 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     public void OutputTo(IBuildingCanInputItem building)
     {
         outputBuilding = building;
+    }
+
+    public int GetCurrentRecipeId()
+    {
+        var factoryInfo = info as FactoryInfo;
+        if (factoryInfo == null)
+            return -1;
+
+        var recipes = factoryInfo.recipes;
+
+        for (var i = 0; i < recipes.Length; ++i)
+            if (recipes[i] == CurrentRecipe)
+                return i;
+        return -1;
     }
 }

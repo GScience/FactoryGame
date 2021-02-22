@@ -76,57 +76,6 @@ public class GameMap : MonoBehaviour
             var updater = Activator.CreateInstance(type) as IBuildingUpdater;
             _updaterGroups.Add(type.Name.Substring(0, type.Name.Length - "Updater".Length), new UpdaterGroup(updater));
         }
-
-        StartCoroutine(GenerateTestBuilding());
-    }
-
-    public BuildingBase testBuilding;
-    public BuildingBase testBelt;
-
-    private IEnumerator GenerateTestBuilding()
-    {
-        Belt _lastBelt = null;
-
-        // 测试！添加10个建筑测试效率
-        for (var i = 0; i < 10; ++i)
-        {
-            var previewBuilding = CreateBuildingPreview(testBuilding);
-            var previewBelt1 = CreateBuildingPreview(testBelt);
-            var previewBelt2 = CreateBuildingPreview(testBelt);
-            previewBuilding.transform.position = new Vector3(i * 5, 0, 0);
-            previewBelt1.transform.position = new Vector3(i * 5 + 2, 0, 0);
-            previewBelt2.transform.position = new Vector3(i * 5 + 3, 0, 0);
-            previewBelt1.transform.Rotate(Vector3.forward, 180);
-            previewBelt2.transform.Rotate(Vector3.forward, 180);
-
-            var factory = previewBuilding as Factory;
-            if (factory == null)
-                continue;
-            factory.SetCurrentRecipe(0);
-            if (i == 0)
-            {
-                for (var j = 0; j < factory.CurrentRecipe.input.Count; ++j)
-                    for (var k = 0; k < factory.CurrentRecipe.input[i].count; ++k)
-                        factory.TryPutOneItem(factory.CurrentRecipe.input[i].item);
-            }
-
-            factory.outputBuilding = previewBelt1 as IBuildingCanInputItem;
-            (previewBelt1 as Belt).outputBuilding = previewBelt2 as IBuildingCanInputItem;
-
-            PutBuildingOnMap(previewBuilding);
-            PutBuildingOnMap(previewBelt1);
-            PutBuildingOnMap(previewBelt2);
-
-            if (_lastBelt != null)
-                _lastBelt.outputBuilding = previewBuilding as IBuildingCanInputItem;
-
-            Debug.Log(i);
-
-            if (i % 50 == 0)
-                yield return 0;
-
-            _lastBelt = previewBelt2 as Belt;
-        }
     }
 
     public void PutBuildingOnMap(BuildingBase building)
@@ -199,6 +148,10 @@ public class GameMap : MonoBehaviour
                     _lastMouseOverBuilding = building;
                     building.OnMouseEnter();
                 }
+
+                // 点击
+                if (PlayerInput.GetMouseClick(0))
+                    building.OnClick();
             }
             else
             {
