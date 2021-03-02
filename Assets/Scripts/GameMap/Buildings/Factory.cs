@@ -46,6 +46,8 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     /// <summary>
     /// 是否已经弹出所有物品
     /// </summary>
+    [HideInInspector]
+    [NonSerialized]
     public bool isAllItemPoped = true;
 
     /// <summary>
@@ -326,14 +328,18 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         return inputBuilding == null || building == null;
     }
 
-    public IBuildingCanOutputItem GetInputBuilding()
+    public IBuildingCanOutputItem[] GetInputBuildings()
     {
-        return inputBuilding;
+        if (inputBuilding == null)
+            return new IBuildingCanOutputItem[] { };
+        return new[] { inputBuilding };
     }
 
-    public IBuildingCanInputItem GetOutputBuilding()
+    public IBuildingCanInputItem[] GetOutputBuildings()
     {
-        return outputBuilding;
+        if (outputBuilding == null)
+            return new IBuildingCanInputItem[] { };
+        return new[] { outputBuilding };
     }
 
     public int GetCurrentRecipeId()

@@ -50,9 +50,11 @@ public class Storage : BuildingBase, IBuildingCanOutputItem
         return outputBuilding == null || building == null;
     }
 
-    public IBuildingCanInputItem GetOutputBuilding()
+    public IBuildingCanInputItem[] GetOutputBuildings()
     {
-        return outputBuilding;
+        if (outputBuilding == null)
+            return new IBuildingCanInputItem[] { };
+        return new[] { outputBuilding };
     }
 
     public ItemInfo TakeAnyOneItem()

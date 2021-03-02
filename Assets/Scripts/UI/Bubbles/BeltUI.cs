@@ -30,7 +30,7 @@ public class BeltUI : MonoBehaviour
 
         itemImage.Item = belt.cargo;
 
-        if (belt.GetInputBuilding() == null || belt.GetOutputBuilding() == null)
+        if (belt.GetInputBuildings().Length == 0 || belt.GetOutputBuildings().Length == 0)
             text.text = "<color=#ff0000>" + LangManager.Current.Belt_Warning_No_Connection + "</color>";
         else
             text.text = "<color=#07b807>" + LangManager.Current.Building_Everything_Fine + "</color>";

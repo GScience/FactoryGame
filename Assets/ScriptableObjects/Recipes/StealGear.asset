@@ -18,4 +18,4 @@ MonoBehaviour:
   output:
   - item: {fileID: 11400000, guid: e841b390fc6209c42bd5dce81d6f348a, type: 2}
     count: 1
-  time: 15
+  time: 4

@@ -25,5 +25,5 @@ public interface IBuildingCanOutputItem
     bool TrySetOutputTo(IBuildingCanInputItem building, Vector2Int outputPos);
     bool CanSetOutputTo(IBuildingCanInputItem building, Vector2Int outputPos);
 
-    IBuildingCanInputItem GetOutputBuilding();
+    IBuildingCanInputItem[] GetOutputBuildings();
 }

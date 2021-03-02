@@ -48,9 +48,11 @@ public class SellingBox : BuildingBase, IBuildingCanInputItem
         return inputBuilding == null || building == null;
     }
 
-    public IBuildingCanOutputItem GetInputBuilding()
+    public IBuildingCanOutputItem[] GetInputBuildings()
     {
-        return inputBuilding;
+        if (inputBuilding == null)
+            return new IBuildingCanOutputItem[] { };
+        return new[] { inputBuilding };
     }
 
     public bool TryPutOneItem(ItemInfo item)

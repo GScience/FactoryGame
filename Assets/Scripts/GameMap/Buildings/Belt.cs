@@ -119,8 +119,12 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 
     public ItemInfo TakeAnyOneItem()
     {
+        if (percentage < 1)
+            return null;
         var item = cargo;
         cargo = null;
+        percentage = 0;
+        cargoSpriteRenderer.sprite = null;
         return item;
     }
 
@@ -134,6 +138,10 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 
     public bool TryTakeOneItem(ItemInfo item)
     {
+        if (percentage < 1)
+            return false;
+        percentage = 0;
+        cargoSpriteRenderer.sprite = null;
         if (cargo == item)
         {
             cargo = null;
@@ -298,13 +306,17 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
         return inputBuilding == null || building == null;
     }
 
-    public IBuildingCanOutputItem GetInputBuilding()
+    public IBuildingCanOutputItem[] GetInputBuildings()
     {
-        return inputBuilding;
+        if (inputBuilding == null)
+            return new IBuildingCanOutputItem[] { };
+        return new[] { inputBuilding };
     }
 
-    public IBuildingCanInputItem GetOutputBuilding()
+    public IBuildingCanInputItem[] GetOutputBuildings()
     {
-        return outputBuilding;
+        if (outputBuilding == null)
+            return new IBuildingCanInputItem[] { };
+        return new[] { outputBuilding };
     }
 }

@@ -19,5 +19,5 @@ public interface IBuildingCanInputItem
     bool TrySetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos);
     bool CanSetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos);
 
-    IBuildingCanOutputItem GetInputBuilding();
+    IBuildingCanOutputItem[] GetInputBuildings();
 }

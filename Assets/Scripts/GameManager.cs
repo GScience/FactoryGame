@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public static InstanceHelper<GameManager> GlobalGameManager;
 
-    public int Money { get; private set; } = 5000;
+    public int Money { get; private set; } = 50000000;
     
     /// <summary>
     /// 总时间

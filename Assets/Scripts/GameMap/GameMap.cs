@@ -106,15 +106,17 @@ public class GameMap : MonoBehaviour
         // 修改连接到这个建筑的输出建筑的输出为null
         if (building is IBuildingCanInputItem inputBuilding)
         {
-            var inputFrom = inputBuilding.GetInputBuilding();
-            inputFrom?.TrySetOutputTo(null, pos);
+            var inputsFrom = inputBuilding.GetInputBuildings();
+            foreach (var inputFrom in inputsFrom)
+                inputFrom?.TrySetOutputTo(null, pos);
         }
 
         // 修改连接到这个建筑的输入建筑的输出为null
         if (building is IBuildingCanOutputItem outputBuilding)
         {
-            var outputTo = outputBuilding.GetOutputBuilding();
-            outputTo?.TrySetInputFrom(null, pos);
+            var outputsTo = outputBuilding.GetOutputBuildings();
+            foreach (var outputTo in outputsTo)
+                outputTo?.TrySetInputFrom(null, pos);
         }
 
         // 移除
