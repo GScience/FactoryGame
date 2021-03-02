@@ -294,6 +294,8 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
             return true;
         if (outputBuilding != null)
             return false;
+        if (!(building is Belt))
+            return true;
         var direction = GetRelevantPos(inputPos);
         if (direction.x == 1)
             return State == BeltState.Down2Right || State == BeltState.Up2Right || State == BeltState.Left2Right;
@@ -320,6 +322,8 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
             return true;
         if (inputBuilding != null)
             return false;
+        if (!(building is Belt))
+            return true;
         var direction = GetRelevantPos(inputPos);
         if (direction.x == 1)
             return State == BeltState.Right2Down || State == BeltState.Right2Up || State == BeltState.Right2Left;
