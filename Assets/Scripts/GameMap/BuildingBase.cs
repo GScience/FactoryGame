@@ -68,4 +68,9 @@ public abstract class BuildingBase : MonoBehaviour
     public virtual void ChangeToState(int offset)
     {
     }
+
+    public Vector2Int GetRelevantPos(Vector2Int pos)
+    {
+        return pos - _gridElement.CellPos;
+    }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 /// <summary>
 /// 可向外输出物品的建筑
@@ -20,4 +21,9 @@ public interface IBuildingCanOutputItem
     /// </summary>
     /// <returns>返回为null代表无物品</returns>
     ItemInfo TakeAnyOneItem();
+
+    bool TrySetOutputTo(IBuildingCanInputItem building, Vector2Int outputPos);
+    bool CanSetOutputTo(IBuildingCanInputItem building, Vector2Int outputPos);
+
+    IBuildingCanInputItem GetOutputBuilding();
 }

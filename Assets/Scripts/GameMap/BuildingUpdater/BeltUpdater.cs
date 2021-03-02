@@ -10,7 +10,7 @@ public class BeltUpdater : BeltUpdaterBase
 
     public override void OnCarryingItem(Belt building, float process)
     {
-        
+        building.UpdateAnimation();
     }
 
     public override bool TryFinishItemCarrying(Belt building)

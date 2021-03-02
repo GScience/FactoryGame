@@ -37,12 +37,17 @@ public class GameMap : MonoBehaviour
             foreach (var building in _buildings)
                 func(building, _updater);
         }
+
+        public void Remove(BuildingBase building)
+        {
+            _buildings.Remove(building);
+        }
     }
 
     /// <summary>
     /// 所有建筑
     /// </summary>
-    private List<BuildingBase> _buildings = new List<BuildingBase>();
+    private Dictionary<int, BuildingBase> _buildings = new Dictionary<int, BuildingBase>();
 
     /// <summary>
     /// 用来查找刷新组
@@ -87,6 +92,38 @@ public class GameMap : MonoBehaviour
         AddBuilding(building);
     }
 
+    public void DestroyBuilding(BuildingBase building)
+    {
+        var pos = building.GetComponent<GridElement>().CellPos;
+
+        // 修改连接到这个建筑的输出建筑的输出为null
+        if (building is IBuildingCanInputItem inputBuilding)
+        {
+            var inputFrom = inputBuilding.GetInputBuilding();
+            inputFrom?.TrySetOutputTo(null, pos);
+        }
+
+        // 修改连接到这个建筑的输入建筑的输出为null
+        if (building is IBuildingCanOutputItem outputBuilding)
+        {
+            var outputTo = outputBuilding.GetOutputBuilding();
+            outputTo?.TrySetInputFrom(null, pos);
+        }
+
+        // 移除
+        _buildings.Remove(building.id);
+        var gridElement = building.GetComponent<GridElement>();
+        var cellPos = gridElement.CellPos;
+        var size = gridElement.Size;
+        for (var x = 0; x < size.x; ++x)
+            for (var y = 0; y < size.y; ++y)
+                _buildingMap.Remove(cellPos + new Vector2Int(x, y));
+        var updater = building.UpdaterRef;
+        var updateGroup = _updaterGroups[updater.className];
+        updateGroup.Remove(building);
+        Destroy(building.gameObject);
+    }
+
     public BuildingBase CreateBuildingPreview(BuildingBase building)
     {
         var newBuilding = Instantiate(building, transform);
@@ -104,7 +141,7 @@ public class GameMap : MonoBehaviour
     {
         building.ExitPreviewMode();
         building.id = _buildings.Count;
-        _buildings.Add(building);
+        _buildings[_buildings.Count] = building;
         var updaterName = building.UpdaterRef.className;
 
         if (_updaterGroups.TryGetValue(updaterName, out var updaterGroup))

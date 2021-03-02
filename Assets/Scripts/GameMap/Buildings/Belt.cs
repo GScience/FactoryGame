@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// 传送带
 /// </summary>
-public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem, IBuildingCanOutputToOther
+public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 {
     public enum BeltState
     {
@@ -58,6 +58,11 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem,
     /// </summary>
     private bool _isVisible;
 
+    /// <summary>
+    /// 传送带移动动画
+    /// </summary>
+    public AnimationClip clip;
+
     public BeltState State
     {
         get => _state;
@@ -78,6 +83,11 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem,
     /// 输出建筑
     /// </summary>
     public IBuildingCanInputItem outputBuilding;
+
+    /// <summary>
+    /// 输入建筑
+    /// </summary>
+    public IBuildingCanOutputItem inputBuilding;
 
     public override void OnMouseEnter()
     {
@@ -132,7 +142,7 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem,
         return false;
     }
 
-    void Update()
+    public void UpdateAnimation()
     {
         if (!_isVisible)
             return;
@@ -143,10 +153,7 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem,
             return;
         }
         cargoSpriteRenderer.sprite = cargo.icon;
-        cargoSpriteRenderer.transform.localPosition =
-            Vector2.Lerp(new Vector2(1, 0.5f), new Vector2(0, 0.5f), percentage) 
-            - (Vector2)_renderer.bounds.size / 2 
-            - Vector2.up * cargoSpriteRenderer.size.y / 3;
+        clip.SampleAnimation(gameObject, percentage);
     }
 
     void OnBecameVisible()
@@ -265,8 +272,39 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem,
         }
     }
 
-    public void OutputTo(IBuildingCanInputItem building)
+    public bool TrySetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
     {
+        if (!CanSetOutputTo(building, inputPos))
+            return false;
         outputBuilding = building;
+        return true;
+    }
+
+    public bool CanSetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
+    {
+        return outputBuilding == null || building == null;
+    }
+
+    public bool TrySetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos)
+    {
+        if (!CanSetInputFrom(building, inputPos))
+            return false;
+        inputBuilding = building;
+        return true;
+    }
+
+    public bool CanSetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos)
+    {
+        return inputBuilding == null || building == null;
+    }
+
+    public IBuildingCanOutputItem GetInputBuilding()
+    {
+        return inputBuilding;
+    }
+
+    public IBuildingCanInputItem GetOutputBuilding()
+    {
+        return outputBuilding;
     }
 }

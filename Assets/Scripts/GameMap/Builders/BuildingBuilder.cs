@@ -125,7 +125,7 @@ public class BuildingBuilder : MonoBehaviour
             var guideBlock = Instantiate(buildingGuideBlock);
             _buildingGuidingBlocks.Add(guideBlock);
             guideBlock.transform.SetParent(transform);
-            guideBlock.transform.localPosition = new Vector3(x - gridElement.Size.x / 2, y - gridElement.Size.y / 2);
+            guideBlock.transform.localPosition = new Vector3(x - gridElement.Size.x / 2.0f + 0.5f, y - gridElement.Size.y / 2.0f + 0.5f);
         }
     }
 

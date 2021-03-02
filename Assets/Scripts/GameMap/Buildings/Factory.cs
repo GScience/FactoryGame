@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 /// 工厂
 /// 有配方和可以进行加工的建筑
 /// </summary>
-public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem, IBuildingCanOutputToOther
+public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 {
     /// <summary>
     /// 加工开始的时间
@@ -52,6 +52,11 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     /// 输出建筑
     /// </summary>
     public IBuildingCanInputItem outputBuilding;
+
+    /// <summary>
+    /// 输入建筑
+    /// </summary>
+    public IBuildingCanOutputItem inputBuilding;
 
     /// <summary>
     /// 是否能放物品
@@ -284,9 +289,46 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         
     }
 
-    public void OutputTo(IBuildingCanInputItem building)
+    public bool TrySetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
     {
+        if (!CanSetOutputTo(building, inputPos))
+            return false;
         outputBuilding = building;
+        return true;
+    }
+
+    public bool CanSetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
+    {
+        var relevantPos = GetRelevantPos(inputPos);
+        if (relevantPos.x != 3 || relevantPos.y != 1)
+            return false;
+        return outputBuilding == null || building == null;
+    }
+
+    public bool TrySetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos)
+    {
+        if (!CanSetInputFrom(building, inputPos))
+            return false;
+        inputBuilding = building;
+        return true;
+    }
+
+    public bool CanSetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos)
+    {
+        var relevantPos = GetRelevantPos(inputPos);
+        if (relevantPos.x != -1 || relevantPos.y != 1)
+            return false;
+        return inputBuilding == null || building == null;
+    }
+
+    public IBuildingCanOutputItem GetInputBuilding()
+    {
+        return inputBuilding;
+    }
+
+    public IBuildingCanInputItem GetOutputBuilding()
+    {
+        return outputBuilding;
     }
 
     public int GetCurrentRecipeId()

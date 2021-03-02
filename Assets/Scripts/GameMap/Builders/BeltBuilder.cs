@@ -34,7 +34,7 @@ public class BeltBuilder : MonoBehaviour
     /// <summary>
     /// 开始端连接的建筑
     /// </summary>
-    private IBuildingCanOutputToOther _startpointBuilding;
+    private IBuildingCanOutputItem _startpointBuilding;
 
     /// <summary>
     /// 是否选择了起始地点
@@ -135,6 +135,21 @@ public class BeltBuilder : MonoBehaviour
             _hasChosenStartPos = true;
     }
 
+    private bool ConnectBuilding(IBuildingCanOutputItem from, IBuildingCanInputItem to)
+    {
+        if (from == null || to == null)
+            return false;
+        Vector2Int fromPos = ((BuildingBase)from).GetComponent<GridElement>().CellPos;
+        Vector2Int toPos = ((BuildingBase)to).GetComponent<GridElement>().CellPos;
+
+        if (!from.CanSetOutputTo(to, toPos) || !to.CanSetInputFrom(from, fromPos))
+            return false;
+
+        from.TrySetOutputTo(to, toPos);
+        to.TrySetInputFrom(from, fromPos);
+
+        return true;
+    }
     // 刷新拖动
     private void UpdateDragging()
     {
@@ -185,15 +200,15 @@ public class BeltBuilder : MonoBehaviour
                     {
                         if (i == 0)
                         {
-                            var building = FindBuildingInDirection<IBuildingCanOutputToOther>(gridElement, dir);
-                            if (building == null)
+                            var building = FindBuildingInDirection<IBuildingCanOutputItem>(gridElement, dir);
+                            if (building == null || !building.CanSetOutputTo(belt, gridElement.CellPos))
                                 continue;
                             _startpointBuilding = building;
                         }
                         else
                         {
                             var building = FindBuildingInDirection<IBuildingCanInputItem>(gridElement, dir);
-                            if (building == null)
+                            if (building == null || !building.CanSetInputFrom(belt, gridElement.CellPos))
                                 continue;
                             findBuilding = building;
                         }
@@ -358,16 +373,15 @@ public class BeltBuilder : MonoBehaviour
             var belt = _previewsBelts[i].belt;
             gameMap.PutBuildingOnMap(belt);
 
-            if (i != _previewsBelts.Count - 1)
-                belt.outputBuilding = _previewsBelts[i + 1].belt;
-            else
-                belt.outputBuilding = _endpointBuilding;
-
             if (i == 0)
+                ConnectBuilding(_startpointBuilding, _previewsBelts[0].belt);
+            else
             {
-                // TODO 更通用的方法
-                _startpointBuilding?.OutputTo(_previewsBelts[0].belt);
+                if (i == _previewsBelts.Count - 1)
+                    ConnectBuilding(belt, _endpointBuilding);
+                ConnectBuilding(_previewsBelts[i - 1].belt, belt);
             }
+            
 
             Destroy(_previewsBelts[i].guideBlock.gameObject);
         }

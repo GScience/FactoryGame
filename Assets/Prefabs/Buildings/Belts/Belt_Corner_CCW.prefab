@@ -106,7 +106,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4703226855810847796}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6088226497128999201}
@@ -156,7 +156,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.64, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -278,6 +278,7 @@ MonoBehaviour:
     className: Belt
   cargoSpriteRenderer: {fileID: 5970620807820642022}
   beltType: 1
+  clip: {fileID: 7400000, guid: 7a472486302d09945b365ce0e2926587, type: 2}
 --- !u!1 &7667305759147493792
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 /// <summary>
 /// 仓库
 /// </summary>
-public class Storage : BuildingBase, IBuildingCanOutputItem, IBuildingCanOutputToOther
+public class Storage : BuildingBase, IBuildingCanOutputItem
 {
     public ItemInfo itemInfo;
 
@@ -33,9 +34,25 @@ public class Storage : BuildingBase, IBuildingCanOutputItem, IBuildingCanOutputT
         
     }
 
-    public void OutputTo(IBuildingCanInputItem building)
+    public bool TrySetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
     {
+        if (!CanSetOutputTo(building, inputPos))
+            return false;
         outputBuilding = building;
+        return true;
+    }
+
+    public bool CanSetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
+    {
+        var relevantPos = GetRelevantPos(inputPos);
+        if (relevantPos.x != 1 || relevantPos.y != -1)
+            return false;
+        return outputBuilding == null || building == null;
+    }
+
+    public IBuildingCanInputItem GetOutputBuilding()
+    {
+        return outputBuilding;
     }
 
     public ItemInfo TakeAnyOneItem()
