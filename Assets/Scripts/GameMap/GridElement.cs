@@ -32,6 +32,10 @@ public class GridElement : MonoBehaviour
     {
         get
         {
+#if UNITY_EDITOR
+            if (_grid == null)
+                return Vector2Int.zero;
+#endif
             var offset = new Vector3((Size.x - 1) * _grid.cellSize.x / 2, (Size.y - 1) * _grid.cellSize.y / 2, 0);
             return (Vector2Int)_grid.WorldToCell(transform.position - offset);
         }

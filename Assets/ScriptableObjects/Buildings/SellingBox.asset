@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bb47a277c0919a4d96a7dc460db5690, type: 3}
-  m_Name: Storage
+  m_Name: SellingBox
   m_EditorClassIdentifier: 
-  buildingName: "\u4ED3\u5E93"
-  buildingDescription: "\u6D4B\u8BD5\u7528\u7684\u65E0\u9650\u4ED3\u5E93"
-  cost: 1000
+  buildingName: "\u51FA\u8D27\u7BB1"
+  buildingDescription: "\u7528\u6765\u51FA\u552E\u8D2D\u4E70\u7684\u7269\u54C1"
+  cost: 2000
   people: 0
   icon: {fileID: 21300000, guid: f3f859ea77608e4428401d7db2f92e65, type: 3}

@@ -438,8 +438,18 @@ public class BeltBuilder : MonoBehaviour
 
         // 最后一个传送带还是预览
         var continueDragging = _endpointBuilding == null && _previewsBelts.Count > 1;
+        var buildCount = _previewsBelts.Count - (continueDragging ? 1 : 0);
 
-        for (var i = 0; i < _previewsBelts.Count - (continueDragging ? 1 : 0); ++i)
+        var cost = _straight.info.cost;
+        if (!GameManager.GlobalGameManager.Get().RequireMoney(cost * buildCount))
+        {
+            var msgBox = PopMenuLayer.GlobalPopMenuLayer.Get().Pop("SimpleMessageBox").GetComponent<SimpleMessageBox>();
+            msgBox.message = LangManager.Current.Money_Not_Enough.Replace("[BUILDING]", _straight.info.buildingName + " * " + buildCount);
+            return;
+        }
+
+
+        for (var i = 0; i < buildCount; ++i)
         {
             var belt = _previewsBelts[i].belt;
             gameMap.PutBuildingOnMap(belt);

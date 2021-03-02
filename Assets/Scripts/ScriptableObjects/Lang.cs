@@ -20,4 +20,9 @@ public class Lang : ScriptableObject
     /// 一切正常
     /// </summary>
     public string Building_Everything_Fine;
+
+    /// <summary>
+    /// 钱不够了
+    /// </summary>
+    public string Money_Not_Enough;
 }

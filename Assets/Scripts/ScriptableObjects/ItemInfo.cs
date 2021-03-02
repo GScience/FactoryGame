@@ -14,6 +14,7 @@ public class ItemInfo : ScriptableObject
     public string itemName;
     public int maxStackCount = 1;
     public Sprite icon;
+    public int basePrice;
 
     public void OnValidate()
     {
