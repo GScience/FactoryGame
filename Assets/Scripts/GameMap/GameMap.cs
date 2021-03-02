@@ -59,6 +59,13 @@ public class GameMap : MonoBehaviour
     /// </summary>
     private Dictionary<Vector2Int, BuildingBase> _buildingMap = new Dictionary<Vector2Int, BuildingBase>();
 
+    /// <summary>
+    /// 禁止点击地图上的建筑
+    /// </summary>
+    [HideInInspector]
+    [NonSerialized]
+    public bool disableClickWithMapElement = false;
+
     public static InstanceHelper<GameMap> GlobalMap;
 
     void Awake()
@@ -187,7 +194,7 @@ public class GameMap : MonoBehaviour
                 }
 
                 // 点击
-                if (PlayerInput.GetMouseClick(0))
+                if (!disableClickWithMapElement && PlayerInput.GetMouseClick(0))
                     building.OnClick();
             }
             else

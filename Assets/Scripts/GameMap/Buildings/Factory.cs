@@ -49,6 +49,11 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     public bool isAllItemPoped = true;
 
     /// <summary>
+    /// 机器是否被阻塞
+    /// </summary>
+    public bool IsStucked { get => !isAllItemPoped; }
+
+    /// <summary>
     /// 输出建筑
     /// </summary>
     public IBuildingCanInputItem outputBuilding;

@@ -24,6 +24,8 @@ public class BuildingDestroyer : MonoBehaviour
         gridRenderer.OnSelected();
         _isOpen = true;
         _onFinished = onFinished;
+
+        GameMap.GlobalMap.Get().disableClickWithMapElement = true;
     }
 
     private void Awake()
@@ -67,6 +69,10 @@ public class BuildingDestroyer : MonoBehaviour
         UpdateGuideBlock();
         _isOpen = false;
         _onFinished?.Invoke();
+
+        gridRenderer.OnUnselected();
+
+        GameMap.GlobalMap.Get().disableClickWithMapElement = false;
     }
 
     void UpdateGuideBlock()

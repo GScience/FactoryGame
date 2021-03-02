@@ -47,7 +47,7 @@ public abstract class FactoryUpdaterBase : IBuildingUpdater
             return;
 
         var deltaTime = Time.time - factory.processingStartTime;
-        if (deltaTime > factory.CurrentRecipe.time)
+        if (deltaTime > factory.CurrentRecipe.time && !factory.IsStucked)
             factory.FinishManufacturing();
         else
             OnProcessing(factory, deltaTime / factory.CurrentRecipe.time);

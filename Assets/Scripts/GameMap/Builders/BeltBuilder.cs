@@ -9,6 +9,20 @@ using UnityEngine.EventSystems;
 
 public class BeltBuilder : MonoBehaviour
 {
+    private Vector2Int[] _directions = new[] { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+    private class BuildingSearchResult<T> where T : class
+    {
+        public T building;
+        public Vector2Int dir;
+
+        public BuildingSearchResult(T b, Vector2Int d)
+        {
+            building = b;
+            dir = d;
+        }
+    }
+
     public static InstanceHelper<BeltBuilder> GlobalBuilder;
     public GridRenderer gridRenderer;
     public BuildingGuideBlock BuildingGuideBlock;
@@ -130,11 +144,22 @@ public class BeltBuilder : MonoBehaviour
 
         _lastCellPos = gridElement.CellPos;
 
+        // 获取输入建筑
+        var inputBuilding = SearchBuildingInDirections<IBuildingCanOutputItem>(beginBelt.belt, (building) => building.CanSetOutputTo(beginBelt.belt, gridElement.CellPos));
+        if (inputBuilding != null)
+            RefreshPreviewBeltState(-inputBuilding.dir, inputBuilding.dir, 0);
+
         // 如果玩家点击了则代表选择了
         if (PlayerInput.GetMouseClick(0))
             _hasChosenStartPos = true;
     }
 
+    /// <summary>
+    /// 连接两个建筑
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <returns></returns>
     private bool ConnectBuilding(IBuildingCanOutputItem from, IBuildingCanInputItem to)
     {
         if (from == null || to == null)
@@ -150,6 +175,59 @@ public class BeltBuilder : MonoBehaviour
 
         return true;
     }
+
+    /// <summary>
+    /// 刷新预览传送带
+    /// </summary>
+    /// <param name="inDirection"></param>
+    /// <param name="outDirection"></param>
+    /// <param name="beltIndex"></param>
+    void RefreshPreviewBeltState(Vector2Int inDirection, Vector2Int outDirection, int beltIndex)
+    {
+        // 获取传送带对应的类型
+        var beltType = CheckCornerBeltType(inDirection, outDirection);
+
+        if (beltType != _previewsBelts[beltIndex].belt.beltType)
+        {
+            // 创建传送带
+            Belt newBelt;
+            switch (beltType)
+            {
+                case Belt.BeltType.Straight:
+                    newBelt = GenerateBeltFromPrefab(_straight);
+                    break;
+                case Belt.BeltType.CornerCcw:
+                    newBelt = GenerateBeltFromPrefab(_ccw);
+                    break;
+                case Belt.BeltType.CornerCw:
+                    newBelt = GenerateBeltFromPrefab(_cw);
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException();
+            }
+
+            var pos = _previewsBelts[beltIndex].belt.transform.position;
+            Destroy(_previewsBelts[beltIndex].belt.gameObject);
+            newBelt.transform.position = pos;
+            _previewsBelts[beltIndex] = (newBelt, _previewsBelts[beltIndex].guideBlock);
+        }
+        _previewsBelts[beltIndex].belt.SetBeltDirection(inDirection);
+    }
+
+    private BuildingSearchResult<T> SearchBuildingInDirections<T>(Belt belt, Func<T, bool> check) where T : class
+    {
+        var gridElement = belt.GetComponent<GridElement>();
+
+        foreach (var dir in _directions)
+        {
+            var building = FindBuildingInDirection<T>(gridElement, dir);
+            if (building == null || !check(building))
+                continue;
+            return new BuildingSearchResult<T>(building, dir);
+        }
+        return null;
+    }
+
     // 刷新拖动
     private void UpdateDragging()
     {
@@ -178,7 +256,6 @@ public class BeltBuilder : MonoBehaviour
             while (length < _previewsBelts.Count && TryRemoveTopPreviewBelt()) { }
 
             // 计算传送带位置
-            var directions = new[] {Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right};
 
             for (var i = 0; i < _previewsBelts.Count; ++i)
             {
@@ -194,62 +271,55 @@ public class BeltBuilder : MonoBehaviour
                 // 首位两个传送带需要手动查找连接，可以是曲的，特殊处理
                 if (i == 0 || i == _previewsBelts.Count - 1)
                 {
-                    IBuildingCanInputItem findBuilding = null;
+                    needResetToStraightFoundBuilding = false;
 
-                    foreach (var dir in directions)
+                    BuildingSearchResult<IBuildingCanInputItem> outputBuilding = null;
+                    if (i == _previewsBelts.Count - 1)
                     {
-                        if (i == 0)
-                        {
-                            var building = FindBuildingInDirection<IBuildingCanOutputItem>(gridElement, dir);
-                            if (building == null || !building.CanSetOutputTo(belt, gridElement.CellPos))
-                                continue;
-                            _startpointBuilding = building;
-                        }
-                        else
-                        {
-                            var building = FindBuildingInDirection<IBuildingCanInputItem>(gridElement, dir);
-                            if (building == null || !building.CanSetInputFrom(belt, gridElement.CellPos))
-                                continue;
-                            findBuilding = building;
-                        }
-
-                        needResetToStraightFoundBuilding = false;
-
-                        var inDirection = i == 0 ? -dir : direction;
-                        var outDirection = i == 0 ? direction : dir;
-
-                        // 获取传送带对应的类型
-                        var beltType = CheckCornerBeltType(inDirection, outDirection);
-
-                        if (beltType == _previewsBelts[i].belt.beltType)
-                            continue;
-
-                        // 创建传送带
-                        Belt newBelt;
-                        switch (beltType)
-                        {
-                            case Belt.BeltType.Straight:
-                                newBelt = GenerateBeltFromPrefab(_straight);
-                                break;
-                            case Belt.BeltType.CornerCcw:
-                                newBelt = GenerateBeltFromPrefab(_ccw);
-                                break;
-                            case Belt.BeltType.CornerCw:
-                                newBelt = GenerateBeltFromPrefab(_cw);
-                                break;
-                            default:
-                                throw new InvalidEnumArgumentException();
-                        }
-
-                        var pos = _previewsBelts[i].belt.transform.position;
-                        Destroy(_previewsBelts[i].belt.gameObject);
-                        newBelt.transform.position = pos;
-                        _previewsBelts[i] = (newBelt, _previewsBelts[i].guideBlock);
-                        _previewsBelts[i].belt.SetBeltDirection(inDirection);
+                        outputBuilding = SearchBuildingInDirections<IBuildingCanInputItem>(belt, (building) => building.CanSetInputFrom(belt, gridElement.CellPos));
+                        _endpointBuilding = outputBuilding?.building;
                     }
 
-                    if (i != 0)
-                        _endpointBuilding = findBuilding;
+                    BuildingSearchResult<IBuildingCanOutputItem> inputBuilding = null;
+                    if (i == 0)
+                    {
+                        inputBuilding = SearchBuildingInDirections<IBuildingCanOutputItem>(belt, (building) => building.CanSetOutputTo(belt, gridElement.CellPos));
+                        _startpointBuilding = inputBuilding?.building;
+                    }
+
+                    var inDirection = -inputBuilding?.dir ?? direction;
+                    var outDirection = outputBuilding?.dir ?? direction;
+
+                    // 相加为零则表示传送带冲突了
+                    if (inDirection + outDirection == Vector2Int.zero && length == 1)
+                    {
+                        // 强制让没有约束的一方的方向等于另一方
+                        if (inputBuilding != null)
+                            _startpointBuilding = null;
+                        else if (outputBuilding != null)
+                            _endpointBuilding = null;
+                        else
+                        {
+                            // 奇怪的BUG，取消拖动
+                            OnDraggingCancelled();
+                            return;
+                        }
+                    }
+
+                    RefreshPreviewBeltState(inDirection, outDirection, i);
+
+                    // 如果一格传送带输入输出建筑都找到
+                    if (outputBuilding != null && inputBuilding != null)
+                    {
+                        if (length == 1)
+                            OnDraggingConfirm();
+                        else
+                        {
+                            // 奇怪的BUG，取消拖动
+                            OnDraggingCancelled();
+                            return;
+                        }
+                    }
                 }
 
                 // 其他位置全是直的
@@ -265,7 +335,8 @@ public class BeltBuilder : MonoBehaviour
                         _previewsBelts[i].belt.SetBeltDirection(direction);
                     }
                 }
-                else
+                // 如果长度不为1则设置连接方向
+                else if (length != 1)
                     _previewsBelts[i].belt.SetBeltDirection(direction);
 
                 var guideBlock = _previewsBelts[i].guideBlock;
@@ -373,16 +444,14 @@ public class BeltBuilder : MonoBehaviour
             var belt = _previewsBelts[i].belt;
             gameMap.PutBuildingOnMap(belt);
 
+            if (i == _previewsBelts.Count - 1)
+                ConnectBuilding(belt, _endpointBuilding);
+
             if (i == 0)
                 ConnectBuilding(_startpointBuilding, _previewsBelts[0].belt);
             else
-            {
-                if (i == _previewsBelts.Count - 1)
-                    ConnectBuilding(belt, _endpointBuilding);
                 ConnectBuilding(_previewsBelts[i - 1].belt, belt);
-            }
             
-
             Destroy(_previewsBelts[i].guideBlock.gameObject);
         }
 

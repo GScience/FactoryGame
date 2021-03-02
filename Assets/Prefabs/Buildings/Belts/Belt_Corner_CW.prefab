@@ -111,7 +111,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6088226497128999201}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!212 &7252013166792946671
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -174,7 +174,6 @@ GameObject:
   - component: {fileID: 6088226497128999206}
   - component: {fileID: 6088226497128999207}
   - component: {fileID: 6088226497128999200}
-  - component: {fileID: 2453655788332688969}
   m_Layer: 0
   m_Name: Belt_Corner_CW
   m_TagString: Untagged
@@ -280,22 +279,6 @@ MonoBehaviour:
   cargoSpriteRenderer: {fileID: 7252013166792946671}
   beltType: 2
   clip: {fileID: 7400000, guid: a263886b6f78a754c8b8be3fd515f272, type: 2}
---- !u!111 &2453655788332688969
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6088226497128999202}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: a263886b6f78a754c8b8be3fd515f272, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: a263886b6f78a754c8b8be3fd515f272, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &7667305759147493792
 GameObject:
   m_ObjectHideFlags: 0
