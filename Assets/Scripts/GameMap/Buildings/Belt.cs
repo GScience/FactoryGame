@@ -290,7 +290,20 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 
     public bool CanSetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
     {
-        return outputBuilding == null || building == null;
+        if (building == null)
+            return true;
+        if (outputBuilding != null)
+            return false;
+        var direction = GetRelevantPos(inputPos);
+        if (direction.x == 1)
+            return State == BeltState.Down2Right || State == BeltState.Up2Right || State == BeltState.Left2Right;
+        if (direction.x == -1)
+            return State == BeltState.Down2Left || State == BeltState.Up2Left || State == BeltState.Right2Left;
+        if (direction.y == 1)
+            return State == BeltState.Down2Up || State == BeltState.Left2Up || State == BeltState.Right2Up;
+        if (direction.y == -1)
+            return State == BeltState.Left2Down || State == BeltState.Right2Down || State == BeltState.Up2Down;
+        return false;
     }
 
     public bool TrySetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos)
@@ -303,7 +316,20 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 
     public bool CanSetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos)
     {
-        return inputBuilding == null || building == null;
+        if (building == null)
+            return true;
+        if (inputBuilding != null)
+            return false;
+        var direction = GetRelevantPos(inputPos);
+        if (direction.x == 1)
+            return State == BeltState.Right2Down || State == BeltState.Right2Up || State == BeltState.Right2Left;
+        if (direction.x == -1)
+            return State == BeltState.Left2Down || State == BeltState.Left2Up || State == BeltState.Left2Right;
+        if (direction.y == 1)
+            return State == BeltState.Up2Down || State == BeltState.Up2Left || State == BeltState.Up2Right;
+        if (direction.y == -1)
+            return State == BeltState.Down2Left || State == BeltState.Down2Right || State == BeltState.Down2Up;
+        return false;
     }
 
     public IBuildingCanOutputItem[] GetInputBuildings()

@@ -309,7 +309,7 @@ public class BeltBuilder : MonoBehaviour
                     RefreshPreviewBeltState(inDirection, outDirection, i);
 
                     // 如果一格传送带输入输出建筑都找到
-                    if (outputBuilding != null && inputBuilding != null)
+                    if (outputBuilding != null && inputBuilding != null && outputBuilding.building != inputBuilding.building)
                     {
                         if (length == 1)
                             OnDraggingConfirm();

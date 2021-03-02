@@ -10,8 +10,14 @@ public class GameManager : MonoBehaviour
 {
     public static InstanceHelper<GameManager> GlobalGameManager;
 
-    public int Money { get; private set; } = 50000000;
-    
+    public int Money { get; private set; } =
+#if UNITY_EDITOR
+        100000000
+#else
+        5500
+#endif
+        ;
+
     /// <summary>
     /// 总时间
     /// </summary>
