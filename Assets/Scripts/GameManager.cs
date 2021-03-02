@@ -42,15 +42,20 @@ public class GameManager : MonoBehaviour
 
     public bool RequireMoney(int money)
     {
-        if (Money < money)
+        if (!HasEnoughMoney(money))
             return false;
         Money -= money;
         return true;
     }
 
+    public bool HasEnoughMoney(int money)
+    {
+        return Money >= money;
+    }
+
     public bool TrySellItem(ItemInfo info)
     {
-        Money += info.basePrice;
+        Money += (int)(info.basePrice * 0.8f);
         return true;
     }
 

@@ -29,7 +29,9 @@ public class StorageUpdater : IBuildingUpdater
     public void OnUpdate(BuildingBase building)
     {
         var storage = building as Storage;
-        if (storage.outputBuilding != null)
-            storage.outputBuilding.TryPutOneItem(storage.itemInfo);
+        if (storage.outputBuilding != null &&
+            storage.CanTakeItem() &&
+            storage.outputBuilding.TryPutOneItem(storage.itemInfo))
+            storage.TryTakeOneItem(storage.itemInfo);
     }
 }

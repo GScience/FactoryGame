@@ -57,12 +57,27 @@ public class Storage : BuildingBase, IBuildingCanOutputItem
 
     public ItemInfo TakeAnyOneItem()
     {
-        return itemInfo;
+        if (CanTakeItem())
+        {
+            GameManager.GlobalGameManager.Get().RequireMoney(itemInfo.basePrice);
+            return itemInfo;
+        }
+        return null;
     }
 
     public bool TryTakeOneItem(ItemInfo item)
     {
-        return itemInfo == item;
+        if (CanTakeItem())
+        {
+            GameManager.GlobalGameManager.Get().RequireMoney(itemInfo.basePrice);
+            return itemInfo == item;
+        }
+        return false;
+    }
+
+    public bool CanTakeItem()
+    {
+        return GameManager.GlobalGameManager.Get().HasEnoughMoney(itemInfo.basePrice);
     }
 }
 
