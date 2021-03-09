@@ -25,6 +25,11 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         GlobalGameManager = new InstanceHelper<GameManager>(this);
         DontDestroyOnLoad(this);
+
+#if UNITY_EDITOR
+        if (SceneManager.GetActiveScene().name == "GameScene")
+            StartGame();
+#endif
     }
 
     private void Update()
@@ -42,7 +47,10 @@ public class GameManager : MonoBehaviour
         IsPlaying = true;
         _timeSystem = new TimeSystem();
         _moneySystem = new MoneySystem();
-        SceneManager.LoadScene("GameScene");
+#if UNITY_EDITOR
+        if (SceneManager.GetActiveScene().name != "GameScene")
+#endif
+            SceneManager.LoadScene("GameScene");
     }
 
     public void ExitGame()
