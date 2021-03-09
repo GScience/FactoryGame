@@ -54,9 +54,6 @@ public static class BuildHelper
         var outputPath = GetOutputPath();
         var outputName = GetOutputName();
 
-        // build ab
-        BuildAssetBundles(target, outputPath + "/" + outputName + "_Data/AssetBundles/");
-
         // build player
         BuildPlayerOptions options = new BuildPlayerOptions();
         options.scenes = (from scene in EditorBuildSettings.scenes select scene.path).ToArray();
@@ -67,6 +64,12 @@ public static class BuildHelper
 
         if (playerBuildReport.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
             throw new Exception("Failed to build player!" + playerBuildReport.summary);
+
+        // build ab
+        var abDir = outputPath + "/" + outputName + "_Data/AssetBundles/";
+        if (!Directory.Exists(abDir))
+            Directory.CreateDirectory(abDir);
+        BuildAssetBundles(target, abDir);
     }
 
     public static void BuildWindows()
