@@ -130,6 +130,12 @@ public class GameMap : MonoBehaviour
         var updater = building.UpdaterRef;
         var updateGroup = _updaterGroups[updater.className];
         updateGroup.Remove(building);
+
+        if (building == _lastMouseOverBuilding)
+        {
+            _lastMouseOverBuilding.OnMouseLeave();
+            _lastMouseOverBuilding = null;
+        }
         Destroy(building.gameObject);
     }
 
