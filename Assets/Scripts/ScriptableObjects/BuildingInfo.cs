@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +12,7 @@ using UnityEngine;
 /// 建筑信息
 /// </summary>
 [CreateAssetMenu(fileName="new Building", menuName="Game/Building")]
-public class BuildingInfo : ScriptableObject
+public class BuildingInfo : NamedScriptableObject
 {
     public string buildingName;
     [TextArea(20, 50)]

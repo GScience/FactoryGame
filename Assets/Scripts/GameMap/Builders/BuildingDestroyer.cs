@@ -77,7 +77,9 @@ public class BuildingDestroyer : MonoBehaviour
 
     void UpdateGuideBlock()
     {
-        var gridElement = _selectedBuilding?.GetComponent<GridElement>();
+        GridElement gridElement = null;
+        if (_selectedBuilding != null)
+            gridElement = _selectedBuilding.GetComponent<GridElement>();
         var size = Vector2Int.zero;
         if (gridElement != null)
             size = gridElement.Size;

@@ -9,7 +9,7 @@ using UnityEngine;
 /// 物品定义
 /// </summary>
 [CreateAssetMenu(fileName="New Item", menuName = "Game/Item")]
-public class ItemInfo : ScriptableObject
+public class ItemInfo : NamedScriptableObject
 {
     public string itemName;
     public int maxStackCount = 1;

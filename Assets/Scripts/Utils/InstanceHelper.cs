@@ -1,16 +1,21 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 public class InstanceHelper<T> where T : UnityEngine.Object
 {
     private static T _instance;
 
-    public T Get()
+    public static T GetGlobal()
     {
         if (_instance == null)
             _instance = UnityEngine.Object.FindObjectOfType<T>();
 
         return _instance;
+    }
+
+    public T Get()
+    {
+        return GetGlobal();
     }
 
     public void Set(T obj)

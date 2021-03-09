@@ -58,3 +58,5 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+#ignore asset bundles built in the editor for test
+/Assets/AssetBundles/

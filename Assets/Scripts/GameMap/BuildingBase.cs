@@ -30,6 +30,12 @@ public abstract class BuildingBase : MonoBehaviour
     protected Renderer _renderer;
 
     /// <summary>
+    /// 初始建筑的hash值
+    /// 用来在资源管理器中查找资源
+    /// </summary>
+    public int NameHash { get; set; }
+
+    /// <summary>
     /// 是否在预览模式
     /// </summary>
     public bool IsPreviewMode { get; private set; }

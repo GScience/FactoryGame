@@ -136,6 +136,7 @@ public class GameMap : MonoBehaviour
     public BuildingBase CreateBuildingPreview(BuildingBase building)
     {
         var newBuilding = Instantiate(building, transform);
+        newBuilding.gameObject.name = building.gameObject.name;
         newBuilding.EnterPreviewMode();
         return newBuilding;
     }
@@ -146,6 +147,7 @@ public class GameMap : MonoBehaviour
             return building;
         return null;
     }
+
     private void AddBuilding(BuildingBase building)
     {
         building.ExitPreviewMode();
@@ -201,13 +203,15 @@ public class GameMap : MonoBehaviour
             }
             else
             {
-                _lastMouseOverBuilding?.OnMouseLeave();
+                if (_lastMouseOverBuilding != null)
+                    _lastMouseOverBuilding.OnMouseLeave();
                 _lastMouseOverBuilding = null;
             }
         }
         else
         {
-            _lastMouseOverBuilding?.OnMouseLeave();
+            if (_lastMouseOverBuilding != null)
+                _lastMouseOverBuilding.OnMouseLeave();
             _lastMouseOverBuilding = null;
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ using UnityEngine;
 /// 合成配方
 /// </summary>
 [CreateAssetMenu(fileName = "New Recipe", menuName = "Game/Recipe")]
-public class RecipeInfo : ScriptableObject
+public class RecipeInfo : NamedScriptableObject
 {
     /// <summary>
     /// 合成需求
