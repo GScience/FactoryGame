@@ -441,7 +441,7 @@ public class BeltBuilder : MonoBehaviour
         var buildCount = _previewsBelts.Count - (continueDragging ? 1 : 0);
 
         var cost = _straight.info.cost;
-        if (!GameManager.GlobalGameManager.Get().RequireMoney(cost * buildCount))
+        if (!GameManager.MoneySystem.RequireMoney(cost * buildCount))
         {
             var msgBox = PopMenuLayer.GlobalPopMenuLayer.Get().Pop("SimpleMessageBox").GetComponent<SimpleMessageBox>();
             msgBox.message = LangManager.Current.Money_Not_Enough.Replace("[BUILDING]", _straight.info.buildingName + " * " + buildCount);

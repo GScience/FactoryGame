@@ -157,7 +157,7 @@ public class BuildingBuilder : MonoBehaviour
         if (_pickedBuilding == null)
             return;
         var cost = _pickedBuilding.info.cost;
-        if (!GameManager.GlobalGameManager.Get().RequireMoney(cost))
+        if (!GameManager.MoneySystem.RequireMoney(cost))
         {
             var msgBox = PopMenuLayer.GlobalPopMenuLayer.Get().Pop("SimpleMessageBox").GetComponent<SimpleMessageBox>();
             msgBox.message = LangManager.Current.Money_Not_Enough.Replace("[BUILDING]", _pickedBuilding.info.buildingName);

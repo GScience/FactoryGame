@@ -61,7 +61,7 @@ public class Storage : BuildingBase, IBuildingCanOutputItem
     {
         if (CanTakeItem())
         {
-            GameManager.GlobalGameManager.Get().RequireMoney(itemInfo.basePrice);
+            GameManager.MoneySystem.RequireMoney(itemInfo.basePrice);
             return itemInfo;
         }
         return null;
@@ -71,7 +71,7 @@ public class Storage : BuildingBase, IBuildingCanOutputItem
     {
         if (CanTakeItem())
         {
-            GameManager.GlobalGameManager.Get().RequireMoney(itemInfo.basePrice);
+            GameManager.MoneySystem.RequireMoney(itemInfo.basePrice);
             return itemInfo == item;
         }
         return false;
@@ -79,7 +79,7 @@ public class Storage : BuildingBase, IBuildingCanOutputItem
 
     public bool CanTakeItem()
     {
-        return GameManager.GlobalGameManager.Get().HasEnoughMoney(itemInfo.basePrice);
+        return GameManager.MoneySystem.HasEnoughMoney(itemInfo.basePrice);
     }
 }
 

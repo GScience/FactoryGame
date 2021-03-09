@@ -5,71 +5,50 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static InstanceHelper<GameManager> GlobalGameManager;
 
-    public int Money { get; private set; } =
-#if UNITY_EDITOR
-        100000000
-#else
-        5500
-#endif
-        ;
+    private TimeSystem _timeSystem;
+    private MoneySystem _moneySystem;
 
-    /// <summary>
-    /// 总时间
-    /// </summary>
-    public float TotalTime { get; private set; } = 0;
+    public static TimeSystem TimeSystem => GlobalGameManager.Get()._timeSystem;
+    public static MoneySystem MoneySystem => GlobalGameManager.Get()._moneySystem;
 
-    /// <summary>
-    /// 周期
-    /// </summary>
-    public int Week { get => ((int)TotalTime / 168); }
-
-    /// <summary>
-    /// 天
-    /// </summary>
-    public int Day { get => ((int)TotalTime / 24) - Week * 7; }
-
-    /// <summary>
-    /// 小时
-    /// </summary>
-    public int Hour { get => ((int)TotalTime) - Week * 168 - Day * 24; }
-
-    public TextMeshProUGUI moneyText;
-    public TextMeshProUGUI timeText;
+    public bool IsPlaying { get; private set; }
 
     private void Awake()
     {
+        if (InstanceHelper<GameManager>.GetGlobal() != this)
+            Destroy(gameObject);
         GlobalGameManager = new InstanceHelper<GameManager>(this);
-    }
-
-    public bool RequireMoney(int money)
-    {
-        if (!HasEnoughMoney(money))
-            return false;
-        Money -= money;
-        return true;
-    }
-
-    public bool HasEnoughMoney(int money)
-    {
-        return Money >= money;
-    }
-
-    public bool TrySellItem(ItemInfo info)
-    {
-        Money += (int)(info.basePrice * 0.8f);
-        return true;
+        DontDestroyOnLoad(this);
     }
 
     private void Update()
     {
-        moneyText.text = Money.ToString();
-        timeText.text = Week + "周 " + Day + "天 " + Hour + "小时";
+        if (!IsPlaying)
+            return;
+        _timeSystem.Update();
+        _moneySystem.Update();
+    }
 
-        TotalTime += Time.deltaTime * 1f;
+    public void StartGame()
+    {
+        if (IsPlaying)
+            return;
+        IsPlaying = true;
+        _timeSystem = new TimeSystem();
+        _moneySystem = new MoneySystem();
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void ExitGame()
+    {
+        IsPlaying = false;
+        _timeSystem = null;
+        _moneySystem = null;
     }
 }

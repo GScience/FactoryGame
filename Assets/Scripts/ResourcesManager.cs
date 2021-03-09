@@ -37,7 +37,7 @@ public class ResourcesManager : MonoBehaviour
         while (_current.MoveNext()) ;
     }
 
-    private IEnumerator InitAsync()
+    public IEnumerator InitAsync()
     {
         if (_buildingDatabase != null)
             yield break;

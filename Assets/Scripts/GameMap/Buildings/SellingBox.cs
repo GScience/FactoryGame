@@ -57,7 +57,7 @@ public class SellingBox : BuildingBase, IBuildingCanInputItem
 
     public bool TryPutOneItem(ItemInfo item)
     {
-        return GameManager.GlobalGameManager.Get().TrySellItem(item);
+        return GameManager.MoneySystem.TrySellItem(item);
     }
 }
 
