@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,12 +38,28 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
     /// </summary>
     private int _lastOutputPort;
 
+    /// <summary>
+    /// 传输百分比
+    /// </summary>
+    [NonSerialized]
+    [HideInInspector]
+    public float percent;
+
     public void BeginDistributeItem()
     {
         if (_itemCache == null)
             UpdateInput();
         else
-            UpdateOutput();
+        {
+            if (percent < 1)
+                percent += Time.deltaTime;
+            else
+            {
+                UpdateOutput();
+                if (_itemCache == null)
+                    percent = 0;
+            }
+        }
     }
 
     public PortType GetPortType(Vector2Int direction)
@@ -208,10 +225,13 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
         {
             var pos = GetComponent<GridElement>().CellPos;
 
-            if (_portsType[id] == PortType.In)
-                (_portsObj[id] as IBuildingCanOutputItem).TrySetOutputTo(null, pos);
-            else
-                (_portsObj[id] as IBuildingCanInputItem).TrySetInputFrom(null, pos);
+            if (_portsObj[id] != null)
+            {
+                if (_portsType[id] == PortType.In)
+                    (_portsObj[id] as IBuildingCanOutputItem).TrySetOutputTo(null, pos);
+                else
+                    (_portsObj[id] as IBuildingCanInputItem).TrySetInputFrom(null, pos);
+            }
         }
         _portsObj[id] = null;
         _portsType[id] = PortType.Disabled;
@@ -223,7 +243,7 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
         var id = DirectionToPortID(direction);
         if (building == null)
         {
-            DisablePort(id);
+            _portsObj[id] = null;
             return true;
         }
         if (_portsType[id] != PortType.In)
@@ -241,7 +261,7 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
         var id = DirectionToPortID(direction);
         if (building == null)
         {
-            DisablePort(id);
+            _portsObj[id] = null;
             return true;
         }
         if (_portsType[id] != PortType.Out)
@@ -256,5 +276,35 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
     public bool TryTakeOneItem(ItemInfo item)
     {
         return false;
+    }
+
+    public override void Load(BinaryReader reader)
+    {
+        base.Load(reader);
+
+        for (var i = 0; i < 4; ++i)
+        {
+            _portsType[i] = (PortType)reader.ReadChar();
+            _portsObj[i] = SaveHelper.ReadBuilding(reader);
+        }
+        _itemCache = SaveHelper.ReadScriptable<ItemInfo>(reader);
+        percent = reader.ReadSingle();
+        _lastInputPort = reader.ReadChar();
+        _lastOutputPort = reader.ReadChar();
+    }
+
+    public override void Save(BinaryWriter writer)
+    {
+        base.Save(writer);
+
+        for (var i = 0; i < 4; ++i)
+        {
+            writer.Write((char)_portsType[i]);
+            SaveHelper.Write(writer, _portsObj[i] as BuildingBase);
+        }
+        SaveHelper.Write(writer, _itemCache);
+        writer.Write(percent);
+        writer.Write((char)_lastInputPort);
+        writer.Write((char)_lastOutputPort);
     }
 }

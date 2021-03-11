@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,6 +59,16 @@ public class SellingBox : BuildingBase, IBuildingCanInputItem
     public bool TryPutOneItem(ItemInfo item)
     {
         return GameManager.MoneySystem.TrySellItem(item);
+    }
+
+    public override void Save(BinaryWriter writer)
+    {
+        SaveHelper.Write(writer, inputBuilding);
+    }
+
+    public override void Load(BinaryReader reader)
+    {
+        inputBuilding = SaveHelper.ReadBuildingCanOutput(reader);
     }
 }
 

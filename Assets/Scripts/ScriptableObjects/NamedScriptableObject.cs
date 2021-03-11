@@ -15,4 +15,9 @@ public class NamedScriptableObject : ScriptableObject
     /// 用来在资源管理器中查找资源
     /// </summary>
     public int NameHash { get; set; }
+
+    public static T Get<T>(int nameHash) where T : NamedScriptableObject
+    {
+        return ResourcesManager.GetScriptable(nameHash) as T;
+    }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -80,6 +81,18 @@ public class Storage : BuildingBase, IBuildingCanOutputItem
     public bool CanTakeItem()
     {
         return GameManager.MoneySystem.HasEnoughMoney(itemInfo.basePrice);
+    }
+
+    public override void Save(BinaryWriter writer)
+    {
+        SaveHelper.Write(writer, itemInfo);
+        SaveHelper.Write(writer, outputBuilding);
+    }
+
+    public override void Load(BinaryReader reader)
+    {
+        itemInfo = SaveHelper.ReadScriptable<ItemInfo>(reader);
+        outputBuilding = SaveHelper.ReadBuildingCanInput(reader);
     }
 }
 

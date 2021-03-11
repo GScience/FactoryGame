@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -78,5 +79,21 @@ public abstract class BuildingBase : MonoBehaviour
     public Vector2Int GetRelevantPos(Vector2Int pos)
     {
         return pos - _gridElement.CellPos;
+    }
+
+    /// <summary>
+    /// 保存
+    /// </summary>
+    /// <param name="writer"></param>
+    public virtual void Save(BinaryWriter writer)
+    {
+    }
+
+    /// <summary>
+    /// 读取
+    /// </summary>
+    /// <param name="reader"></param>
+    public virtual void Load(BinaryReader reader)
+    {
     }
 }

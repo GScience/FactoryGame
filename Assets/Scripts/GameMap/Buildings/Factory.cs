@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +14,11 @@ using UnityEngine.EventSystems;
 public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 {
     /// <summary>
-    /// 加工开始的时间
+    /// 加工经过的总时间
     /// </summary>
     [HideInInspector]
     [NonSerialized]
-    public float processingStartTime;
+    public float processingTime;
 
     /// <summary>
     /// 当前所选配方
@@ -39,8 +40,8 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     /// </summary>
     public bool IsManufacturing
     {
-        get => processingStartTime >= 0;
-        private set => processingStartTime = value ? Time.time : -1;
+        get => processingTime >= 0;
+        private set => processingTime = value ? 0 : -1;
     }
 
     /// <summary>
@@ -159,8 +160,6 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     /// </summary>
     public void FinishManufacturing()
     {
-        Debug.Log("Factory " + id + " finished");
-
         // 清空物品
         foreach (var item in _inputItemCache)
             item.count = 0;
@@ -262,7 +261,7 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         if (!IsManufacturing || CurrentRecipe == null)
             return 0;
 
-        return (Time.time - processingStartTime) / CurrentRecipe.time;
+        return processingTime / CurrentRecipe.time;
     }
 
     private Bubble _popedUI;
@@ -354,5 +353,52 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
             if (recipes[i] == CurrentRecipe)
                 return i;
         return -1;
+    }
+
+    public override void Save(BinaryWriter writer)
+    {
+        // 配方
+        SaveHelper.Write(writer, CurrentRecipe);
+
+        // 缓存
+        writer.Write(_inputItemCache.Length);
+        foreach (var itemStack in _inputItemCache)
+            SaveHelper.Write(writer, itemStack);
+
+        writer.Write(_outputItemCache.Length);
+        foreach (var itemStack in _outputItemCache)
+            SaveHelper.Write(writer, itemStack);
+
+        // 合成进度
+        writer.Write(processingTime);
+
+        //输入输出
+        SaveHelper.Write(writer, inputBuilding);
+        SaveHelper.Write(writer, outputBuilding);
+    }
+
+    public override void Load(BinaryReader reader)
+    {
+        CurrentRecipe = SaveHelper.ReadScriptable<RecipeInfo>(reader);
+
+        var inputCacheCount = reader.ReadInt32();
+        _inputItemCache = new ItemStack[inputCacheCount];
+        for (var i = 0; i < inputCacheCount; ++i)
+            _inputItemCache[i] = SaveHelper.ReadItemStack(reader);
+
+        var outputCacheCount = reader.ReadInt32();
+        _outputItemCache = new ItemStack[outputCacheCount];
+        for (var i = 0; i < inputCacheCount; ++i)
+        {
+            _outputItemCache[i] = SaveHelper.ReadItemStack(reader);
+
+            if (_outputItemCache[i].count > 0)
+                isAllItemPoped = false;
+        }
+
+        processingTime = reader.ReadSingle();
+
+        inputBuilding = SaveHelper.ReadBuildingCanOutput(reader);
+        outputBuilding = SaveHelper.ReadBuildingCanInput(reader);
     }
 }

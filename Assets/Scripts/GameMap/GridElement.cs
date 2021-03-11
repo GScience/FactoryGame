@@ -56,10 +56,7 @@ public class GridElement : MonoBehaviour
         if (_grid == null)
             _grid = GetComponentInParent<Grid>();
         _renderer = GetComponent<Renderer>();
-    }
 
-    void Start()
-    {
         OnSizeChanged();
     }
 

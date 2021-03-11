@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,5 +40,15 @@ public class TimeSystem : ISystem
     public override string ToString()
     {
         return Week + "周 " + Day + "天 " + Hour + "小时";
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(TotalTime);
+    }
+
+    public void Load(BinaryReader reader)
+    {
+        TotalTime = reader.ReadSingle();
     }
 }

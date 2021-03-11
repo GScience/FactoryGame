@@ -23,7 +23,7 @@ public class ResourcesManager : MonoBehaviour
 
     private static Dictionary<int, BuildingBase> _buildingDatabase;
     private static List<BuildingCardBase> _cardDatabase;
-    private static Dictionary<int, ScriptableObject> _scriptableDatabase;
+    private static Dictionary<int, NamedScriptableObject> _scriptableDatabase;
 
     private LoadResourcesMenu _loadResourceMenu;
     private IEnumerator _current;
@@ -47,7 +47,7 @@ public class ResourcesManager : MonoBehaviour
 
         _buildingDatabase = new Dictionary<int, BuildingBase>();
         _cardDatabase = new List<BuildingCardBase>();
-        _scriptableDatabase = new Dictionary<int, ScriptableObject>();
+        _scriptableDatabase = new Dictionary<int, NamedScriptableObject>();
 
         foreach (var abName in _abNames)
         {
@@ -149,11 +149,23 @@ public class ResourcesManager : MonoBehaviour
     public static BuildingBase GetBuilding(int keyHash)
     {
         CheckInit();
+        if (keyHash == 0)
+            return null;
         if (_buildingDatabase.TryGetValue(keyHash, out var result))
             return result;
         return null;
     }
 
+    public static NamedScriptableObject GetScriptable(int keyHash)
+    {
+        CheckInit();
+        if (keyHash == 0)
+            return null;
+        if (_scriptableDatabase.TryGetValue(keyHash, out var result))
+            return result;
+        return null;
+    }
+ 
     public void Start()
     {
         _current = InitAsync();

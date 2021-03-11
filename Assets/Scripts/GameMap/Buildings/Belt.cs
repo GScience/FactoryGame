@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -348,5 +349,29 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
         if (outputBuilding == null)
             return new IBuildingCanInputItem[] { };
         return new[] { outputBuilding };
+    }
+
+    public override void Load(BinaryReader reader)
+    {
+        base.Load(reader);
+        State = (BeltState)reader.ReadChar();
+        cargo = SaveHelper.ReadScriptable<ItemInfo>(reader);
+        percentage = reader.ReadSingle();
+
+        // 输入输出建筑
+        inputBuilding = SaveHelper.ReadBuildingCanOutput(reader);
+        outputBuilding = SaveHelper.ReadBuildingCanInput(reader); 
+    }
+
+    public override void Save(BinaryWriter writer)
+    {
+        base.Save(writer);
+        writer.Write((char)State);
+        SaveHelper.Write(writer, cargo);
+        writer.Write(percentage);
+
+        // 输入输出建筑
+        SaveHelper.Write(writer, inputBuilding);
+        SaveHelper.Write(writer, outputBuilding);
     }
 }

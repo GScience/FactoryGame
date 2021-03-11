@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -90,15 +91,10 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    public void PutBuildingOnMap(BuildingBase building)
-    {
-#if UNITY_EDITOR
-        if (!building.IsPreviewMode)
-            Debug.LogError("Only can put preview building on map");
-#endif
-        AddBuilding(building);
-    }
-
+    /// <summary>
+    /// 删除建筑
+    /// </summary>
+    /// <param name="building"></param>
     public void DestroyBuilding(BuildingBase building)
     {
         var pos = building.GetComponent<GridElement>().CellPos;
@@ -139,9 +135,22 @@ public class GameMap : MonoBehaviour
         Destroy(building.gameObject);
     }
 
+    /// <summary>
+    /// 通过ID获取建筑
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public BuildingBase GetBuildingById(int id)
+    {
+        if (_buildings.TryGetValue(id, out var building))
+            return building;
+        return null;
+    }
+
     public BuildingBase CreateBuildingPreview(BuildingBase building)
     {
         var newBuilding = Instantiate(building, transform);
+        newBuilding.NameHash = building.NameHash;
         newBuilding.gameObject.name = building.gameObject.name;
         newBuilding.EnterPreviewMode();
         return newBuilding;
@@ -154,11 +163,21 @@ public class GameMap : MonoBehaviour
         return null;
     }
 
-    private void AddBuilding(BuildingBase building)
+    public void PutBuildingOnMap(BuildingBase building, int id = -1)
     {
+#if UNITY_EDITOR
+        if (!building.IsPreviewMode)
+        {
+            Debug.LogError("Only can put preview building on map");
+            return;
+        }
+#endif
+        if (id < 0)
+            id = _buildings.Count;
+
         building.ExitPreviewMode();
-        building.id = _buildings.Count;
-        _buildings[_buildings.Count] = building;
+        building.id = id;
+        _buildings[id] = building;
         var updaterName = building.UpdaterRef.className;
 
         if (_updaterGroups.TryGetValue(updaterName, out var updaterGroup))
@@ -249,4 +268,71 @@ public class GameMap : MonoBehaviour
         return _updaters;
     }
 #endif
+
+    /// <summary>
+    /// 保存
+    /// </summary>
+    /// <param name="writer"></param>
+    public void Save(BinaryWriter writer)
+    {
+        // 所有建筑数量
+        writer.Write(_buildings.Count);
+
+        var buildingList = new List<BuildingBase>();
+
+        // 保存建筑ID和类型
+        foreach (var pair in _buildings)
+        {
+            var building = pair.Value;
+
+            // 建筑NameHash
+            writer.Write(building.NameHash);
+
+            // 建筑id
+            writer.Write(pair.Key);
+
+            // 写入坐标
+            var gridElement = building.GetComponent<GridElement>();
+            writer.Write(gridElement.CellPos.x);
+            writer.Write(gridElement.CellPos.y);
+
+            buildingList.Add(building);
+        }
+
+        // 保存建筑状态
+        foreach (var building in buildingList)
+            building.Save(writer);
+    }
+
+    /// <summary>
+    /// 读取
+    /// </summary>
+    /// <param name="reader"></param>
+    public void Load(BinaryReader reader)
+    {
+        // 建筑总数
+        var count = reader.ReadInt32();
+        var buildingList = new List<BuildingBase>();
+
+        for (var i = 0; i < count; ++i)
+        {
+            var nameHash = reader.ReadInt32();
+
+            var building = CreateBuildingPreview(ResourcesManager.GetBuilding(nameHash));
+            buildingList.Add(building);
+
+            var id = reader.ReadInt32();
+
+            // 读取坐标
+            var gridElement = building.GetComponent<GridElement>();
+            var posX = reader.ReadInt32();
+            var posY = reader.ReadInt32();
+            gridElement.CellPos = new Vector2Int(posX, posY);
+
+            PutBuildingOnMap(building, id);
+        }
+
+        foreach (var building in buildingList)
+            building.Load(reader);
+    }
 }

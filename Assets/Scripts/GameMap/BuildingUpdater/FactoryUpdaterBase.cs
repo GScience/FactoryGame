@@ -46,11 +46,12 @@ public abstract class FactoryUpdaterBase : IBuildingUpdater
         if (factory.CurrentRecipe == null || !factory.IsManufacturing) 
             return;
 
-        var deltaTime = Time.time - factory.processingStartTime;
-        if (deltaTime > factory.CurrentRecipe.time && !factory.IsStucked)
+        factory.processingTime += Time.deltaTime;
+
+        if (factory.processingTime > factory.CurrentRecipe.time && !factory.IsStucked)
             factory.FinishManufacturing();
         else
-            OnProcessing(factory, deltaTime / factory.CurrentRecipe.time);
+            OnProcessing(factory, factory.processingTime / factory.CurrentRecipe.time);
     }
 
     /// <summary>

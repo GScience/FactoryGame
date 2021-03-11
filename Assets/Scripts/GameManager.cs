@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +40,11 @@ public class GameManager : MonoBehaviour
             return;
         _timeSystem.Update();
         _moneySystem.Update();
+
+        if (Input.GetKeyDown(KeyCode.S))
+            SaveGame();
+        else if (Input.GetKeyDown(KeyCode.L))
+            StartCoroutine(LoadGameAsync());
     }
 
     public void StartGame()
@@ -58,5 +65,28 @@ public class GameManager : MonoBehaviour
         IsPlaying = false;
         _timeSystem = null;
         _moneySystem = null;
+    }
+
+    public void SaveGame()
+    {
+        using (var writer = new BinaryWriter(File.Create(Application.persistentDataPath + "/save0.sav")))
+        {
+            InstanceHelper<GameMap>.GetGlobal().Save(writer);
+            TimeSystem.Save(writer);
+            MoneySystem.Save(writer);
+        }
+    }
+
+    IEnumerator LoadGameAsync()
+    {
+        yield return SceneManager.LoadSceneAsync("GameScene");
+        yield return new WaitForEndOfFrame();
+
+        using (var reader = new BinaryReader(File.OpenRead(Application.persistentDataPath + "/save0.sav")))
+        {
+            InstanceHelper<GameMap>.GetGlobal().Load(reader);
+            TimeSystem.Load(reader);
+            MoneySystem.Load(reader);
+        }
     }
 }
