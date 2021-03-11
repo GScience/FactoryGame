@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,13 @@ public class PopMenuLayer : MonoBehaviour
     {
         GlobalPopMenuLayer = new InstanceHelper<PopMenuLayer>(this);
     }
+
+    public bool HasPopedMenu => _popedMenus.Count != 0;
+
+    /// <summary>
+    /// 尝试关闭但是已经空了的时候
+    /// </summary>
+    public Action TryCloseButEmpty;
 
     /// <summary>
     /// 弹出
@@ -61,7 +69,12 @@ public class PopMenuLayer : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && _popedMenus.Count > 0)
-            Close(_popedMenus[_popedMenus.Count - 1]);
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (_popedMenus.Count > 0)
+                Close(_popedMenus[_popedMenus.Count - 1]);
+            else
+                TryCloseButEmpty?.Invoke();
+        }
     }
 }

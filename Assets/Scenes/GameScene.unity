@@ -1682,7 +1682,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 923365172}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1813119716}
+        m_MethodName: ShowPauseMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &923365172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3647,6 +3658,7 @@ MonoBehaviour:
   - {fileID: 8072214711679769675, guid: 557a11429e7ff0b4cbf637c92f7e68b0, type: 3}
   - {fileID: 615318553995361170, guid: 305a4199e9f79e042b643c768169ad1f, type: 3}
   - {fileID: 5834636187889541379, guid: bd17a73a5ba7efe4da81c6c7a7467807, type: 3}
+  - {fileID: 6688385704474385333, guid: 20d707d76932258428ec8fdceb1a18d1, type: 3}
 --- !u!223 &1905975318
 Canvas:
   m_ObjectHideFlags: 0

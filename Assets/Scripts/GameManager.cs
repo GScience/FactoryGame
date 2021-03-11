@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,15 @@ public class GameManager : MonoBehaviour
     public static TimeSystem TimeSystem => GlobalGameManager.Get()._timeSystem;
     public static MoneySystem MoneySystem => GlobalGameManager.Get()._moneySystem;
 
+    /// <summary>
+    /// 是否正在游戏
+    /// </summary>
     public bool IsPlaying { get; private set; }
+    
+    /// <summary>
+    /// 存档名称
+    /// </summary>
+    public string SaveName { get; private set; }
 
     private void Awake()
     {
@@ -30,7 +39,7 @@ public class GameManager : MonoBehaviour
 
 #if UNITY_EDITOR
         if (SceneManager.GetActiveScene().name == "GameScene")
-            StartGame();
+            StartGame("save0");
 #endif
     }
 
@@ -40,36 +49,57 @@ public class GameManager : MonoBehaviour
             return;
         _timeSystem.Update();
         _moneySystem.Update();
-
-        if (Input.GetKeyDown(KeyCode.S))
-            SaveGame();
-        else if (Input.GetKeyDown(KeyCode.L))
-            StartCoroutine(LoadGameAsync());
     }
 
-    public void StartGame()
+    private static string GetSavePath(string saveName)
+    {
+        return Application.persistentDataPath + "/" + saveName + ".sav";
+    }
+
+    private bool IsNewGame()
+    {
+        return !File.Exists(GetSavePath(SaveName));
+    }
+
+    public void StartGame(string saveName)
+    {
+        StartCoroutine(StartGameAsync(saveName));
+    }
+
+    private IEnumerator StartGameAsync(string saveName)
     {
         if (IsPlaying)
-            return;
+            yield break;
+
+        SaveName = saveName;
+
         IsPlaying = true;
         _timeSystem = new TimeSystem();
         _moneySystem = new MoneySystem();
+
 #if UNITY_EDITOR
         if (SceneManager.GetActiveScene().name != "GameScene")
 #endif
-            SceneManager.LoadScene("GameScene");
+
+            yield return SceneManager.LoadSceneAsync("GameScene");
+
+        yield return new WaitForEndOfFrame();
+
+        if (!IsNewGame())
+            LoadGame();
     }
 
-    public void ExitGame()
+    public void QuitGame()
     {
         IsPlaying = false;
-        _timeSystem = null;
-        _moneySystem = null;
+        SceneManager.LoadScene("MainMenuScene");
     }
 
     public void SaveGame()
     {
-        using (var writer = new BinaryWriter(File.Create(Application.persistentDataPath + "/save0.sav")))
+        var file = File.Create(Application.persistentDataPath + "/" + SaveName + ".sav");
+        var compressStream = new GZipStream(file, CompressionMode.Compress);
+        using (var writer = new BinaryWriter(compressStream))
         {
             InstanceHelper<GameMap>.GetGlobal().Save(writer);
             TimeSystem.Save(writer);
@@ -77,12 +107,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    IEnumerator LoadGameAsync()
+    private void LoadGame()
     {
-        yield return SceneManager.LoadSceneAsync("GameScene");
-        yield return new WaitForEndOfFrame();
+        var file = File.OpenRead(Application.persistentDataPath + "/" + SaveName + ".sav");
+        var decompressStream = new GZipStream(file, CompressionMode.Decompress);
 
-        using (var reader = new BinaryReader(File.OpenRead(Application.persistentDataPath + "/save0.sav")))
+        using (var reader = new BinaryReader(decompressStream))
         {
             InstanceHelper<GameMap>.GetGlobal().Load(reader);
             TimeSystem.Load(reader);

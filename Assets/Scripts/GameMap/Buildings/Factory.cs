@@ -361,13 +361,15 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         SaveHelper.Write(writer, CurrentRecipe);
 
         // 缓存
-        writer.Write(_inputItemCache.Length);
-        foreach (var itemStack in _inputItemCache)
-            SaveHelper.Write(writer, itemStack);
+        writer.Write(_inputItemCache?.Length ?? 0);
+        if (_inputItemCache != null)
+            foreach (var itemStack in _inputItemCache)
+                SaveHelper.Write(writer, itemStack);
 
-        writer.Write(_outputItemCache.Length);
-        foreach (var itemStack in _outputItemCache)
-            SaveHelper.Write(writer, itemStack);
+        writer.Write(_outputItemCache?.Length ?? 0);
+        if (_outputItemCache != null)
+            foreach (var itemStack in _outputItemCache)
+                SaveHelper.Write(writer, itemStack);
 
         // 合成进度
         writer.Write(processingTime);

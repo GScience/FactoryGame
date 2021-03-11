@@ -67,6 +67,8 @@ public class BeltBuilder : MonoBehaviour
 
     public void ChooseBeltPrefabs(Belt straight, Belt cw, Belt ccw, Action onFinish)
     {
+        GameMap.GlobalMap.Get().isBuilding = true;
+
         BuildingInformationBoard.GlobalBuildingInformationBoard.Get().ShowInformation(straight);
         gridRenderer.OnSelected();
         _straight = straight;
@@ -127,7 +129,7 @@ public class BeltBuilder : MonoBehaviour
     private void UpdateFirstSelection()
     {       
         // 第一个传送带是起点
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyUp(KeyCode.Escape))
         {
             OnCancelled();
             return;
@@ -361,7 +363,7 @@ public class BeltBuilder : MonoBehaviour
                 OnDraggingConfirm();
         }
 
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        else if (Input.GetKeyUp(KeyCode.Escape))
             OnDraggingCancelled();
     }
 
@@ -427,6 +429,8 @@ public class BeltBuilder : MonoBehaviour
         gridRenderer.OnUnselected();
         BuildingInformationBoard.GlobalBuildingInformationBoard.Get().HideInformation();
         _onFinished?.Invoke();
+
+        GameMap.GlobalMap.Get().isBuilding = false;
     }
 
     /// <summary>

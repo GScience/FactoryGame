@@ -19,4 +19,18 @@ public class TopGameBar : MonoBehaviour
         timeText.text = GameManager.TimeSystem.ToString();
         moneyText.text = GameManager.MoneySystem.Money.ToString();
     }
+
+    private void Start()
+    {
+        PopMenuLayer.GlobalPopMenuLayer.Get().TryCloseButEmpty += () =>
+        {
+            if (!GameMap.GlobalMap.Get().isBuilding)
+                ShowPauseMenu();
+        };
+    }
+
+    public void ShowPauseMenu()
+    {
+        PopMenuLayer.GlobalPopMenuLayer.Get().Pop("GamePauseMenu");
+    }
 }

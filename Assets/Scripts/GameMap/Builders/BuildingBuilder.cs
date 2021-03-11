@@ -72,7 +72,7 @@ public class BuildingBuilder : MonoBehaviour
             if (CanBuild(_pickedBuilding.GetComponent<GridElement>()))
                 OnConfirm();
         }
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        else if (Input.GetKeyUp(KeyCode.Escape))
             OnCancel();
         else
         {
@@ -98,6 +98,8 @@ public class BuildingBuilder : MonoBehaviour
 
     public void Pick(BuildingBase obj, Action onConfirm, Action onCancel)
     {
+        GameMap.GlobalMap.Get().isBuilding = true;
+
         if (_pickedBuilding != null)
             OnCancel();
 
@@ -187,5 +189,7 @@ public class BuildingBuilder : MonoBehaviour
         gridRenderer.OnUnselected();
 
         _lastCellPos = new Vector2Int(int.MaxValue, int.MaxValue);
+
+        GameMap.GlobalMap.Get().isBuilding = false;
     }
 }

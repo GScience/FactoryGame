@@ -65,7 +65,7 @@ public class GameMap : MonoBehaviour
     /// </summary>
     [HideInInspector]
     [NonSerialized]
-    public bool disableClickWithMapElement = false;
+    public bool isBuilding = false;
 
     public static InstanceHelper<GameMap> GlobalMap;
 
@@ -223,7 +223,7 @@ public class GameMap : MonoBehaviour
                 }
 
                 // 点击
-                if (!disableClickWithMapElement && PlayerInput.GetMouseClick(0))
+                if (!isBuilding && PlayerInput.GetMouseClick(0))
                     building.OnClick();
             }
             else
