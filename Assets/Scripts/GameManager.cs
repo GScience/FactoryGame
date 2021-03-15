@@ -14,11 +14,11 @@ public class GameManager : MonoBehaviour
 {
     public static InstanceHelper<GameManager> GlobalGameManager;
 
-    private TimeSystem _timeSystem;
-    private MoneySystem _moneySystem;
+    private Dictionary<string, ISystem> _systems = new Dictionary<string, ISystem>();
 
-    public static TimeSystem TimeSystem => GlobalGameManager.Get()._timeSystem;
-    public static MoneySystem MoneySystem => GlobalGameManager.Get()._moneySystem;
+    public static TimeSystem TimeSystem => GlobalGameManager.Get()._systems["time"] as TimeSystem;
+    public static MoneySystem MoneySystem => GlobalGameManager.Get()._systems["money"] as MoneySystem;
+    public static CameraSystem CameraSystem => GlobalGameManager.Get()._systems["camera"] as CameraSystem;
 
     public static int SaveVersion = 1;
     public const string Magic = "FGS";
@@ -50,8 +50,8 @@ public class GameManager : MonoBehaviour
     {
         if (!IsPlaying)
             return;
-        _timeSystem.Update();
-        _moneySystem.Update();
+        foreach (var system in _systems)
+            system.Value.Update();
     }
 
     private static string GetSavePath(string saveName)
@@ -77,8 +77,10 @@ public class GameManager : MonoBehaviour
         SaveName = saveName;
 
         IsPlaying = true;
-        _timeSystem = new TimeSystem();
-        _moneySystem = new MoneySystem();
+
+        _systems["time"] = new TimeSystem();
+        _systems["money"] = new MoneySystem();
+        _systems["camera"] = new CameraSystem();
 
 #if UNITY_EDITOR
         if (SceneManager.GetActiveScene().name != "GameScene")
@@ -108,8 +110,12 @@ public class GameManager : MonoBehaviour
             writer.Write(SaveVersion);
 
             InstanceHelper<GameMap>.GetGlobal().Save(writer);
-            TimeSystem.Save(writer);
-            MoneySystem.Save(writer);
+            foreach (var system in _systems)
+            {
+                writer.Write(system.Key);
+                system.Value.Save(writer);
+            }
+            writer.Write("");
         }
     }
 
@@ -125,8 +131,14 @@ public class GameManager : MonoBehaviour
                 return;
 
             InstanceHelper<GameMap>.GetGlobal().Load(reader);
-            TimeSystem.Load(reader);
-            MoneySystem.Load(reader);
+
+            var systemName = reader.ReadString();
+            while (!string.IsNullOrEmpty(systemName))
+            {
+                if (_systems.TryGetValue(systemName, out var system))
+                    system.Load(reader);
+                systemName = reader.ReadString();
+            }
         }
     }
 }

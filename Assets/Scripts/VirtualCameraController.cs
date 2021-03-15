@@ -51,4 +51,14 @@ public class VirtualCameraController : MonoBehaviour
         else
             _lastMousePos = null;
     }
+
+    public void MoveTo(Vector2 pos)
+    {
+        _viewportCenter.transform.position = pos;
+    }
+
+    public Vector2 GetPosition()
+    {
+        return _viewportCenter.transform.position;
+    }
 }
