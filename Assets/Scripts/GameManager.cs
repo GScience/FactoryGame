@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
         var compressStream = new GZipStream(file, CompressionMode.Compress);
         using (var writer = new BinaryWriter(compressStream))
         {
-            writer.Write(Magic);
+            writer.Write(Encoding.UTF8.GetBytes(Magic));
             writer.Write(SaveVersion);
 
             InstanceHelper<GameMap>.GetGlobal().Save(writer);
@@ -126,8 +126,10 @@ public class GameManager : MonoBehaviour
 
         using (var reader = new BinaryReader(decompressStream))
         {
-            if (Magic != reader.ReadString() ||
-                SaveVersion != reader.ReadInt32())
+            var magic = Encoding.UTF8.GetString(reader.ReadBytes(Magic.Length));
+            var saveVerison = reader.ReadInt32();
+            if (Magic != magic ||
+                SaveVersion != saveVerison)
                 return;
 
             InstanceHelper<GameMap>.GetGlobal().Load(reader);
