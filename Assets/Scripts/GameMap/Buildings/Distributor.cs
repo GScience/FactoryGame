@@ -208,12 +208,19 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
 
     public ItemInfo TakeAnyOneItem()
     {
-        return null;
+        if (_itemCache == null || percent < 1)
+            return null;
+        var tmpItem = _itemCache;
+        _itemCache = null;
+        return tmpItem;
     }
 
     public bool TryPutOneItem(ItemInfo item)
     {
-        return false;
+        if (_itemCache != null)
+            return false;
+        _itemCache = item;
+        return true;
     }
 
     private void DisablePort(int id)
@@ -332,6 +339,8 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
                     if (outputBuilding.TrySetOutputTo(this, pos))
                         _portsObj[id] = outputBuilding;
                 }
+                else if (foundBuilding == null)
+                    _portsObj[id] = null;
                 break;
             case PortType.Out:
                 if (foundBuilding is IBuildingCanInputItem inputBuilding)
@@ -339,6 +348,8 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
                     if (inputBuilding.TrySetInputFrom(this, pos))
                         _portsObj[id] = inputBuilding;
                 }
+                else if (foundBuilding == null)
+                    _portsObj[id] = null;
                 break;
         }
     }

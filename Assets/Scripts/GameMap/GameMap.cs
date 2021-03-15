@@ -99,22 +99,6 @@ public class GameMap : MonoBehaviour
     {
         var pos = building.GetComponent<GridElement>().CellPos;
 
-        // 修改连接到这个建筑的输出建筑的输出为null
-        if (building is IBuildingCanInputItem inputBuilding)
-        {
-            var inputsFrom = inputBuilding.GetInputBuildings();
-            foreach (var inputFrom in inputsFrom)
-                inputFrom?.TrySetOutputTo(null, pos);
-        }
-
-        // 修改连接到这个建筑的输入建筑的输出为null
-        if (building is IBuildingCanOutputItem outputBuilding)
-        {
-            var outputsTo = outputBuilding.GetOutputBuildings();
-            foreach (var outputTo in outputsTo)
-                outputTo?.TrySetInputFrom(null, pos);
-        }
-
         // 移除
         _buildings.Remove(building.id);
         var gridElement = building.GetComponent<GridElement>();
@@ -132,6 +116,33 @@ public class GameMap : MonoBehaviour
             _lastMouseOverBuilding.OnMouseLeave();
             _lastMouseOverBuilding = null;
         }
+
+        // 修改连接到这个建筑的输出建筑的输出为null
+        if (building is IBuildingCanInputItem inputBuilding)
+        {
+            var inputsFrom = inputBuilding.GetInputBuildings();
+            foreach (var inputFrom in inputsFrom)
+            {
+                if (inputFrom is IBuildingAutoConnect autoConnect)
+                    autoConnect.Reconnect();
+                else
+                    inputFrom?.TrySetOutputTo(null, pos);
+            }
+        }
+
+        // 修改连接到这个建筑的输入建筑的输出为null
+        if (building is IBuildingCanOutputItem outputBuilding)
+        {
+            var outputsTo = outputBuilding.GetOutputBuildings();
+            foreach (var outputTo in outputsTo)
+            {
+                if (outputTo is IBuildingAutoConnect autoConnect)
+                    autoConnect.Reconnect();
+                else
+                    outputTo?.TrySetInputFrom(null, pos);
+            }
+        }
+
         Destroy(building.gameObject);
     }
 
