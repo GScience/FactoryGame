@@ -9,8 +9,10 @@ using UnityEngine;
 /// <summary>
 /// 出货箱
 /// </summary>
-public class SellingBox : BuildingBase, IBuildingCanInputItem
+public class SellingBox : BuildingBase, IBuildingCanInputItem, IBuildingAutoConnect
 {
+    public static readonly Vector2Int InputPos = new Vector2Int(1, 2);
+
     public IBuildingCanOutputItem inputBuilding;
 
     public override void OnClick()
@@ -44,7 +46,7 @@ public class SellingBox : BuildingBase, IBuildingCanInputItem
     public bool CanSetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos)
     {
         var relevantPos = GetRelevantPos(inputPos);
-        if (relevantPos.x != 1 || relevantPos.y != 2)
+        if (relevantPos != InputPos)
             return false;
         return inputBuilding == null || building == null;
     }
@@ -69,6 +71,20 @@ public class SellingBox : BuildingBase, IBuildingCanInputItem
     public override void Load(BinaryReader reader)
     {
         inputBuilding = SaveHelper.ReadBuildingCanOutput(reader);
+    }
+
+    public void Reconnect()
+    {
+        var pos = _gridElement.CellPos;
+
+        // 寻找输入
+        var foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + InputPos);
+        if (foundBuilding != null && foundBuilding is IBuildingCanOutputItem foundOutputBuilding)
+        {
+            // 尝试连接
+            if (foundOutputBuilding.TrySetOutputTo(this, pos + InputPos + Vector2Int.down))
+                inputBuilding = foundOutputBuilding;
+        }
     }
 }
 

@@ -11,8 +11,11 @@ using UnityEngine.EventSystems;
 /// 工厂
 /// 有配方和可以进行加工的建筑
 /// </summary>
-public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
+public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem, IBuildingAutoConnect
 {
+    public static readonly Vector2Int InputPos = new Vector2Int(-1, 1);
+    public static readonly Vector2Int OutputPos = new Vector2Int(3, 1);
+
     /// <summary>
     /// 加工经过的总时间
     /// </summary>
@@ -306,7 +309,7 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     public bool CanSetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
     {
         var relevantPos = GetRelevantPos(inputPos);
-        if (relevantPos.x != 3 || relevantPos.y != 1)
+        if (relevantPos != OutputPos)
             return false;
         return outputBuilding == null || building == null;
     }
@@ -322,7 +325,7 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     public bool CanSetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos)
     {
         var relevantPos = GetRelevantPos(inputPos);
-        if (relevantPos.x != -1 || relevantPos.y != 1)
+        if (relevantPos != InputPos)
             return false;
         return inputBuilding == null || building == null;
     }
@@ -402,5 +405,28 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
         inputBuilding = SaveHelper.ReadBuildingCanOutput(reader);
         outputBuilding = SaveHelper.ReadBuildingCanInput(reader);
+    }
+
+    public void Reconnect()
+    {
+        var pos = _gridElement.CellPos;
+
+        // 寻找输入
+        var foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + InputPos);
+        if (foundBuilding != null && foundBuilding is IBuildingCanOutputItem foundOutputBuilding)
+        {
+            // 尝试连接
+            if (foundOutputBuilding.TrySetOutputTo(this, pos + InputPos + Vector2Int.right))
+                inputBuilding = foundOutputBuilding;
+        }
+
+        // 寻找输出
+        foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + OutputPos);
+        if (foundBuilding != null && foundBuilding is IBuildingCanInputItem foundInputBuilding)
+        {
+            // 尝试连接
+            if (foundInputBuilding.TrySetInputFrom(this, pos + OutputPos + Vector2Int.left))
+                outputBuilding = foundInputBuilding;
+        }
     }
 }

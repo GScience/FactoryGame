@@ -157,17 +157,17 @@ public class BeltBuilder : MonoBehaviour
     }
 
     /// <summary>
-    /// 连接两个建筑
+    /// 连接两个传送带
     /// </summary>
     /// <param name="from"></param>
     /// <param name="to"></param>
     /// <returns></returns>
-    private bool ConnectBuilding(IBuildingCanOutputItem from, IBuildingCanInputItem to)
+    private bool ConnectBelt(Belt from, Belt to)
     {
         if (from == null || to == null)
             return false;
-        Vector2Int fromPos = ((BuildingBase)from).GetComponent<GridElement>().CellPos;
-        Vector2Int toPos = ((BuildingBase)to).GetComponent<GridElement>().CellPos;
+        Vector2Int fromPos = from.GetComponent<GridElement>().CellPos;
+        Vector2Int toPos = to.GetComponent<GridElement>().CellPos;
 
         if (!from.CanSetOutputTo(to, toPos) || !to.CanSetInputFrom(from, fromPos))
             return false;
@@ -458,16 +458,24 @@ public class BeltBuilder : MonoBehaviour
             var belt = _previewsBelts[i].belt;
             gameMap.PutBuildingOnMap(belt);
 
-            if (i == _previewsBelts.Count - 1)
-                ConnectBuilding(belt, _endpointBuilding);
+            if (i == _previewsBelts.Count - 1 && _endpointBuilding is Belt endpointBelt)
+                ConnectBelt(belt, endpointBelt);
 
             if (i == 0)
-                ConnectBuilding(_startpointBuilding, _previewsBelts[0].belt);
+            {
+                if (_startpointBuilding is Belt startpointBelt)
+                    ConnectBelt(startpointBelt, _previewsBelts[0].belt);
+            }
             else
-                ConnectBuilding(_previewsBelts[i - 1].belt, belt);
+                ConnectBelt(_previewsBelts[i - 1].belt, belt);
             
             Destroy(_previewsBelts[i].guideBlock.gameObject);
         }
+
+        if (_endpointBuilding is IBuildingAutoConnect endpointReconnect)
+            endpointReconnect.Reconnect();
+        if (_startpointBuilding is IBuildingAutoConnect startpointReconnect)
+            startpointReconnect.Reconnect();
 
         if (continueDragging)
         {

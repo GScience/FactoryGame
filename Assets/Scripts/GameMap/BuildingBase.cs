@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using TMPro;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -27,7 +28,7 @@ public abstract class BuildingBase : MonoBehaviour
     // 建筑信息
     public BuildingInfo info;
     public UpdaterRef UpdaterRef;
-    private GridElement _gridElement;
+    protected GridElement _gridElement;
     protected Renderer _renderer;
 
     /// <summary>

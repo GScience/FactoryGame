@@ -10,7 +10,7 @@ using UnityEngine;
 /// 传送带分配器
 /// 不允许主动放物品
 /// </summary>
-public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
+public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem, IBuildingAutoConnect
 {
     /// <summary>
     /// 接口类型
@@ -78,6 +78,7 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
             DisablePort(id);
 
         _portsType[id] = portType;
+        ReconnectPort(direction);
     }
 
     private void UpdateInput()
@@ -306,5 +307,39 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
         writer.Write(percent);
         writer.Write((char)_lastInputPort);
         writer.Write((char)_lastOutputPort);
+    }
+
+    public void Reconnect()
+    {
+        ReconnectPort(Vector2Int.up);
+        ReconnectPort(Vector2Int.down);
+        ReconnectPort(Vector2Int.left);
+        ReconnectPort(Vector2Int.right);
+    }
+
+    private void ReconnectPort(Vector2Int direction)
+    {
+        var id = DirectionToPortID(direction);
+        var portType = _portsType[id];
+        var pos = _gridElement.CellPos;
+        var foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + direction);
+
+        switch (portType)
+        {
+            case PortType.In:
+                if (foundBuilding is IBuildingCanOutputItem outputBuilding)
+                {
+                    if (outputBuilding.TrySetOutputTo(this, pos))
+                        _portsObj[id] = outputBuilding;
+                }
+                break;
+            case PortType.Out:
+                if (foundBuilding is IBuildingCanInputItem inputBuilding)
+                {
+                    if (inputBuilding.TrySetInputFrom(this, pos))
+                        _portsObj[id] = inputBuilding;
+                }
+                break;
+        }
     }
 }

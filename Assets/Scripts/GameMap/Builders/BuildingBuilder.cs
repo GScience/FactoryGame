@@ -167,6 +167,8 @@ public class BuildingBuilder : MonoBehaviour
         }
         _onConfirm?.Invoke();
         GameMap.GlobalMap.Get().PutBuildingOnMap(_pickedBuilding);
+        if (_pickedBuilding is IBuildingAutoConnect autoConnect)
+            autoConnect.Reconnect();
         OnFinished();
     }
 

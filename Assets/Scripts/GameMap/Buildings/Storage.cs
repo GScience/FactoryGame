@@ -9,8 +9,10 @@ using UnityEngine;
 /// <summary>
 /// 仓库
 /// </summary>
-public class Storage : BuildingBase, IBuildingCanOutputItem
+public class Storage : BuildingBase, IBuildingCanOutputItem, IBuildingAutoConnect
 {
+    public static readonly Vector2Int OutputPos = new Vector2Int(1, -1);
+
     public ItemInfo itemInfo;
 
     public IBuildingCanInputItem outputBuilding;
@@ -46,7 +48,7 @@ public class Storage : BuildingBase, IBuildingCanOutputItem
     public bool CanSetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
     {
         var relevantPos = GetRelevantPos(inputPos);
-        if (relevantPos.x != 1 || relevantPos.y != -1)
+        if (relevantPos != OutputPos)
             return false;
         return outputBuilding == null || building == null;
     }
@@ -93,6 +95,20 @@ public class Storage : BuildingBase, IBuildingCanOutputItem
     {
         itemInfo = SaveHelper.ReadScriptable<ItemInfo>(reader);
         outputBuilding = SaveHelper.ReadBuildingCanInput(reader);
+    }
+
+    public void Reconnect()
+    {
+        var pos = _gridElement.CellPos;
+
+        // 寻找输出
+        var foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + OutputPos);
+        if (foundBuilding != null && foundBuilding is IBuildingCanInputItem foundInputBuilding)
+        {
+            // 尝试连接
+            if (foundInputBuilding.TrySetInputFrom(this, pos + OutputPos + Vector2Int.up))
+                outputBuilding = foundInputBuilding;
+        }
     }
 }
 
