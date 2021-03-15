@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     public static TimeSystem TimeSystem => GlobalGameManager.Get()._timeSystem;
     public static MoneySystem MoneySystem => GlobalGameManager.Get()._moneySystem;
 
+    public static int SaveVersion = 1;
+    public const string Magic = "FGS";
+
     /// <summary>
     /// 是否正在游戏
     /// </summary>
@@ -101,6 +104,9 @@ public class GameManager : MonoBehaviour
         var compressStream = new GZipStream(file, CompressionMode.Compress);
         using (var writer = new BinaryWriter(compressStream))
         {
+            writer.Write(Magic);
+            writer.Write(SaveVersion);
+
             InstanceHelper<GameMap>.GetGlobal().Save(writer);
             TimeSystem.Save(writer);
             MoneySystem.Save(writer);
@@ -114,6 +120,10 @@ public class GameManager : MonoBehaviour
 
         using (var reader = new BinaryReader(decompressStream))
         {
+            if (Magic != reader.ReadString() ||
+                SaveVersion != reader.ReadInt32())
+                return;
+
             InstanceHelper<GameMap>.GetGlobal().Load(reader);
             TimeSystem.Load(reader);
             MoneySystem.Load(reader);

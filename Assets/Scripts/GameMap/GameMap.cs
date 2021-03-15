@@ -67,6 +67,11 @@ public class GameMap : MonoBehaviour
     [NonSerialized]
     public bool isBuilding = false;
 
+    /// <summary>
+    /// 下一个建筑的ID
+    /// </summary>
+    private int _nextId = 0;
+
     public static InstanceHelper<GameMap> GlobalMap;
 
     void Awake()
@@ -184,7 +189,10 @@ public class GameMap : MonoBehaviour
         }
 #endif
         if (id < 0)
-            id = _buildings.Count;
+        {
+            id = _nextId;
+            _nextId += 1;
+        }
 
         building.ExitPreviewMode();
         building.id = id;
@@ -334,6 +342,8 @@ public class GameMap : MonoBehaviour
 
             var id = reader.ReadInt32();
 
+            if (_nextId < id)
+                _nextId = id;
             // 读取坐标
             var gridElement = building.GetComponent<GridElement>();
             var posX = reader.ReadInt32();
@@ -342,7 +352,7 @@ public class GameMap : MonoBehaviour
 
             PutBuildingOnMap(building, id);
         }
-
+        _nextId += 1;
         foreach (var building in buildingList)
             building.Load(reader);
     }

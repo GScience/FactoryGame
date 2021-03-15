@@ -351,6 +351,9 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
                 else if (foundBuilding == null)
                     _portsObj[id] = null;
                 break;
+            case PortType.Disabled:
+                _portsObj[id] = null;
+                break;
         }
     }
 }
