@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Belt
   m_EditorClassIdentifier: 
   buildingName: "\u4F20\u9001\u5E26"
-  buildingDescription: "\u8D1F\u8D23\u4F20\u9001\u7269\u54C1"
+  buildingDescription: "\u8D1F\u8D23\u4F20\u9001\u7269\u54C1\u3002"
   cost: 100
   people: 0
   icon: {fileID: 21300000, guid: bd53c516534cde64c9a50c0a60383550, type: 3}

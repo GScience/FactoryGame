@@ -15,6 +15,16 @@ public class GameMap : MonoBehaviour
     private Grid _grid;
 
     /// <summary>
+    /// 输入引导方块
+    /// </summary>
+    public Sprite inputGuide;
+
+    /// <summary>
+    /// 输出引导方块
+    /// </summary>
+    public Sprite outputGuide;
+
+    /// <summary>
     /// 把刷新器和建筑分类到一起
     /// </summary>
     private class UpdaterGroup

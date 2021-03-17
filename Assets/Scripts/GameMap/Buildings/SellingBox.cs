@@ -79,12 +79,14 @@ public class SellingBox : BuildingBase, IBuildingCanInputItem, IBuildingAutoConn
 
         // 寻找输入
         var foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + InputPos);
-        if (foundBuilding != null && foundBuilding is IBuildingCanOutputItem foundOutputBuilding)
+        if (foundBuilding is IBuildingCanOutputItem foundOutputBuilding)
         {
             // 尝试连接
             if (foundOutputBuilding.TrySetOutputTo(this, pos + InputPos + Vector2Int.down))
                 inputBuilding = foundOutputBuilding;
         }
+        else
+            inputBuilding = null;
     }
 }
 

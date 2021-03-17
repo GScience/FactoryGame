@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SellingBox
   m_EditorClassIdentifier: 
   buildingName: "\u51FA\u8D27\u7BB1"
-  buildingDescription: "\u7528\u6765\u51FA\u552E\u8D2D\u4E70\u7684\u7269\u54C1"
+  buildingDescription: "\u7528\u6765\u51FA\u552E\u8D2D\u4E70\u7684\u7269\u54C1\u3002"
   cost: 2000
   people: 0
-  icon: {fileID: 21300000, guid: f3f859ea77608e4428401d7db2f92e65, type: 3}
+  icon: {fileID: 21300000, guid: 0ed177bc5cdc34e408d1b1d63620e990, type: 3}

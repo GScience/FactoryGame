@@ -678,6 +678,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1374698c0a320ca4cbbf5928885875c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputGuide: {fileID: 21300000, guid: 34ee18d1b37d428418f1ca8434be1090, type: 3}
+  outputGuide: {fileID: 21300000, guid: 85810b21906361e4a9540a1311dc6ded, type: 3}
 --- !u!1 &409823066
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,8 +1048,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: '[NAME]'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 75063828274bdb145a55f6dd2f22e8b2, type: 2}
-  m_sharedMaterial: {fileID: 21098970014090698, guid: 75063828274bdb145a55f6dd2f22e8b2,
+  m_fontAsset: {fileID: 11400000, guid: 72d542206a062fe44afacb1e9b5c45b7, type: 2}
+  m_sharedMaterial: {fileID: -1028686091802056991, guid: 72d542206a062fe44afacb1e9b5c45b7,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

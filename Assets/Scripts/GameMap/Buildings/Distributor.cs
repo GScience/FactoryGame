@@ -45,6 +45,11 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
     [HideInInspector]
     public float percent;
 
+    /// <summary>
+    /// 输入输出引导方块渲染器
+    /// </summary>
+    public SpriteRenderer[] inputGuideBlocks;
+
     public void BeginDistributeItem()
     {
         if (_itemCache == null)
@@ -71,6 +76,7 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
     public void SetPortType(Vector2Int direction, PortType portType)
     {
         var id = DirectionToPortID(direction);
+
         if (_portsType[id] == portType)
             return;
 
@@ -79,6 +85,36 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
 
         _portsType[id] = portType;
         ReconnectPort(direction);
+        UpdateInputGuide(direction);
+    }
+
+    public void Start()
+    {
+        UpdateInputGuide(Vector2Int.up);
+        UpdateInputGuide(Vector2Int.down);
+        UpdateInputGuide(Vector2Int.left);
+        UpdateInputGuide(Vector2Int.right);
+    }
+
+    private void UpdateInputGuide(Vector2Int direction)
+    {
+        var id = DirectionToPortID(direction);
+        direction.y = -direction.y;
+        var angle = Vector2.SignedAngle(direction, Vector2.right);
+        switch (_portsType[id])
+        {
+            case PortType.Disabled:
+                inputGuideBlocks[id].sprite = null;
+                break;
+            case PortType.In:
+                inputGuideBlocks[id].sprite = GameMap.GlobalMap.Get().inputGuide;
+                inputGuideBlocks[id].transform.rotation = Quaternion.Euler(0, 0, angle);
+                break;
+            case PortType.Out:
+                inputGuideBlocks[id].sprite = GameMap.GlobalMap.Get().outputGuide;
+                inputGuideBlocks[id].transform.rotation = Quaternion.Euler(0, 0, 180 + angle);
+                break;
+        }
     }
 
     private void UpdateInput()
@@ -339,7 +375,7 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
                     if (outputBuilding.TrySetOutputTo(this, pos))
                         _portsObj[id] = outputBuilding;
                 }
-                else if (foundBuilding == null)
+                else
                     _portsObj[id] = null;
                 break;
             case PortType.Out:
@@ -348,7 +384,7 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
                     if (inputBuilding.TrySetInputFrom(this, pos))
                         _portsObj[id] = inputBuilding;
                 }
-                else if (foundBuilding == null)
+                else
                     _portsObj[id] = null;
                 break;
             case PortType.Disabled:

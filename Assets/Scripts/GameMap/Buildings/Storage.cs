@@ -103,12 +103,14 @@ public class Storage : BuildingBase, IBuildingCanOutputItem, IBuildingAutoConnec
 
         // 寻找输出
         var foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + OutputPos);
-        if (foundBuilding != null && foundBuilding is IBuildingCanInputItem foundInputBuilding)
+        if (foundBuilding is IBuildingCanInputItem foundInputBuilding)
         {
             // 尝试连接
             if (foundInputBuilding.TrySetInputFrom(this, pos + OutputPos + Vector2Int.up))
                 outputBuilding = foundInputBuilding;
         }
+        else
+            outputBuilding = null;
     }
 }
 

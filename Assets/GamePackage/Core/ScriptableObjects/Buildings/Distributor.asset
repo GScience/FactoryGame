@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bb47a277c0919a4d96a7dc460db5690, type: 3}
   m_Name: Distributor
   m_EditorClassIdentifier: 
-  buildingName: "\u7269\u54C1\u5206\u914D\u5668"
-  buildingDescription: "\u7528\u6765\u5747\u5300\u7684\u5206\u914D\u7269\u54C1"
+  buildingName: "\u5206\u62E3\u4E2D\u5FC3"
+  buildingDescription: "\u7528\u6765\u5747\u5300\u7684\u5206\u914D\u7269\u54C1\u3002"
   cost: 500
   people: 0
-  icon: {fileID: 21300000, guid: 5bc27b21cb22c334dbc5b593d5b242bd, type: 3}
+  icon: {fileID: 21300000, guid: 737be7f082b2f6c4b91bdc4a7c2095e0, type: 3}

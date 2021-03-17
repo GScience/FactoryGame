@@ -206,6 +206,9 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
     public bool TryTakeOneItem(ItemInfo item)
     {
+        if (_outputItemCache == null)
+            return false;
+
         foreach (var itemStack in _outputItemCache)
         {
             if (itemStack.item != item || itemStack.count <= 0)
@@ -219,6 +222,9 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
     public ItemInfo TakeAnyOneItem()
     {
+        if (_outputItemCache == null)
+            return null;
+
         foreach (var itemStack in _outputItemCache)
         {
             if (itemStack.count <= 0)
@@ -413,20 +419,24 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
         // 寻找输入
         var foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + InputPos);
-        if (foundBuilding != null && foundBuilding is IBuildingCanOutputItem foundOutputBuilding)
+        if (foundBuilding is IBuildingCanOutputItem foundOutputBuilding)
         {
             // 尝试连接
             if (foundOutputBuilding.TrySetOutputTo(this, pos + InputPos + Vector2Int.right))
                 inputBuilding = foundOutputBuilding;
         }
+        else
+            inputBuilding = null;
 
         // 寻找输出
         foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + OutputPos);
-        if (foundBuilding != null && foundBuilding is IBuildingCanInputItem foundInputBuilding)
+        if (foundBuilding is IBuildingCanInputItem foundInputBuilding)
         {
             // 尝试连接
             if (foundInputBuilding.TrySetInputFrom(this, pos + OutputPos + Vector2Int.left))
                 outputBuilding = foundInputBuilding;
         }
+        else
+            outputBuilding = null;
     }
 }

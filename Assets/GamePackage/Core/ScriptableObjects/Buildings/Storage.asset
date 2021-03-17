@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bb47a277c0919a4d96a7dc460db5690, type: 3}
   m_Name: Storage
   m_EditorClassIdentifier: 
-  buildingName: "\u4ED3\u5E93"
-  buildingDescription: "\u6D4B\u8BD5\u7528\u7684\u65E0\u9650\u4ED3\u5E93"
+  buildingName: "\u94A2\u94C1\u4ED3\u5E93"
+  buildingDescription: "\u91C7\u8D2D\u94A2\u94C1\u7684\u5E93\u623F\uFF0C\u81EA\u52A8\u5411\u8FDE\u63A5\u7684\u4F20\u9001\u5E26\u4E0A\u8F93\u51FA\u94A2\u952D\u3002"
   cost: 1000
   people: 0
-  icon: {fileID: 21300000, guid: f3f859ea77608e4428401d7db2f92e65, type: 3}
+  icon: {fileID: 21300000, guid: bdfba8e1136b1454c995fefc55813749, type: 3}
