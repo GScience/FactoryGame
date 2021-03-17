@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BuildingDestroyer : MonoBehaviour
 {
@@ -36,6 +37,10 @@ public class BuildingDestroyer : MonoBehaviour
     void Update()
     {
         if (!_isOpen)
+            return;
+
+        // 忽略在UI上点击
+        if (EventSystem.current.IsPointerOverGameObject())
             return;
 
         // 获取鼠标所在的建筑
