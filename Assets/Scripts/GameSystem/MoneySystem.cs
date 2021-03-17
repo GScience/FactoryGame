@@ -45,7 +45,7 @@ public class MoneySystem : ISystem
 
     public void Update()
     {
-        if (GameManager.TimeSystem.Day == 15)
+        if (GameManager.TimeSystem.Day == 3)
         {
             var totalTime = GameManager.TimeSystem.TotalTime;
             if (totalTime - _lastShowMoneyDetailTime < 30)
