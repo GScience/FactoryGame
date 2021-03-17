@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 207f8bcc0f190424ab6a205196dcb732, type: 3}
   m_Name: SteelBall
   m_EditorClassIdentifier: 
-  itemName: "\u94A2\u68D2"
+  itemName: "\u94A2\u7403"
   maxStackCount: 100
   icon: {fileID: 21300000, guid: 914ebf5f4965a614690f233f6167e9fb, type: 3}
   basePrice: 100

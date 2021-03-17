@@ -24,6 +24,11 @@ public class GameManager : MonoBehaviour
     public const string Magic = "FGS";
 
     /// <summary>
+    /// 任务UI
+    /// </summary>
+    public ObjectiveToast missionUI;
+
+    /// <summary>
     /// 是否正在游戏
     /// </summary>
     public bool IsPlaying { get; private set; }
@@ -32,6 +37,11 @@ public class GameManager : MonoBehaviour
     /// 存档名称
     /// </summary>
     public string SaveName { get; private set; }
+
+    /// <summary>
+    /// 通用UI层
+    /// </summary>
+    private static Transform _uiLayer = null;
 
     private void Awake()
     {
@@ -91,7 +101,41 @@ public class GameManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         if (!IsNewGame())
-            LoadGame();
+        {
+            try
+            {
+                LoadGame();
+                ShowToastMessage("工厂小助手", "欢迎您回来~");
+            }
+            catch (Exception e)
+            {
+                ShowToastMessage("工厂小助手", "在您不在的时候工厂受到了未知力量的破坏");
+                Console.WriteLine(e.ToString());
+            }
+        }
+        else
+        {
+            yield return NewGameTip();
+        }
+    }
+
+    public IEnumerator NewGameTip()
+    {
+        ShowToastMessage("工厂小助手", "这是您的新工厂，一切都已经准备就绪");
+        yield return new WaitForSeconds(5);
+        ShowToastMessage("工厂小助手", "一个最基本的工厂包含 仓库 生产设备 和 出货箱");
+        yield return new WaitForSeconds(5);
+        ShowToastMessage("工厂小助手", "仓库负责进货");
+        ShowToastMessage("工厂小助手", "生产设备负责产出");
+        ShowToastMessage("工厂小助手", "出货箱负责出售货物");
+        yield return new WaitForSeconds(10);
+        ShowToastMessage("工厂小助手", "建议把车床当作您的第一个生产设备");
+        yield return new WaitForSeconds(5);
+        ShowToastMessage("工厂小助手", "建造 仓库 车床 和 出货箱 并用传送带连接");
+        yield return new WaitForSeconds(5);
+        ShowToastMessage("工厂小助手", "这将是您的第一个简单的生产线");
+        yield return new WaitForSeconds(5);
+        ShowToastMessage("工厂小助手", "以盈利为目标建造大型的复杂生产线吧");
     }
 
     public void QuitGame()
@@ -142,5 +186,14 @@ public class GameManager : MonoBehaviour
                 systemName = reader.ReadString();
             }
         }
+    }
+
+    public static void ShowToastMessage(string title, string message)
+    {
+        var missionUI = GameManager.GlobalGameManager.Get().missionUI;
+        if (_uiLayer == null)
+            _uiLayer = GameObject.Find("UILayer").transform;
+        var toast = GameObject.Instantiate(missionUI, _uiLayer);
+        toast.Initialize(title, message, "", 5f);
     }
 }

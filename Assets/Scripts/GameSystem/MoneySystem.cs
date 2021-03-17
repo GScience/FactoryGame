@@ -16,6 +16,14 @@ public class MoneySystem : ISystem
 #endif
         ;
 
+    /// <summary>
+    /// 月中显示财务报表
+    /// </summary>
+    private float _lastShowMoneyDetailTime = -1;
+    private int _lastShowMoneyDetailMoney;
+
+    private bool loadFromSaveData = false;
+
     public bool RequireMoney(int money)
     {
         if (!HasEnoughMoney(money))
@@ -37,6 +45,20 @@ public class MoneySystem : ISystem
 
     public void Update()
     {
+        if (GameManager.TimeSystem.Day == 15)
+        {
+            var totalTime = GameManager.TimeSystem.TotalTime;
+            if (totalTime - _lastShowMoneyDetailTime < 30)
+                return;
+            var deltaTime = totalTime - _lastShowMoneyDetailTime;
+            var deltaMoney = Money - _lastShowMoneyDetailMoney;
+            if (deltaMoney > 0)
+                GameManager.ShowToastMessage("财务小助手", (int)deltaTime + " 小时来盈利 " + deltaMoney);
+            else
+                GameManager.ShowToastMessage("财务小助手", (int)deltaTime + " 小时来亏损 " + -deltaMoney);
+            _lastShowMoneyDetailTime = totalTime;
+            _lastShowMoneyDetailMoney = Money;
+        }
     }
 
     public void Save(BinaryWriter writer)
@@ -47,5 +69,7 @@ public class MoneySystem : ISystem
     public void Load(BinaryReader reader)
     {
         Money = reader.ReadInt32();
+        _lastShowMoneyDetailMoney = Money;
+        _lastShowMoneyDetailTime = GameManager.TimeSystem.TotalTime;
     }
 }

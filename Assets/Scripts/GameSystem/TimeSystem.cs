@@ -32,14 +32,22 @@ public class TimeSystem : ISystem
     /// </summary>
     public int Hour { get => ((int)TotalTime) - Week * 168 - Day * 24; }
 
+    private int previousWeek = -1;
+
     public void Update()
     {
         TotalTime += Time.deltaTime * 1f;
+
+        if (Hour == 1 && Day == 0 && previousWeek != Week)
+        {
+            GameManager.ShowToastMessage("时间小助手", "新的一周已开始");
+            previousWeek = Week;
+        }
     }
 
     public override string ToString()
     {
-        return Week + "周 " + Day + "天 " + Hour + "小时";
+        return (Week + 1) + "周 " + (Day + 1) + "天 " + (Hour + 1) + "小时";
     }
 
     public void Save(BinaryWriter writer)
@@ -50,5 +58,6 @@ public class TimeSystem : ISystem
     public void Load(BinaryReader reader)
     {
         TotalTime = reader.ReadSingle();
+        previousWeek = Week;
     }
 }
