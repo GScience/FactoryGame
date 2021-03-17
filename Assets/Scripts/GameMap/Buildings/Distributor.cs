@@ -45,6 +45,26 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
     [HideInInspector]
     public float percent;
 
+    private Bubble _popedUI;
+
+    public override void OnMouseEnter()
+    {
+        if (PlayerInput.IsBuilding())
+            return;
+
+        _popedUI = BubbleUILayer.GlobalBubbleUILayer.Get().Pop("DistributorUI");
+        _popedUI.GetComponent<DistributorUI>().distributor = this;
+    }
+
+    public override void OnMouseLeave()
+    {
+        if (_popedUI != null)
+        {
+            BubbleUILayer.GlobalBubbleUILayer.Get().Close(_popedUI);
+            _popedUI = null;
+        }
+    }
+
     /// <summary>
     /// 输入输出引导方块渲染器
     /// </summary>
@@ -187,16 +207,6 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
     {
         var popMenu = PopMenuLayer.GlobalPopMenuLayer.Get().Pop("DistributorPopMenu");
         popMenu.GetComponent<DistributorPopMenu>().distributor = this;
-    }
-
-    public override void OnMouseEnter()
-    {
-        
-    }
-
-    public override void OnMouseLeave()
-    {
-        
     }
 
     public override void OnPlace()

@@ -17,6 +17,8 @@ public class PopMenuLayer : MonoBehaviour
     /// </summary>
     public PopMenu[] popMenus;
 
+    private Canvas _canvas;
+
     /// <summary>
     /// 已经弹出的菜单
     /// </summary>
@@ -25,6 +27,12 @@ public class PopMenuLayer : MonoBehaviour
     private void Awake()
     {
         GlobalPopMenuLayer = new InstanceHelper<PopMenuLayer>(this);
+        _canvas = GetComponent<Canvas>();
+    }
+
+    public float GetScale()
+    {
+        return _canvas.scaleFactor;
     }
 
     public bool HasPopedMenu => _popedMenus.Count != 0;
@@ -45,6 +53,7 @@ public class PopMenuLayer : MonoBehaviour
 
         var clone = Instantiate(prefab);
         clone.transform.SetParent(transform);
+        clone.transform.localScale = Vector3.one;
 
         _popedMenus.Add(clone);
 

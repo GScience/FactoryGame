@@ -20,9 +20,17 @@ public class BubbleUILayer : MonoBehaviour
     /// </summary>
     public Bubble[] bubbles;
 
+    private Canvas _canvas;
+
     private void Awake()
     {
         GlobalBubbleUILayer = new InstanceHelper<BubbleUILayer>(this);
+        _canvas = GetComponent<Canvas>();
+    }
+
+    public float GetScale()
+    {
+        return _canvas.scaleFactor;
     }
 
     /// <summary>
@@ -35,6 +43,7 @@ public class BubbleUILayer : MonoBehaviour
 
         var clone = Instantiate(prefab);
         clone.transform.SetParent(transform);
+        clone.transform.localScale = Vector3.one;
 
         return clone;
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,8 +55,8 @@ public class PlayerInput : MonoBehaviour
     /// <returns></returns>
     public static bool IsBuilding()
     {
-        return 
-            BeltBuilder.GlobalBuilder.Get().IsBuilding || 
+        return
+            BeltBuilder.GlobalBuilder.Get().IsBuilding ||
             BuildingBuilder.GlobalBuilder.Get().IsBuilding;
     }
 }

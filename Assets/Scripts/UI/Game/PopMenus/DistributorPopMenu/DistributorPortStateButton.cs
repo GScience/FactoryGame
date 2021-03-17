@@ -16,6 +16,10 @@ public class DistributorPortStateButton : MonoBehaviour, IPointerClickHandler
     public Sprite inSprite;
     public Sprite outSprite;
     public Sprite disabledSprite;
+    
+    public Material inMaterial;
+    public Material outMaterial;
+    public Material disabledMaterial;
 
     public Distributor.PortType PortType { get; set; }
 
@@ -43,12 +47,15 @@ public class DistributorPortStateButton : MonoBehaviour, IPointerClickHandler
         {
             case Distributor.PortType.Disabled:
                 _image.sprite = disabledSprite;
+                _image.material = disabledMaterial;
                 break;
             case Distributor.PortType.In:
                 _image.sprite = inSprite;
+                _image.material = inMaterial;
                 break;
             case Distributor.PortType.Out:
                 _image.sprite = outSprite;
+                _image.material = outMaterial;
                 break;
         }
     }

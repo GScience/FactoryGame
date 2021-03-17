@@ -22,8 +22,6 @@ public class MoneySystem : ISystem
     private float _lastShowMoneyDetailTime = -1;
     private int _lastShowMoneyDetailMoney;
 
-    private bool loadFromSaveData = false;
-
     public bool RequireMoney(int money)
     {
         if (!HasEnoughMoney(money))

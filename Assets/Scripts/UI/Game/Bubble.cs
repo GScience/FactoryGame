@@ -57,8 +57,10 @@ public class Bubble : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
     public void UpdatePos()
     {
+        var scaleFactor = BubbleUILayer.GlobalBubbleUILayer.Get().GetScale();
+
         transform.position = new Vector3(
-            Input.mousePosition.x + _rect.sizeDelta.x / 2,
-            Input.mousePosition.y + _rect.sizeDelta.y / 2);
+            Input.mousePosition.x + _rect.sizeDelta.x / 2 * scaleFactor,
+            Input.mousePosition.y + _rect.sizeDelta.y / 2 * scaleFactor);
     }
 }
