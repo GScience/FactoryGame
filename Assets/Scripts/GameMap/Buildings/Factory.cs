@@ -13,8 +13,14 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem, IBuildingAutoConnect
 {
-    public static readonly Vector2Int InputPos = new Vector2Int(-1, 1);
+    public static readonly Vector2Int[] InputPos = new[] { new Vector2Int(-1, 0), new Vector2Int(-1, 1), new Vector2Int(-1, 2), new Vector2Int(1, -1), new Vector2Int(1, 3) };
     public static readonly Vector2Int OutputPos = new Vector2Int(3, 1);
+
+    private static int GetInputPortIdFromRelPos(Vector2Int pos)
+    {
+        var id = Array.IndexOf(InputPos, pos);
+        return id;
+    }
 
     /// <summary>
     /// 加工经过的总时间
@@ -67,7 +73,7 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     /// <summary>
     /// 输入建筑
     /// </summary>
-    public IBuildingCanOutputItem inputBuilding;
+    public IBuildingCanOutputItem[] inputBuildings = new IBuildingCanOutputItem[InputPos.Length];
 
     /// <summary>
     /// 是否能放物品
@@ -244,11 +250,15 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         if (_inputItemCache == null)
             return false;
 
+        var isAllInputFilled = true;
+
         for (var i = 0; i < _inputItemCache.Length; ++i)
         {
-            if (_inputItemCache[i].item != item)
-                continue;
             if (_inputItemCache[i].count >= CurrentRecipe.input[i].count)
+                continue;
+            isAllInputFilled = false;
+
+            if (_inputItemCache[i].item != item)
                 continue;
             ++_inputItemCache[i].count;
             OnItemUpdate();
@@ -256,7 +266,8 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
             return true;
         }
 
-        _canPlaceItem = false;
+        if (isAllInputFilled)
+            _canPlaceItem = false;
         return false;
     }
 
@@ -324,23 +335,31 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     {
         if (!CanSetInputFrom(building, inputPos))
             return false;
-        inputBuilding = building;
+        var relevantPos = GetRelevantPos(inputPos);
+        var id = GetInputPortIdFromRelPos(relevantPos);
+        inputBuildings[id] = building;
         return true;
     }
 
     public bool CanSetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos)
     {
         var relevantPos = GetRelevantPos(inputPos);
-        if (relevantPos != InputPos)
+
+        var id = GetInputPortIdFromRelPos(relevantPos);
+        if (id == -1)
             return false;
-        return inputBuilding == null || building == null;
+
+        var factoryInfo = info as FactoryInfo;
+        if (factoryInfo == null)
+            return false;
+        if (!factoryInfo.enableInputPorts.ElementAtOrDefault(id))
+            return false;
+        return inputBuildings[id] == null || building == null;
     }
 
     public IBuildingCanOutputItem[] GetInputBuildings()
     {
-        if (inputBuilding == null)
-            return new IBuildingCanOutputItem[] { };
-        return new[] { inputBuilding };
+        return inputBuildings.Where((building) => building != null).ToArray();
     }
 
     public IBuildingCanInputItem[] GetOutputBuildings()
@@ -384,7 +403,8 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         writer.Write(processingTime);
 
         //输入输出
-        SaveHelper.Write(writer, inputBuilding);
+        for (var i = 0; i < inputBuildings.Length; ++i)
+            SaveHelper.Write(writer, inputBuildings[i]);
         SaveHelper.Write(writer, outputBuilding);
     }
 
@@ -399,7 +419,7 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
         var outputCacheCount = reader.ReadInt32();
         _outputItemCache = new ItemStack[outputCacheCount];
-        for (var i = 0; i < inputCacheCount; ++i)
+        for (var i = 0; i < outputCacheCount; ++i)
         {
             _outputItemCache[i] = SaveHelper.ReadItemStack(reader);
 
@@ -409,7 +429,8 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
         processingTime = reader.ReadSingle();
 
-        inputBuilding = SaveHelper.ReadBuildingCanOutput(reader);
+        for (var i = 0; i < inputBuildings.Length; ++i)
+            inputBuildings[i] = SaveHelper.ReadBuildingCanOutput(reader);
         outputBuilding = SaveHelper.ReadBuildingCanInput(reader);
     }
 
@@ -418,15 +439,29 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         var pos = _gridElement.CellPos;
 
         // 寻找输入
-        var foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + InputPos);
-        if (foundBuilding is IBuildingCanOutputItem foundOutputBuilding)
+        BuildingBase foundBuilding = null;
+        foreach (var inputPos in InputPos)
         {
-            // 尝试连接
-            if (foundOutputBuilding.TrySetOutputTo(this, pos + InputPos + Vector2Int.right))
-                inputBuilding = foundOutputBuilding;
+            var id = GetInputPortIdFromRelPos(inputPos);
+            foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + inputPos);
+            if (foundBuilding is IBuildingCanOutputItem foundOutputBuilding)
+            {
+                // 尝试连接
+                Vector2Int connectDirection;
+                if (inputPos.x < 0)
+                    connectDirection = Vector2Int.right;
+                else if (inputPos.y < 0)
+                    connectDirection = Vector2Int.up;
+                else if (inputPos.y > 2)
+                    connectDirection = Vector2Int.down;
+                else
+                    connectDirection = Vector2Int.zero;
+                if (foundOutputBuilding.TrySetOutputTo(this, pos + inputPos + connectDirection))
+                    inputBuildings[id] = foundOutputBuilding;
+            }
+            else
+                inputBuildings[id] = null;
         }
-        else
-            inputBuilding = null;
 
         // 寻找输出
         foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + OutputPos);

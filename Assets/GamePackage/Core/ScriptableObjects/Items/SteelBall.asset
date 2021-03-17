@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 207f8bcc0f190424ab6a205196dcb732, type: 3}
-  m_Name: SteelStick
+  m_Name: SteelBall
   m_EditorClassIdentifier: 
   itemName: "\u94A2\u68D2"
   maxStackCount: 100
-  icon: {fileID: 21300000, guid: afe8b720b2e6f7c49b6e441e95f00271, type: 3}
+  icon: {fileID: 21300000, guid: 914ebf5f4965a614690f233f6167e9fb, type: 3}
   basePrice: 100

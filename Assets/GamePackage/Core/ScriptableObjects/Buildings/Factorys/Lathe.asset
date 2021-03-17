@@ -20,4 +20,6 @@ MonoBehaviour:
   recipes:
   - {fileID: 11400000, guid: 298b93e405441cf45bdaf3ff1e07f6b3, type: 2}
   - {fileID: 11400000, guid: c9a32ba5259620c48918fa18f5ddcc3e, type: 2}
-  - {fileID: 11400000, guid: daca51cc57758514e9872cf23380def8, type: 2}
+  - {fileID: 11400000, guid: 2adad1d99b17f5d4dbb2dac494090175, type: 2}
+  - {fileID: 11400000, guid: f67a207af859ee64ea572ccd5db64d38, type: 2}
+  enableInputPorts: 000100

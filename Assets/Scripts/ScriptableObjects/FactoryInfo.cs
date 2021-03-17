@@ -12,4 +12,6 @@ public class FactoryInfo : BuildingInfo
     /// 合成配方
     /// </summary>
     public RecipeInfo[] recipes;
+
+    public bool[] enableInputPorts = new[] { false, false, false };
 }
