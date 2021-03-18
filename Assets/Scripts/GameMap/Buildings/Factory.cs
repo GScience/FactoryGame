@@ -442,6 +442,9 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         // 配方
         SaveHelper.Write(writer, CurrentRecipe);
 
+        // 旋转状态
+        writer.Write((char)RotationState);
+
         // 缓存
         writer.Write(_inputItemCache?.Length ?? 0);
         if (_inputItemCache != null)
@@ -465,6 +468,8 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     public override void Load(BinaryReader reader)
     {
         CurrentRecipe = SaveHelper.ReadScriptable<RecipeInfo>(reader);
+
+        RotationState = reader.ReadChar();
 
         var inputCacheCount = reader.ReadInt32();
         _inputItemCache = new ItemStack[inputCacheCount];
