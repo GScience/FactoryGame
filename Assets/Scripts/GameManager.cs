@@ -137,6 +137,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(5);
         ShowToastMessage("工厂小助手", "这将是您的第一个简单的生产线");
         yield return new WaitForSeconds(5);
+        ShowToastMessage("工厂小助手", "对于生产设备，您可以通过转动鼠标滚轮改变方向");
+        yield return new WaitForSeconds(5);
         ShowToastMessage("工厂小助手", "以盈利为目标建造大型的复杂生产线吧");
     }
 
