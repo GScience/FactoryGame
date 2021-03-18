@@ -1,8 +1,9 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ObjectiveToast : MonoBehaviour
+public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
 {
     [Header("References")]
     [Tooltip("标题文字")]
@@ -121,5 +122,10 @@ public class ObjectiveToast : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        _delay = 0;
     }
 }

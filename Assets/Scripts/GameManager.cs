@@ -126,7 +126,9 @@ public class GameManager : MonoBehaviour
         ShowToastMessage("工厂小助手", "一个最基本的工厂包含 仓库 生产设备 和 出货箱");
         yield return new WaitForSeconds(5);
         ShowToastMessage("工厂小助手", "仓库负责进货");
+        yield return new WaitForSeconds(0.5f);
         ShowToastMessage("工厂小助手", "生产设备负责产出");
+        yield return new WaitForSeconds(0.5f);
         ShowToastMessage("工厂小助手", "出货箱负责出售货物");
         yield return new WaitForSeconds(10);
         ShowToastMessage("工厂小助手", "建议把车床当作您的第一个生产设备");
@@ -194,6 +196,6 @@ public class GameManager : MonoBehaviour
         if (_uiLayer == null)
             _uiLayer = GameObject.Find("UILayer").transform;
         var toast = GameObject.Instantiate(missionUI, _uiLayer);
-        toast.Initialize(title, message, "", 5f);
+        toast.Initialize(title, message, "", 30f);
     }
 }
