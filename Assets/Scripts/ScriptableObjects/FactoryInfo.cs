@@ -13,5 +13,6 @@ public class FactoryInfo : BuildingInfo
     /// </summary>
     public RecipeInfo[] recipes;
 
-    public bool[] enableInputPorts = new[] { false, false, false };
+    public Vector2Int[] inputPos;
+    public Vector2Int outputPos;
 }

@@ -20,4 +20,7 @@ MonoBehaviour:
   recipes:
   - {fileID: 11400000, guid: 7f6ddbdb56d898e4e9f17f48eef15064, type: 2}
   - {fileID: 11400000, guid: 390e5c6bf63c024439cdae24e492eac6, type: 2}
-  enableInputPorts: 010001
+  inputPos:
+  - {x: -1, y: 0}
+  - {x: -1, y: 2}
+  outputPos: {x: 3, y: 1}

@@ -8,7 +8,7 @@ using UnityEngine;
 public class BuildingInputGuide : MonoBehaviour
 {
     public GameObject inputGuideGroup;
-    private bool _visiable = false;
+    private bool _visiable = true;
 
     private void Update()
     {

@@ -22,4 +22,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c9a32ba5259620c48918fa18f5ddcc3e, type: 2}
   - {fileID: 11400000, guid: 2adad1d99b17f5d4dbb2dac494090175, type: 2}
   - {fileID: 11400000, guid: f67a207af859ee64ea572ccd5db64d38, type: 2}
-  enableInputPorts: 000100
+  inputPos:
+  - {x: -1, y: 1}
+  outputPos: {x: 3, y: 1}

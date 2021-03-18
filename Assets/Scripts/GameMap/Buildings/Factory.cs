@@ -13,12 +13,17 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem, IBuildingAutoConnect
 {
-    public static readonly Vector2Int[] InputPos = new[] { new Vector2Int(-1, 0), new Vector2Int(-1, 1), new Vector2Int(-1, 2), new Vector2Int(1, -1), new Vector2Int(1, 3) };
-    public static readonly Vector2Int OutputPos = new Vector2Int(3, 1);
+    public static readonly Vector2Int[] PortPos 
+        = new[] {
+            new Vector2Int(-1, 0), new Vector2Int(-1, 1), new Vector2Int(-1, 2),
+            new Vector2Int(2, -1), new Vector2Int(1, -1), new Vector2Int(0, -1),
+            new Vector2Int(3, 2),new Vector2Int(3, 1),new Vector2Int(3, 0),
+            new Vector2Int(0, 3), new Vector2Int(1, 3), new Vector2Int(2, 3)
+        };
 
-    private static int GetInputPortIdFromRelPos(Vector2Int pos)
+    private static int GetPortIdFromRelPos(Vector2Int pos)
     {
-        var id = Array.IndexOf(InputPos, pos);
+        var id = Array.IndexOf(PortPos, pos);
         return id;
     }
 
@@ -28,6 +33,11 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     [HideInInspector]
     [NonSerialized]
     public float processingTime;
+
+    /// <summary>
+    /// 输入引导方块
+    /// </summary>
+    public BuildingInputGuide inputGuide;
 
     /// <summary>
     /// 当前所选配方
@@ -73,7 +83,7 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     /// <summary>
     /// 输入建筑
     /// </summary>
-    public IBuildingCanOutputItem[] inputBuildings = new IBuildingCanOutputItem[InputPos.Length];
+    public IBuildingCanOutputItem[] inputBuildings = new IBuildingCanOutputItem[PortPos.Length];
 
     /// <summary>
     /// 是否能放物品
@@ -96,6 +106,50 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
         // 开始加工
         IsManufacturing = true;
+    }
+
+    private int _rotateState;
+
+    /// <summary>
+    /// 建筑旋转状态
+    /// </summary>
+    public int RotationState
+    {
+        get => _rotateState;
+        set
+        {
+            value %= 4;
+            if (value < 0)
+                value += 4;
+            var deltaState = value - _rotateState;
+            inputGuide.transform.Rotate(Vector3.forward, deltaState * 90);
+            _rotateState = value;
+        }
+    }
+
+    public Vector2Int[] GetInputPos()
+    {
+        var factoryInfo = info as FactoryInfo;
+        if (factoryInfo == null)
+            return new Vector2Int[0];
+
+        return factoryInfo.inputPos.Select((pos) => GetRotatedPos(pos)).ToArray();
+    }
+
+    public Vector2Int GetOutputPos()
+    {
+        var factoryInfo = info as FactoryInfo;
+        if (factoryInfo == null)
+            return Vector2Int.zero;
+        return GetRotatedPos(factoryInfo.outputPos);
+    }
+
+    private Vector2Int GetRotatedPos(Vector2Int pos)
+    {
+        var id = GetPortIdFromRelPos(pos);
+        id += RotationState * 3;
+        id %= PortPos.Length;
+        return PortPos[id];
     }
 
     /// <summary>
@@ -315,6 +369,11 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         
     }
 
+    public override void ChangeToState(int offset)
+    {
+        RotationState += offset;
+    }
+
     public bool TrySetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
     {
         if (!CanSetOutputTo(building, inputPos))
@@ -326,7 +385,7 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     public bool CanSetOutputTo(IBuildingCanInputItem building, Vector2Int inputPos)
     {
         var relevantPos = GetRelevantPos(inputPos);
-        if (relevantPos != OutputPos)
+        if (relevantPos != GetOutputPos())
             return false;
         return outputBuilding == null || building == null;
     }
@@ -336,7 +395,7 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         if (!CanSetInputFrom(building, inputPos))
             return false;
         var relevantPos = GetRelevantPos(inputPos);
-        var id = GetInputPortIdFromRelPos(relevantPos);
+        var id = GetPortIdFromRelPos(relevantPos);
         inputBuildings[id] = building;
         return true;
     }
@@ -344,15 +403,10 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
     public bool CanSetInputFrom(IBuildingCanOutputItem building, Vector2Int inputPos)
     {
         var relevantPos = GetRelevantPos(inputPos);
-
-        var id = GetInputPortIdFromRelPos(relevantPos);
+        if (!GetInputPos().Contains(relevantPos))
+            return false;
+        var id = GetPortIdFromRelPos(relevantPos);
         if (id == -1)
-            return false;
-
-        var factoryInfo = info as FactoryInfo;
-        if (factoryInfo == null)
-            return false;
-        if (!factoryInfo.enableInputPorts.ElementAtOrDefault(id))
             return false;
         return inputBuildings[id] == null || building == null;
     }
@@ -440,9 +494,9 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
         // 寻找输入
         BuildingBase foundBuilding = null;
-        foreach (var inputPos in InputPos)
+        foreach (var inputPos in GetInputPos())
         {
-            var id = GetInputPortIdFromRelPos(inputPos);
+            var id = GetPortIdFromRelPos(inputPos);
             foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + inputPos);
             if (foundBuilding is IBuildingCanOutputItem foundOutputBuilding)
             {
@@ -454,6 +508,8 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
                     connectDirection = Vector2Int.up;
                 else if (inputPos.y > 2)
                     connectDirection = Vector2Int.down;
+                else if (inputPos.x > 2)
+                    connectDirection = Vector2Int.left;
                 else
                     connectDirection = Vector2Int.zero;
                 if (foundOutputBuilding.TrySetOutputTo(this, pos + inputPos + connectDirection))
@@ -464,11 +520,24 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
         }
 
         // 寻找输出
-        foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + OutputPos);
+        foundBuilding = GameMap.GlobalMap.Get().GetBuildingAt(pos + GetOutputPos());
         if (foundBuilding is IBuildingCanInputItem foundInputBuilding)
         {
+            var outputPos = GetOutputPos();
             // 尝试连接
-            if (foundInputBuilding.TrySetInputFrom(this, pos + OutputPos + Vector2Int.left))
+            Vector2Int connectDirection;
+            if (outputPos.x < 0)
+                connectDirection = Vector2Int.right;
+            else if (outputPos.y < 0)
+                connectDirection = Vector2Int.up;
+            else if (outputPos.y > 2)
+                connectDirection = Vector2Int.down;
+            else if (outputPos.x > 2)
+                connectDirection = Vector2Int.left;
+            else
+                connectDirection = Vector2Int.zero;
+
+            if (foundInputBuilding.TrySetInputFrom(this, pos + outputPos + connectDirection))
                 outputBuilding = foundInputBuilding;
         }
         else
