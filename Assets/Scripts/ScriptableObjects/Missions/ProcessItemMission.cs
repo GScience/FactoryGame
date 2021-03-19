@@ -14,6 +14,16 @@ public class ProcessItemMission : Mission
     public override string Prefix => "任务：";
     public override bool ShowMissionFinish => true;
 
+    public override string MissionState
+    {
+        get
+        {
+            if (!GameManager.StatsSystem.ProcessItemCount.TryGetValue(item, out var value))
+                value = 0;
+            return item.itemName + " " + value + "/" + count;
+        }
+    }
+
     public override bool Check()
     {
         if (!GameManager.StatsSystem.ProcessItemCount.TryGetValue(item, out var value))

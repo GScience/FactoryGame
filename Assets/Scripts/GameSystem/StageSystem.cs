@@ -21,6 +21,8 @@ public class StageSystem : ISystem
 
     private IEnumerator _showMissionEnumerator;
 
+    private ObjectiveToast _currentObjectiveToast;
+
     /// <summary>
     /// 获取当前游戏阶段名称
     /// </summary>
@@ -68,8 +70,16 @@ public class StageSystem : ISystem
         if (mission == null)
             return;
 
+        if (_currentObjectiveToast != null)
+        {
+            _currentObjectiveToast.CanFadeOut = true;
+            if (mission.ShowMissionFinish)
+                _currentObjectiveToast.Delay = 0;
+            _currentObjectiveToast = null;
+        }
+
         if (mission.ShowMissionFinish)
-            GameManager.ShowToastMessage("任务小助手", "任务已完成");
+            GameManager.ShowToastMessage("任务小助手", "任务已完成", 2);
 
         // 处理奖励
         foreach (var card in mission.cards)
@@ -141,6 +151,9 @@ public class StageSystem : ISystem
         if (_currentGameStages == null)
             return;
         var mission = _currentGameStages.missions[_currentMissionId];
+        if (_currentObjectiveToast != null)
+            _currentObjectiveToast.UpdateCounterText(mission.MissionState);
+
         if (mission == null)
             return;
         if (mission.Check())
@@ -165,6 +178,6 @@ public class StageSystem : ISystem
         var mission = _currentGameStages.missions[_currentMissionId];
         if (mission == null)
             yield break;
-        GameManager.ShowToastMessage("任务小助手", mission.Prefix + mission.desc);
+        _currentObjectiveToast = GameManager.ShowToastMessage("任务小助手", mission.Prefix + mission.desc, 15, false);
     }
 }

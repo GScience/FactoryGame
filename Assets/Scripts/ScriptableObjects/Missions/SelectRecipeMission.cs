@@ -13,6 +13,16 @@ public class SelectRecipeMission : Mission
     public override string Prefix => "任务：";
     public override bool ShowMissionFinish => true;
 
+    public override string MissionState
+    {
+        get
+        {
+            if (!GameManager.StatsSystem.RecipeUseCount.TryGetValue(recipe, out var value))
+                return "未设置";
+            return "已设置";
+        }
+    }
+
     public override bool Check()
     {
         if (!GameManager.StatsSystem.RecipeUseCount.TryGetValue(recipe, out var value))

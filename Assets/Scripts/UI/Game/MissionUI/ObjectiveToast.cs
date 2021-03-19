@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -46,12 +47,17 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
     [Tooltip("退出的动画曲线, 随时间在x轴上发生位置变化")]
     public AnimationCurve moveOutCurve;
 
-    private float _delay;
+    public float Delay { get; set; }
+    public bool CanFadeOut { get; set; }
 
-    private static int ToastCount = 0;
-    private int currentToastId = 0;
+    private static List<ObjectiveToast> _toastList = new List<ObjectiveToast>();
 
-    public void Initialize(string titleText, string descText, string counterText, float delay)
+    public void UpdateCounterText(string text)
+    {
+        counterTextContent.text = text;
+    }
+
+    public void Initialize(string titleText, string descText, string counterText, float delay, bool canFadeOut)
     {
         // 设置对象描述，并更新Canvas
         Canvas.ForceUpdateCanvases();
@@ -62,14 +68,25 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
 
         UpdatePos();
 
-        _delay = delay;
+        Delay = delay;
+        CanFadeOut = canFadeOut;
+
+        if (CanFadeOut)
+        {
+            var insertIndex = _toastList.FindIndex((toast) => toast.CanFadeOut);
+            if (insertIndex == -1)
+                insertIndex = _toastList.Count;
+            _toastList.Insert(insertIndex, this);
+        }
+        else
+            _toastList.Insert(0, this);
+
         StartCoroutine(AnimCotourine());
     }
 
-    private void Awake()
+    void OnDestroy()
     {
-        ToastCount++;
-        currentToastId = ToastCount;
+        _toastList.Remove(this);
     }
 
     private void Update()
@@ -79,8 +96,10 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
 
     public void UpdatePos()
     {
-        layoutGroup.padding.top = (ToastCount - currentToastId) * 100;
-        layoutGroup.padding.bottom = (ToastCount - currentToastId) * -100;
+        var id = _toastList.IndexOf(this);
+
+        layoutGroup.padding.top = id * 100;
+        layoutGroup.padding.bottom = id * -100;
 
         if (GetComponent<RectTransform>())
             LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
@@ -103,7 +122,9 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
         // 延迟
         var totalWaitTime = 0f;
 
-        while (ToastCount - currentToastId < 3 && totalWaitTime < _delay)
+        while (
+            _toastList.FindIndex((toast) => toast == this) < 3 && 
+            totalWaitTime < Delay)
         {
             totalWaitTime += Time.deltaTime;
             yield return 0;
@@ -111,6 +132,9 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
 
         // 淡出
         var totalFadeOutTime = 0f;
+
+        while (!CanFadeOut)
+            yield return 0;
 
         while (totalFadeOutTime < fadeOutDuration)
         {
@@ -126,6 +150,6 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        _delay = 0;
+        Delay = 0;
     }
 }

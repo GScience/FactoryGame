@@ -14,6 +14,8 @@ public class TipMission : Mission
     public override string Prefix => "提示：";
     public override bool ShowMissionFinish => false;
 
+    public override string MissionState => "";
+
     public override bool Check()
     {
         return true;

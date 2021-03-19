@@ -13,6 +13,16 @@ public class BuildBuildingMission : Mission
     public override string Prefix => "任务：";
     public override bool ShowMissionFinish => true;
 
+    public override string MissionState
+    {
+        get
+        {
+            if (!GameManager.StatsSystem.BuildingCount.TryGetValue(building, out var value))
+                return "建造 " + building.buildingName;
+            return "已建造";
+        }
+    }
+
     public override bool Check()
     {
         if (!GameManager.StatsSystem.BuildingCount.TryGetValue(building, out var value))

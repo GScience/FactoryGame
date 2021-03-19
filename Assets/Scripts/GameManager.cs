@@ -177,12 +177,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static void ShowToastMessage(string title, string message)
+    public static ObjectiveToast ShowToastMessage(string title, string message, float delay = 30f, bool canFadeOut = true)
     {
         var missionUI = GameManager.GlobalGameManager.Get().missionUI;
         if (_uiLayer == null)
             _uiLayer = GameObject.Find("UILayer").transform;
         var toast = GameObject.Instantiate(missionUI, _uiLayer);
-        toast.Initialize(title, message, "", 30f);
+        toast.Initialize(title, message, "", delay, canFadeOut);
+
+        return toast;
     }
 }

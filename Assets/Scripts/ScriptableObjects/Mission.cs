@@ -27,6 +27,11 @@ public abstract class Mission : NamedScriptableObject
     public abstract string Prefix { get; }
 
     /// <summary>
+    /// 任务状态字符串
+    /// </summary>
+    public abstract string MissionState { get; }
+
+    /// <summary>
     /// 是否显示任务完成
     /// </summary>
     public abstract bool ShowMissionFinish { get; }
