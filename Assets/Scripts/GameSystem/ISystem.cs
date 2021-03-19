@@ -9,6 +9,8 @@ public interface ISystem
 {
     void Update();
 
+    void Init();
+
     void Save(BinaryWriter writer);
     void Load(BinaryReader reader);
 }

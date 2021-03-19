@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57bde563539b0e343b66545575a8bcdb, type: 3}
+  m_Name: Begin
+  m_EditorClassIdentifier: 
+  stageName: "\u9636\u6BB5 0"
+  missions:
+  - {fileID: 11400000, guid: 77f19b804a3c4bb449d154968daeb408, type: 2}
+  - {fileID: 11400000, guid: 9b8c52f98c61bf84081cef964553a40e, type: 2}
+  - {fileID: 11400000, guid: 221da32085d4f3546b385ab0a96e4595, type: 2}
+  - {fileID: 11400000, guid: 2921048cfdf61b945a23f36abcd7eaf7, type: 2}
+  - {fileID: 11400000, guid: 9bfa6dccf0d9a354c90fba4343dba568, type: 2}
+  - {fileID: 11400000, guid: fc6957cee685e7c44ae25237f0de0d15, type: 2}
+  - {fileID: 11400000, guid: c4f5414c43bd67d4e80314d1ee05bd45, type: 2}
+  - {fileID: 11400000, guid: 84df33450751cee4d99d5d5c987591aa, type: 2}
+  - {fileID: 11400000, guid: e339f9b8ba1a4d94e9bff78671be263b, type: 2}
+  - {fileID: 11400000, guid: 7bc20a30e5dd34541b14f2314ab13eaa, type: 2}
+  isFirstStage: 1
+  nextStage: {fileID: 0}

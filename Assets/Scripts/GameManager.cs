@@ -14,11 +14,13 @@ public class GameManager : MonoBehaviour
 {
     public static InstanceHelper<GameManager> GlobalGameManager;
 
-    private Dictionary<string, ISystem> _systems = new Dictionary<string, ISystem>();
+    private Dictionary<string, ISystem> _systems;
 
     public static TimeSystem TimeSystem => GlobalGameManager.Get()._systems["time"] as TimeSystem;
     public static MoneySystem MoneySystem => GlobalGameManager.Get()._systems["money"] as MoneySystem;
     public static CameraSystem CameraSystem => GlobalGameManager.Get()._systems["camera"] as CameraSystem;
+    public static StageSystem StageSystem => GlobalGameManager.Get()._systems["stage"] as StageSystem;
+    public static StatsSystem StatsSystem => GlobalGameManager.Get()._systems["stats"] as StatsSystem;
 
     public static int SaveVersion = 1;
     public const string Magic = "FGS";
@@ -46,10 +48,12 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         if (InstanceHelper<GameManager>.GetGlobal() != this)
+        {
             Destroy(gameObject);
+            return;
+        }
         GlobalGameManager = new InstanceHelper<GameManager>(this);
         DontDestroyOnLoad(this);
-
 #if UNITY_EDITOR
         if (SceneManager.GetActiveScene().name == "GameScene")
             StartGame("save0");
@@ -86,11 +90,16 @@ public class GameManager : MonoBehaviour
 
         SaveName = saveName;
 
-        IsPlaying = true;
+        _systems = new Dictionary<string, ISystem>()
+        {
+            { "time", new TimeSystem() },
+            { "money",new MoneySystem() },
+            { "camera",new CameraSystem() },
+            { "stage", new StageSystem() },
+            { "stats",new  StatsSystem() }
+        };
 
-        _systems["time"] = new TimeSystem();
-        _systems["money"] = new MoneySystem();
-        _systems["camera"] = new CameraSystem();
+        IsPlaying = true;
 
 #if UNITY_EDITOR
         if (SceneManager.GetActiveScene().name != "GameScene")
@@ -99,6 +108,9 @@ public class GameManager : MonoBehaviour
             yield return SceneManager.LoadSceneAsync("GameScene");
 
         yield return new WaitForEndOfFrame();
+
+        foreach (var system in _systems)
+            system.Value.Init();
 
         if (!IsNewGame())
         {
@@ -113,33 +125,6 @@ public class GameManager : MonoBehaviour
                 Console.WriteLine(e.ToString());
             }
         }
-        else
-        {
-            yield return NewGameTip();
-        }
-    }
-
-    public IEnumerator NewGameTip()
-    {
-        ShowToastMessage("工厂小助手", "这是您的新工厂，一切都已经准备就绪");
-        yield return new WaitForSeconds(5);
-        ShowToastMessage("工厂小助手", "一个最基本的工厂包含 仓库 生产设备 和 出货箱");
-        yield return new WaitForSeconds(5);
-        ShowToastMessage("工厂小助手", "仓库负责进货");
-        yield return new WaitForSeconds(0.5f);
-        ShowToastMessage("工厂小助手", "生产设备负责产出");
-        yield return new WaitForSeconds(0.5f);
-        ShowToastMessage("工厂小助手", "出货箱负责出售货物");
-        yield return new WaitForSeconds(10);
-        ShowToastMessage("工厂小助手", "建议把车床当作您的第一个生产设备");
-        yield return new WaitForSeconds(5);
-        ShowToastMessage("工厂小助手", "建造 仓库 车床 和 出货箱 并用传送带连接");
-        yield return new WaitForSeconds(5);
-        ShowToastMessage("工厂小助手", "这将是您的第一个简单的生产线");
-        yield return new WaitForSeconds(5);
-        ShowToastMessage("工厂小助手", "对于生产设备，您可以通过转动鼠标滚轮改变方向");
-        yield return new WaitForSeconds(5);
-        ShowToastMessage("工厂小助手", "以盈利为目标建造大型的复杂生产线吧");
     }
 
     public void QuitGame()

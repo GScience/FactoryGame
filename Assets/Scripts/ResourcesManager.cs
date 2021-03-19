@@ -22,7 +22,8 @@ public class ResourcesManager : MonoBehaviour
     private static readonly string[] _abNames = new []{ "gamepack.core" };
 
     private static Dictionary<int, BuildingBase> _buildingDatabase;
-    private static List<BuildingCardBase> _cardDatabase;
+    private static Dictionary<int, BuildingCardBase> _cardDatabase;
+    private static Dictionary<int, GameStage> _stageDatabase;
     private static Dictionary<int, NamedScriptableObject> _scriptableDatabase;
 
     private LoadResourcesMenu _loadResourceMenu;
@@ -32,8 +33,13 @@ public class ResourcesManager : MonoBehaviour
 
     public void Init()
     {
+        if (_hasInit)
+            return;
+
         if (_current == null)
             _current = InitAsync();
+        else
+            StopCoroutine(_current);
         while (_current.MoveNext()) ;
     }
 
@@ -46,7 +52,8 @@ public class ResourcesManager : MonoBehaviour
         _loadResourceMenu = loadResourcesPopMenu.GetComponent<LoadResourcesMenu>();
 
         _buildingDatabase = new Dictionary<int, BuildingBase>();
-        _cardDatabase = new List<BuildingCardBase>();
+        _cardDatabase = new Dictionary<int, BuildingCardBase>();
+        _stageDatabase = new Dictionary<int, GameStage>();
         _scriptableDatabase = new Dictionary<int, NamedScriptableObject>();
 
         foreach (var abName in _abNames)
@@ -76,7 +83,7 @@ public class ResourcesManager : MonoBehaviour
             var buildingCardBase = gameObject.GetComponent<BuildingCardBase>();
             if (buildingCardBase != null)
             {
-                _cardDatabase.Add(buildingCardBase);
+                _cardDatabase.Add(name.GetHashCode(), buildingCardBase);
                 Debug.Log("Card " + name + " loaded");
                 return;
             }
@@ -86,6 +93,9 @@ public class ResourcesManager : MonoBehaviour
             _scriptableDatabase[name.GetHashCode()] = scriptableObject;
             scriptableObject.NameHash = name.GetHashCode();
             Debug.Log("Scriptable object " + name + " loaded");
+
+            if (scriptableObject is GameStage gameStage)
+                _stageDatabase.Add(name.GetHashCode(), gameStage);
         }
     }
 
@@ -140,10 +150,42 @@ public class ResourcesManager : MonoBehaviour
             InstanceHelper<ResourcesManager>.GetGlobal().Init();
     }
 
+    public static BuildingCardBase GetCard(int keyHash)
+    {
+        CheckInit();
+        if (keyHash == 0)
+            return null;
+        if (_cardDatabase.TryGetValue(keyHash, out var result))
+            return result;
+        return null;
+    }
+
     public static List<BuildingCardBase> GetAllCards()
     {
         CheckInit();
-        return _cardDatabase;
+        return _cardDatabase.Values.ToList();
+    }
+
+    public static int GetCardKeyHash(BuildingCardBase card)
+    {
+        foreach (var pair in _cardDatabase)
+            if (pair.Value == card)
+                return pair.Key;
+        return 0;
+    }
+
+    public static List<GameStage> GetAllStage()
+    {
+        CheckInit();
+        return _stageDatabase.Values.ToList();
+    }
+
+    public static int GetStageKeyHash(GameStage card)
+    {
+        foreach (var pair in _stageDatabase)
+            if (pair.Value == card)
+                return pair.Key;
+        return 0;
     }
 
     public static BuildingBase GetBuilding(int keyHash)
@@ -168,7 +210,10 @@ public class ResourcesManager : MonoBehaviour
  
     public void Start()
     {
-        _current = InitAsync();
-        StartCoroutine(_current);
+        if (_current == null && !_hasInit)
+        {
+            _current = InitAsync();
+            StartCoroutine(_current);
+        }
     }
 }

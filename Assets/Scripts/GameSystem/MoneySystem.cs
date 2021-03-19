@@ -37,6 +37,8 @@ public class MoneySystem : ISystem
 
     public bool TrySellItem(ItemInfo info)
     {
+        // 游戏统计出售物品
+        GameManager.StatsSystem.OnSellItem(info, 1);
         Money += (int)(info.basePrice * 0.8f);
         return true;
     }
@@ -57,6 +59,11 @@ public class MoneySystem : ISystem
             _lastShowMoneyDetailTime = totalTime;
             _lastShowMoneyDetailMoney = Money;
         }
+    }
+
+    public void Init()
+    {
+
     }
 
     public void Save(BinaryWriter writer)

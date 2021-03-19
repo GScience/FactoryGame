@@ -9,8 +9,13 @@ public class BuildingCardList : MonoBehaviour
 {
     private void Start()
     {
-        var cards = ResourcesManager.GetAllCards();
+        var cards = GameManager.StageSystem.GetAllEnabledBuildingCard();
         foreach (var card in cards)
             Instantiate(card, transform);
+
+        GameManager.StageSystem.OnEnableBuildingCard += (card) =>
+        {
+            Instantiate(card, transform);
+        };
     }
 }

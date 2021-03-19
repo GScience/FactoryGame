@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3009451cc30d0f44c846bd93a59a7734, type: 3}
+  m_Name: 1.FirstLathe
+  m_EditorClassIdentifier: 
+  desc: "\u5EFA\u9020\u4F60\u7684\u7B2C\u4E00\u4E2A\u8F66\u5E8A"
+  cards: []
+  building: {fileID: 11400000, guid: de8d814e2143fda4d9c3908bdf1104f1, type: 2}

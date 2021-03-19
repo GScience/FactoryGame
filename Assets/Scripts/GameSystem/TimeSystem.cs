@@ -50,6 +50,11 @@ public class TimeSystem : ISystem
         return (Week + 1) + "周 " + (Day + 1) + "天 " + (Hour + 1) + "小时";
     }
 
+    public void Init()
+    {
+
+    }
+
     public void Save(BinaryWriter writer)
     {
         writer.Write(TotalTime);

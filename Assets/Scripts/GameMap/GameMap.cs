@@ -158,6 +158,8 @@ public class GameMap : MonoBehaviour
             }
         }
 
+        // 游戏统计建筑拆除
+        GameManager.StatsSystem.OnDestroyBuilding(building.info);
         Destroy(building.gameObject);
     }
 
@@ -189,6 +191,11 @@ public class GameMap : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// 把建筑放到地图上
+    /// </summary>
+    /// <param name="building"></param>
+    /// <param name="id">建筑ID，加载存档使用</param>
     public void PutBuildingOnMap(BuildingBase building, int id = -1)
     {
 #if UNITY_EDITOR
@@ -198,8 +205,11 @@ public class GameMap : MonoBehaviour
             return;
         }
 #endif
+
         if (id < 0)
-        {
+        {       
+            // 游戏统计建造建筑
+            GameManager.StatsSystem.OnBuildBuilding(building.info);
             id = _nextId;
             _nextId += 1;
         }

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55a3299e1efc53a41bd651b4bf977e79, type: 3}
+  m_Name: 4.HowToBuildBelt
+  m_EditorClassIdentifier: 
+  desc: "\u4F20\u9001\u5E26\u53EF\u4EE5\u5C06\u5EFA\u7B51\u8FDE\u63A5\u8D77\u6765"
+  cards:
+  - {fileID: 1006440444089558506, guid: 177dd7ef39960f84c8455922fd6199ae, type: 3}

@@ -103,7 +103,7 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
         // 延迟
         var totalWaitTime = 0f;
 
-        while (ToastCount - currentToastId < 5 && totalWaitTime < _delay)
+        while (ToastCount - currentToastId < 3 && totalWaitTime < _delay)
         {
             totalWaitTime += Time.deltaTime;
             yield return 0;

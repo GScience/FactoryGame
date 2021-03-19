@@ -189,6 +189,10 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
             return;
         }
 
+        // 游戏统计取消选择配方
+        if (CurrentRecipe != null)
+            GameManager.StatsSystem.OnDeselectRecipe(CurrentRecipe);
+
         CurrentRecipe = recipes[recipeId];
 
         // 根据配方分配缓冲区大小
@@ -216,6 +220,9 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
         IsManufacturing = false;
         _canPlaceItem = true;
+
+        // 游戏统计选择配方
+        GameManager.StatsSystem.OnSelectRecipe(CurrentRecipe);
     }
 
     /// <summary>
@@ -229,7 +236,12 @@ public class Factory : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputIt
 
         // 生产物品
         for (var i = 0; i < _outputItemCache.Length; ++i)
+        {
             _outputItemCache[i].count += CurrentRecipe.output[i].count;
+
+            // 游戏统计生产物品
+            GameManager.StatsSystem.OnProcessItem(CurrentRecipe.output[i].item, CurrentRecipe.output[i].count);
+        }
 
         isAllItemPoped = false;
         IsManufacturing = false;

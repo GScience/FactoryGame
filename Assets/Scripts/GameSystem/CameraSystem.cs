@@ -30,6 +30,11 @@ public class CameraSystem : ISystem
         writer.Write(pos.y);
     }
 
+    public void Init()
+    {
+
+    }
+
     public void Update()
     {
         
