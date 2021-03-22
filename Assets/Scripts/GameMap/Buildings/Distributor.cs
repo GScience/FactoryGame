@@ -263,10 +263,14 @@ public class Distributor : BuildingBase, IBuildingCanInputItem, IBuildingCanOutp
 
     public bool TryPutOneItem(ItemInfo item)
     {
+        // 不允许主动放物品，因为会破坏分配器的物品输入规则
+        /*
         if (_itemCache != null)
             return false;
         _itemCache = item;
         return true;
+        */
+        return false;
     }
 
     private void DisablePort(int id)
