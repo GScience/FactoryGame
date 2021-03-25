@@ -31,11 +31,6 @@ public class GameManager : MonoBehaviour
     public ObjectiveToast missionUI;
 
     /// <summary>
-    /// 任务音效
-    /// </summary>
-    public AudioClip missionAudio;
-
-    /// <summary>
     /// 是否正在游戏
     /// </summary>
     public bool IsPlaying { get; private set; }

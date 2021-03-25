@@ -180,6 +180,6 @@ public class StageSystem : ISystem
         var mission = _currentGameStages.missions[_currentMissionId];
         if (mission == null)
             yield break;
-        _currentObjectiveToast = GameManager.ShowToastMessage("任务小助手", mission.Prefix + mission.desc, GameManager.GlobalGameManager.Get().missionAudio, 15, false);
+        _currentObjectiveToast = GameManager.ShowToastMessage("任务小助手", mission.Prefix + mission.desc, mission.audio, 15, false);
     }
 }

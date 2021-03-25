@@ -40,4 +40,9 @@ public abstract class Mission : NamedScriptableObject
     /// 奖励
     /// </summary>
     public BuildingCardBase[] cards;
+
+    /// <summary>
+    /// 音效
+    /// </summary>
+    public AudioClip audio;
 }
