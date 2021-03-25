@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc247e1e9769f4c429712eda8ac4c570, type: 3}
   m_Name: 2.SelectFactoryRecipe
   m_EditorClassIdentifier: 
-  desc: "\u70B9\u51FB\u5DE5\u5382\u9009\u62E9\u94A2\u677F\u914D\u65B9"
+  desc: "\u70B9\u51FB\u8F66\u5E8A\u9009\u62E9\u94A2\u677F\u914D\u65B9"
   cards:
   - {fileID: 7476263062746257839, guid: ba301074acd86c340b7906e39b1b06d8, type: 3}
   recipe: {fileID: 11400000, guid: 298b93e405441cf45bdaf3ff1e07f6b3, type: 2}

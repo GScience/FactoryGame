@@ -29,7 +29,9 @@ public class StageSystem : ISystem
     /// <returns></returns>
     public string GetCurrentGameStageName()
     {
-        return _currentGameStages.name;
+        if (_currentGameStages == null)
+            return "???";
+        return _currentGameStages.stageName;
     }
 
     public event Action<BuildingCardBase> OnEnableBuildingCard;

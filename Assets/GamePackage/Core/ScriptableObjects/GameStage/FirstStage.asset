@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57bde563539b0e343b66545575a8bcdb, type: 3}
+  m_Name: FirstStage
+  m_EditorClassIdentifier: 
+  stageName: "\u7B2C\u4E00\u9636\u6BB5"
+  missions:
+  - {fileID: 11400000, guid: ff20e3d929aa07f43b44a46fda12f0fe, type: 2}
+  - {fileID: 11400000, guid: bc581aeb7b9be0147bd0faf31a26a24a, type: 2}
+  - {fileID: 11400000, guid: 1eba6e1c84bece946930764b5874201f, type: 2}
+  isFirstStage: 0
+  nextStage: {fileID: 0}

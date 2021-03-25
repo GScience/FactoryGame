@@ -13,11 +13,13 @@ public class TopGameBar : MonoBehaviour
 {
     public TextMeshProUGUI timeText;
     public TextMeshProUGUI moneyText;
+    public TextMeshProUGUI stageText;
 
     void Update()
     {
         timeText.text = GameManager.TimeSystem.ToString();
         moneyText.text = GameManager.MoneySystem.Money.ToString();
+        stageText.text = GameManager.StageSystem.GetCurrentGameStageName();
     }
 
     private void Start()

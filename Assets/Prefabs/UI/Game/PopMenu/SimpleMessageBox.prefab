@@ -397,6 +397,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8072214713359571176}
+  - component: {fileID: 4796908441057000861}
   m_Layer: 0
   m_Name: MessageBox
   m_TagString: Untagged
@@ -426,6 +427,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 800, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4796908441057000861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8072214713359571177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17cdabff33a831242bce99848375299d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8072214713404846620
 GameObject:
   m_ObjectHideFlags: 0

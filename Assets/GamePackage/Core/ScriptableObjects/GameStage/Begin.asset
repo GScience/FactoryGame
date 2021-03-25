@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57bde563539b0e343b66545575a8bcdb, type: 3}
   m_Name: Begin
   m_EditorClassIdentifier: 
-  stageName: "\u9636\u6BB5 0"
+  stageName: "\u7B2C\u4E00\u4E2A\u5DE5\u5382"
   missions:
   - {fileID: 11400000, guid: 77f19b804a3c4bb449d154968daeb408, type: 2}
   - {fileID: 11400000, guid: 9b8c52f98c61bf84081cef964553a40e, type: 2}
@@ -25,4 +25,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e339f9b8ba1a4d94e9bff78671be263b, type: 2}
   - {fileID: 11400000, guid: 7bc20a30e5dd34541b14f2314ab13eaa, type: 2}
   isFirstStage: 1
-  nextStage: {fileID: 0}
+  nextStage: {fileID: 11400000, guid: ec47c639731cebf4aa840d10037743c5, type: 2}

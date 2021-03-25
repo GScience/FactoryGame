@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3009451cc30d0f44c846bd93a59a7734, type: 3}
-  m_Name: 3FirstStorage
+  m_Script: {fileID: 11500000, guid: 063d25cd5fdc1e6419031fe3cd94e74e, type: 3}
+  m_Name: 1.ImpossibleMission
   m_EditorClassIdentifier: 
-  desc: "\u5EFA\u9020\u4E00\u4E2A\u94A2\u94C1\u4ED3\u5E93"
+  desc: "\u5C1D\u8BD5\u5B8C\u6210\u6700\u7EC8\u7684\u76EE\u6807\u5427"
   cards: []
-  building: {fileID: 11400000, guid: c2b76abc90b883a438c12e1520137c92, type: 2}
+  item: {fileID: 11400000, guid: bef60ababf24097419a9e7c093f1aba8, type: 2}
+  count: 99999

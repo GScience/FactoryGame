@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3009451cc30d0f44c846bd93a59a7734, type: 3}
-  m_Name: 3FirstStorage
+  m_Script: {fileID: 11500000, guid: 1a8e64b8048e196468b295878cf69892, type: 3}
+  m_Name: 2.FinaleMission
   m_EditorClassIdentifier: 
-  desc: "\u5EFA\u9020\u4E00\u4E2A\u94A2\u94C1\u4ED3\u5E93"
+  desc: "\u606D\u559C\u60A8\uFF0C\u60A8\u5DF2\u7ECF\u5B8C\u6210\u4E86\u6240\u6709\u4EFB\u52A1"
   cards: []
-  building: {fileID: 11400000, guid: c2b76abc90b883a438c12e1520137c92, type: 2}

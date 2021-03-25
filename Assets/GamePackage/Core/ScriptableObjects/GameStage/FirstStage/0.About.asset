@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3009451cc30d0f44c846bd93a59a7734, type: 3}
-  m_Name: 3FirstStorage
+  m_Script: {fileID: 11500000, guid: 55a3299e1efc53a41bd651b4bf977e79, type: 3}
+  m_Name: 0.About
   m_EditorClassIdentifier: 
-  desc: "\u5EFA\u9020\u4E00\u4E2A\u94A2\u94C1\u4ED3\u5E93"
+  desc: "\u8FD9\u4E00\u9636\u6BB5\u7684\u4EFB\u52A1\u8FD8\u6CA1\u5199"
   cards: []
-  building: {fileID: 11400000, guid: c2b76abc90b883a438c12e1520137c92, type: 2}
