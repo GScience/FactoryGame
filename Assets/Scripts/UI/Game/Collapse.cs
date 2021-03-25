@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +22,11 @@ public class Collapse : MonoBehaviour
 
     public bool IsLocked = false;
 
+    public AudioClip openAudioClip;
+    public AudioClip closeAudioClip;
+
+    private AudioSource _audioSource;
+
     [HideInInspector]
     public AnimState animState = AnimState.Closed; 
 
@@ -34,6 +39,9 @@ public class Collapse : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _animator.Play("Closed");
+
+        if (openAudioClip != null || closeAudioClip != null)
+            _audioSource =gameObject.AddComponent<AudioSource>();
     }
 
     void Update()
@@ -72,11 +80,21 @@ public class Collapse : MonoBehaviour
 
     public void Open()
     {
+        if (_audioSource != null)
+        {
+            _audioSource.clip = openAudioClip;
+            _audioSource.Play();
+        }
         _animator.Play("Open");
     }
 
     public void Close()
     {
+        if (_audioSource != null)
+        {
+            _audioSource.clip = closeAudioClip;
+            _audioSource.Play();
+        }
         _animator.Play("Close");
     }
 }
