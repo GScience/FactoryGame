@@ -81,7 +81,7 @@ public class StageSystem : ISystem
         }
 
         if (mission.ShowMissionFinish)
-            GameManager.ShowToastMessage("任务小助手", "任务已完成", 2);
+            GameManager.ShowToastMessage("任务小助手", "任务已完成", null, 2);
 
         // 处理奖励
         foreach (var card in mission.cards)
@@ -180,6 +180,6 @@ public class StageSystem : ISystem
         var mission = _currentGameStages.missions[_currentMissionId];
         if (mission == null)
             yield break;
-        _currentObjectiveToast = GameManager.ShowToastMessage("任务小助手", mission.Prefix + mission.desc, 15, false);
+        _currentObjectiveToast = GameManager.ShowToastMessage("任务小助手", mission.Prefix + mission.desc, GameManager.GlobalGameManager.Get().missionAudio, 15, false);
     }
 }

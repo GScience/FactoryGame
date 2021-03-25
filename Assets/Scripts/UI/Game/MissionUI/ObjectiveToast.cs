@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))]
 public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
 {
     [Header("References")]
@@ -30,12 +31,6 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
     [Tooltip("淡出的时间间隔")]
     public float fadeOutDuration = 2f;
 
-    [Header("Sound")]
-    [Tooltip("初始化声音")]
-    public AudioClip initSound;
-    [Tooltip("玩家完成声音")]
-    public AudioClip completedSound;
-
     [Header("Movement")]
     [Tooltip("进入屏幕的时间")]
     public float moveInDuration = 0.5f;
@@ -47,6 +42,8 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
     [Tooltip("退出的动画曲线, 随时间在x轴上发生位置变化")]
     public AnimationCurve moveOutCurve;
 
+    private AudioSource _audioSource;
+
     public float Delay { get; set; }
     public bool CanFadeOut { get; set; }
 
@@ -57,7 +54,7 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
         counterTextContent.text = text;
     }
 
-    public void Initialize(string titleText, string descText, string counterText, float delay, bool canFadeOut)
+    public void Initialize(string titleText, string descText, string counterText, AudioClip audio, float delay, bool canFadeOut)
     {
         // 设置对象描述，并更新Canvas
         Canvas.ForceUpdateCanvases();
@@ -81,6 +78,8 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
         else
             _toastList.Insert(0, this);
 
+        _audioSource.clip = audio;
+        _audioSource.Play();
         StartCoroutine(AnimCotourine());
     }
 
@@ -92,6 +91,11 @@ public class ObjectiveToast : MonoBehaviour, IPointerClickHandler
     private void Update()
     {
         UpdatePos();
+    }
+
+    void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public void UpdatePos()

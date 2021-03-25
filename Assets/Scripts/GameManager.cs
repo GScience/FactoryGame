@@ -31,6 +31,11 @@ public class GameManager : MonoBehaviour
     public ObjectiveToast missionUI;
 
     /// <summary>
+    /// 任务音效
+    /// </summary>
+    public AudioClip missionAudio;
+
+    /// <summary>
     /// 是否正在游戏
     /// </summary>
     public bool IsPlaying { get; private set; }
@@ -177,13 +182,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static ObjectiveToast ShowToastMessage(string title, string message, float delay = 30f, bool canFadeOut = true)
+    public static ObjectiveToast ShowToastMessage(string title, string message, AudioClip audio = null, float delay = 30f, bool canFadeOut = true)
     {
         var missionUI = GameManager.GlobalGameManager.Get().missionUI;
         if (_uiLayer == null)
             _uiLayer = GameObject.Find("UILayer").transform;
         var toast = GameObject.Instantiate(missionUI, _uiLayer);
-        toast.Initialize(title, message, "", delay, canFadeOut);
+        toast.Initialize(title, message, "", audio, delay, canFadeOut);
 
         return toast;
     }

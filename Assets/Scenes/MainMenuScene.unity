@@ -152,6 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missionUI: {fileID: 450889242155623094, guid: f7fbdd9e9d11fe745968cdf037966ef7,
     type: 3}
+  missionAudio: {fileID: 8300000, guid: 24624bdfafff6be468d83ab580aed78c, type: 3}
 --- !u!4 &1052820
 Transform:
   m_ObjectHideFlags: 0

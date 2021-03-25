@@ -16,6 +16,11 @@ public class GameSound : MonoBehaviour
     /// </summary>
     public AudioClip[] randomClips;
 
+    /// <summary>
+    /// 背景音乐音效
+    /// </summary>
+    public AudioClip[] bgmClips;
+
     public AudioSource backgroundSource;
 
     private AudioSource _environmentSource;
@@ -32,7 +37,7 @@ public class GameSound : MonoBehaviour
         var currentTime = Time.time;
 
         // 每一秒检查一次
-        if (currentTime - _lastUpdateTime < 1)
+        if (currentTime - _lastUpdateTime < 10)
             return;
 
         _lastUpdateTime = currentTime;
@@ -42,7 +47,11 @@ public class GameSound : MonoBehaviour
         {
             var playRand = UnityEngine.Random.Range(0, 10);
             if (playRand < 2)
+            {
+                var idRand = UnityEngine.Random.Range(0, bgmClips.Length);
+                backgroundSource.clip = bgmClips[idRand];
                 backgroundSource.Play();
+            }
         }
 
         // 随机播放环境音效

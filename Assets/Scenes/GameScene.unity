@@ -926,6 +926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missionUI: {fileID: 450889242155623094, guid: f7fbdd9e9d11fe745968cdf037966ef7,
     type: 3}
+  missionAudio: {fileID: 8300000, guid: 24624bdfafff6be468d83ab580aed78c, type: 3}
 --- !u!1 &510395443
 GameObject:
   m_ObjectHideFlags: 0
@@ -1147,7 +1148,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: d87823439fd5d464ebdf47ca1bb5b187, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -3738,6 +3739,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   randomClips:
   - {fileID: 8300000, guid: 240ba0d26a7088b4f9cbda266e8cb716, type: 3}
+  bgmClips:
+  - {fileID: 8300000, guid: 9df073848f6c9334c9867b70d775b1e1, type: 3}
+  - {fileID: 8300000, guid: d87823439fd5d464ebdf47ca1bb5b187, type: 3}
   backgroundSource: {fileID: 621850862}
 --- !u!4 &1608701444
 Transform:
