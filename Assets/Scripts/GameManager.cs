@@ -178,6 +178,12 @@ public class GameManager : MonoBehaviour
 
         if (File.Exists(jsonFilePath))
             gameInfo = JsonUtility.FromJson<GameInfo>(File.ReadAllText(jsonFilePath, Encoding.UTF8));
+        else
+        {
+            gameInfo = new GameInfo();
+            gameInfo.version = SaveVersion;
+        }
+
         if (gameInfo.version != SaveVersion)
             return;
 
