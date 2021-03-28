@@ -57,7 +57,7 @@ public class GameSound : MonoBehaviour
         // 随机播放环境音效
         if (!_environmentSource.isPlaying)
         {
-            var playRand = UnityEngine.Random.Range(0, 20);
+            var playRand = UnityEngine.Random.Range(0, 50);
             if (playRand < 2)
             {
                 var idRand = UnityEngine.Random.Range(0, randomClips.Length);

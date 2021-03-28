@@ -26,6 +26,12 @@ public class GameManager : MonoBehaviour
     public const string Magic = "FGS";
 
     /// <summary>
+    /// 游戏信息
+    /// </summary>
+    [NonSerialized]
+    public GameInfo gameInfo;
+
+    /// <summary>
     /// 任务UI
     /// </summary>
     public ObjectiveToast missionUI;
@@ -73,9 +79,9 @@ public class GameManager : MonoBehaviour
         return Application.persistentDataPath + "/" + saveName + ".sav";
     }
 
-    private bool IsNewGame()
+    public bool IsNewGame(string saveName)
     {
-        return !File.Exists(GetSavePath(SaveName));
+        return !File.Exists(GetSavePath(saveName));
     }
 
     public void StartGame(string saveName)
@@ -112,18 +118,26 @@ public class GameManager : MonoBehaviour
         foreach (var system in _systems)
             system.Value.Init();
 
-        if (!IsNewGame())
+        if (!IsNewGame(SaveName))
         {
             try
             {
                 LoadGame();
-                ShowToastMessage("工厂小助手", "欢迎您回来~");
+                ShowToastMessage("工厂小助手", $"欢迎您回到 {gameInfo.name}");
             }
             catch (Exception e)
             {
                 ShowToastMessage("工厂小助手", "在您不在的时候工厂受到了未知力量的破坏");
                 Console.WriteLine(e.ToString());
             }
+        }
+        else
+        {
+            gameInfo = new GameInfo();
+            gameInfo.version = SaveVersion;
+            gameInfo.createTime = DateTime.Now.ToString();
+            gameInfo.name = saveName;
+            gameInfo.lastModifyTime = DateTime.Now.ToString();
         }
     }
 
@@ -135,6 +149,11 @@ public class GameManager : MonoBehaviour
 
     public void SaveGame()
     {
+        // 保存游戏信息
+        gameInfo.lastModifyTime = DateTime.Now.ToString();
+        File.WriteAllText(Application.persistentDataPath + "/" + SaveName + ".json", JsonUtility.ToJson(gameInfo), Encoding.UTF8);
+
+        // 保存记录
         var file = File.Create(Application.persistentDataPath + "/" + SaveName + ".sav");
         var compressStream = new GZipStream(file, CompressionMode.Compress);
         using (var writer = new BinaryWriter(compressStream))
@@ -154,6 +173,14 @@ public class GameManager : MonoBehaviour
 
     private void LoadGame()
     {
+        // 加载游戏信息
+        var jsonFilePath = Application.persistentDataPath + "/" + SaveName + ".json";
+
+        if (File.Exists(jsonFilePath))
+            gameInfo = JsonUtility.FromJson<GameInfo>(File.ReadAllText(jsonFilePath, Encoding.UTF8));
+        if (gameInfo.version != SaveVersion)
+            return;
+
         var file = File.OpenRead(Application.persistentDataPath + "/" + SaveName + ".sav");
         var decompressStream = new GZipStream(file, CompressionMode.Decompress);
 
