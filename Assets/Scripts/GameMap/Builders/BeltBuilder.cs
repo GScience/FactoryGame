@@ -7,8 +7,18 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// 传送带建造器
+/// </summary>
+[RequireComponent(typeof(AudioSource))]
 public class BeltBuilder : MonoBehaviour
 {
+    /// <summary>
+    /// 拖拽音效
+    /// </summary>
+    public AudioClip beltDragingSound;
+
+    private AudioSource _audioSource;
     private Vector2Int[] _directions = new[] { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
     private class BuildingSearchResult<T> where T : class
@@ -63,6 +73,7 @@ public class BeltBuilder : MonoBehaviour
     void Awake()
     {
         GlobalBuilder = new InstanceHelper<BeltBuilder>(this);
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public void ChooseBeltPrefabs(Belt straight, Belt cw, Belt ccw, Action onFinish)
@@ -141,8 +152,10 @@ public class BeltBuilder : MonoBehaviour
         beginBelt.belt.transform.position = PlayerInput.GetMousePosInWorld();
         var gridElement = beginBelt.belt.GetComponent<GridElement>();
 
+        bool canPlace = gridElement.GetCollidingElement() == null;
+
         if (_lastCellPos != gridElement.CellPos)
-            _previewsBelts[0].guideBlock.SetCanPlace(gridElement.GetCollidingElement() == null);
+            _previewsBelts[0].guideBlock.SetCanPlace(canPlace);
 
         _lastCellPos = gridElement.CellPos;
 
@@ -152,7 +165,7 @@ public class BeltBuilder : MonoBehaviour
             RefreshPreviewBeltState(-inputBuilding.dir, inputBuilding.dir, 0);
 
         // 如果玩家点击了则代表选择了
-        if (PlayerInput.GetMouseClick(0))
+        if (PlayerInput.GetMouseClick(0) && canPlace)
             _hasChosenStartPos = true;
     }
 
@@ -230,6 +243,13 @@ public class BeltBuilder : MonoBehaviour
         return null;
     }
 
+    private void PlayDragSound()
+    {
+        _audioSource.Stop();
+        _audioSource.clip = beltDragingSound;
+        _audioSource.Play();
+    }
+
     // 刷新拖动
     private void UpdateDragging()
     {
@@ -248,8 +268,12 @@ public class BeltBuilder : MonoBehaviour
         else
             direction = deltaPos.y > 0 ? Vector2Int.up : Vector2Int.down;
 
+        // 是否发生变化
         if (length != _lastLength || direction != _lastDirection)
         {
+            // 播放音效
+            PlayDragSound();
+
             // 产生满足数量的传送带
             while (length > _previewsBelts.Count)
                 GeneratePreviewBelt();

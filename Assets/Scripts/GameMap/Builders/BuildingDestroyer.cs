@@ -6,15 +6,22 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(AudioSource))]
 public class BuildingDestroyer : MonoBehaviour
 {
     public static InstanceHelper<BuildingDestroyer> GlobalBuilder;
+
+    /// <summary>
+    /// 拖拽音效
+    /// </summary>
+    public AudioClip buildingDestroySound;
 
     public GridRenderer gridRenderer;
     public Grid grid;
 
     private bool _isOpen;
     private BuildingBase _selectedBuilding;
+    private AudioSource _audioSource;
 
     public BuildingGuideBlock buildingGuideBlock;
     private List<BuildingGuideBlock> _guideBlocks = new List<BuildingGuideBlock>();
@@ -32,6 +39,7 @@ public class BuildingDestroyer : MonoBehaviour
     private void Awake()
     {
         GlobalBuilder = new InstanceHelper<BuildingDestroyer>(this);
+        _audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -61,6 +69,7 @@ public class BuildingDestroyer : MonoBehaviour
             GameMap.GlobalMap.Get().DestroyBuilding(_selectedBuilding);
             _selectedBuilding = null;
             UpdateGuideBlock();
+            PlayDestroySound();
         }
 
         // 是否结束
@@ -68,6 +77,13 @@ public class BuildingDestroyer : MonoBehaviour
             Close();
     }
 
+    private void PlayDestroySound()
+    {
+        _audioSource.Stop();
+        _audioSource.clip = buildingDestroySound;
+        _audioSource.Play();
+    }
+    
     public void Close()
     {
         _selectedBuilding = null;
