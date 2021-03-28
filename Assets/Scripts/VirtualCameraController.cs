@@ -50,6 +50,16 @@ public class VirtualCameraController : MonoBehaviour
         }
         else
             _lastMousePos = null;
+
+        // 缩放
+        if (!GameMap.GlobalMap.Get().isBuilding)
+        {
+            _virtualCamera.m_Lens.OrthographicSize -= Input.mouseScrollDelta.y;
+            if (_virtualCamera.m_Lens.OrthographicSize < 10)
+                _virtualCamera.m_Lens.OrthographicSize = 10;
+            else if (_virtualCamera.m_Lens.OrthographicSize > 25)
+                _virtualCamera.m_Lens.OrthographicSize = 25;
+        }
     }
 
     public void MoveTo(Vector2 pos)
