@@ -62,8 +62,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_88638AE6: 0.05
-    - Vector1_AEBCD9A6: 20
-    - Vector1_CBC32F6F: 0.2
+    - Vector1_AEBCD9A6: 8.98
+    - Vector1_CBC32F6F: 0.1
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -85,7 +85,7 @@ Material:
     - _gridWidth: 0.008
     - _tickWidth: 0.1
     m_Colors:
-    - Color_E2CDC033: {r: 1, g: 0.7613474, b: 0.259434, a: 0}
+    - Color_E2CDC033: {r: 0.546, g: 0.4396938, b: 0.256074, a: 0}
     - Vector2_4D2B5F51: {r: 1, g: 1, b: 0, a: 0}
     - Vector2_B4ED7923: {r: 0.01, g: 0.01, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

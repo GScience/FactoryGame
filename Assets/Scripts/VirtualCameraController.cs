@@ -33,6 +33,9 @@ public class VirtualCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         var isMouseOnUI = EventSystem.current.IsPointerOverGameObject();
 
         // 移动

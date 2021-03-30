@@ -85,7 +85,7 @@ Material:
     - _gridWidth: 0.008
     - _tickWidth: 0.1
     m_Colors:
-    - Color_E2CDC033: {r: 0.16470589, g: 0.45882353, b: 0.7137255, a: 0}
+    - Color_E2CDC033: {r: 0.069960006, g: 0.384648, b: 0.66, a: 1}
     - Vector2_4D2B5F51: {r: 1, g: 1, b: 0, a: 0}
     - Vector2_B4ED7923: {r: 0.01, g: 0.01, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
