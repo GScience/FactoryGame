@@ -56,6 +56,8 @@ public class ResourcesManager : MonoBehaviour
         _stageDatabase = new Dictionary<int, GameStage>();
         _scriptableDatabase = new Dictionary<int, NamedScriptableObject>();
 
+        yield return new WaitForEndOfFrame();
+
         foreach (var abName in _abNames)
         {
             var loadAB = LoadAssetBundleAsync(abName);
@@ -119,7 +121,9 @@ public class ResourcesManager : MonoBehaviour
             Debug.LogWarning("Asset bundles " + pathName + " not found");
             yield break;
         }
-        
+
+        yield return 0;
+
         Debug.Log("Loading asset bundles " + abName);
         var abLoadResult = AssetBundle.LoadFromFileAsync(pathName);
         yield return abLoadResult;
@@ -133,7 +137,7 @@ public class ResourcesManager : MonoBehaviour
 
         foreach (var name in names)
         {
-            _loadResourceMenu.SetProgress("Loading " + abName + ": " + name + "...");
+            _loadResourceMenu.SetProgress("Loading " + abName + "\n" + name + "...");
             var assetLoadResult = ab.LoadAssetAsync<UnityEngine.Object>(name);
 
             yield return assetLoadResult;
