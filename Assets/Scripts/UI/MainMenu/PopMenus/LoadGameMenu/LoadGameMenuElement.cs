@@ -22,6 +22,16 @@ public class LoadGameMenuElement : MonoBehaviour, IPointerClickHandler
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI dateText;
 
+    public DateTime LastModityTime
+    {
+        get
+        {
+            if (DateTime.TryParse(_gameInfo.lastModifyTime, out var result))
+                return result;
+            return DateTime.MinValue;
+        }
+    }
+
     public void BindSaveData(string saveName)
     {
         var jsonFilePath = Application.persistentDataPath + "/" + saveName + ".json";
