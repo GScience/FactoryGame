@@ -21,7 +21,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_2E9FAE48:
-        m_Texture: {fileID: 2800000, guid: 1a13d275ff774b54a8e89542ea8b03af, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -61,6 +61,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Boolean_778DE12: 1
     - Vector1_88638AE6: 0.1
     - Vector1_AEBCD9A6: 0
     - Vector1_CBC32F6F: 0
@@ -85,7 +86,8 @@ Material:
     - _gridWidth: 0.008
     - _tickWidth: 0.1
     m_Colors:
-    - Color_E2CDC033: {r: 0.745283, g: 0.6418137, b: 0.3972499, a: 0.16470589}
+    - Color_78D9E71D: {r: 0.007843138, g: 0.3333333, b: 0.6392157, a: 0}
+    - Color_E2CDC033: {r: 0.6313726, g: 0.61314696, b: 0.35798824, a: 0.13333334}
     - Vector2_4D2B5F51: {r: 1, g: 1, b: 0, a: 0}
     - Vector2_B4ED7923: {r: 0.01, g: 0.01, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
