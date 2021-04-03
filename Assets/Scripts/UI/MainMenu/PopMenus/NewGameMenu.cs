@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +25,14 @@ public class NewGameMenu : MonoBehaviour
             msgBox.message = "存档已存在！";
         }
         else
-            GameManager.GlobalGameManager.Get().StartGame(inputField.text);
+        {
+            if (inputField.text == "")
+            {
+                var msgBox = PopMenuLayer.GlobalPopMenuLayer.Get().Pop("SimpleMessageBox").GetComponent<SimpleMessageBox>();
+                msgBox.message = "存档名不能为空";
+            }
+            else
+                GameManager.GlobalGameManager.Get().StartGame(inputField.text);
+        }
     }
 }

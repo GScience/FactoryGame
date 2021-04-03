@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
             try
             {
                 LoadGame();
-                ShowToastMessage("工厂小助手", $"欢迎您回到 {gameInfo.name}");
+                ShowToastMessage("工厂小助手", $"欢迎您回到 <color=##0C4D3>{gameInfo.name}</color>");
             }
             catch (Exception e)
             {
@@ -182,6 +182,7 @@ public class GameManager : MonoBehaviour
         {
             gameInfo = new GameInfo();
             gameInfo.version = SaveVersion;
+            gameInfo.name = SaveName;
         }
 
         if (gameInfo.version != SaveVersion)

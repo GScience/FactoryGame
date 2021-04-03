@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// ���ش浵�б�Ԫ��
+/// 加载存档列表元素
 /// </summary>
 public class LoadGameMenuElement : MonoBehaviour, IPointerClickHandler
 {
@@ -17,7 +17,7 @@ public class LoadGameMenuElement : MonoBehaviour, IPointerClickHandler
     private string _saveName;
 
     /// <summary>
-    /// �浵�����ı���
+    /// 存档名称文本框
     /// </summary>
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI dateText;
@@ -32,6 +32,7 @@ public class LoadGameMenuElement : MonoBehaviour, IPointerClickHandler
         {
             _gameInfo = new GameInfo();
             _gameInfo.name = saveName;
+            _gameInfo.lastModifyTime = "<color=#D72600>未找到存档信息但是可以进行游戏</color>";
         }
 
         _saveName = saveName;
