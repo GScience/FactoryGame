@@ -153,14 +153,15 @@ public class Belt : BuildingBase, IBuildingCanInputItem, IBuildingCanOutputItem
 
     public void UpdateAnimation()
     {
-        if (!_isVisible)
-            return;
-
         if (cargo == null)
         {
             cargoSpriteRenderer.sprite = null;
             return;
         }
+
+        if (!_isVisible)
+            return;
+
         cargoSpriteRenderer.sprite = cargo.icon;
         clip.SampleAnimation(gameObject, percentage);
     }
