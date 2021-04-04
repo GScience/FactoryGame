@@ -59,4 +59,5 @@ sysinfo.txt
 crashlytics-build.properties
 
 #ignore asset bundles built in the editor for test
-/Assets/AssetBundles/
+/[Aa]ssets/AssetBundles/
+/[Aa]ssets/AssetBundles.meta
