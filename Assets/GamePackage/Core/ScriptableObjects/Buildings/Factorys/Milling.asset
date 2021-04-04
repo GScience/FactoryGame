@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingName: "\u94E3\u5E8A"
   buildingDescription: "\u94E3\u5E8A\uFF0C\u6307\u7528\u94E3\u5200\u5BF9\u5DE5\u4EF6\u591A\u79CD\u8868\u9762\u8FDB\u884C\u52A0\u5DE5\u7684\u673A\u5E8A\uFF0C\u5B83\u53EF\u4EE5\u52A0\u5DE5\u5E73\u9762\u3001\u6C9F\u69FD\uFF0C\u4E5F\u53EF\u4EE5\u52A0\u5DE5\u5404\u79CD\u66F2\u9762\u3001\u9F7F\u8F6E\u7B49\u3002"
-  cost: 1000
+  cost: 1500
   people: 0
   icon: {fileID: 21300000, guid: 531df9ad44c59ab42830ec1d04aec836, type: 3}
   recipes:

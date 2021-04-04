@@ -10,7 +10,7 @@ public class MoneySystem : ISystem
 {
     public int Money { get; private set; } =
 #if UNITY_EDITOR
-        100000000
+        10000
 #else
         5500
 #endif

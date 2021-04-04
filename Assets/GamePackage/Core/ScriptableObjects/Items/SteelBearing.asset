@@ -15,4 +15,4 @@ MonoBehaviour:
   itemName: "\u94A2\u8F74\u627F"
   maxStackCount: 100
   icon: {fileID: 21300000, guid: b43eab3b8803cf943abf7085eec08d26, type: 3}
-  basePrice: 200
+  basePrice: 1500
