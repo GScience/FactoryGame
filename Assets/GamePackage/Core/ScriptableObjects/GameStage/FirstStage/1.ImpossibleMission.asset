@@ -15,4 +15,4 @@ MonoBehaviour:
   desc: "\u5C1D\u8BD5\u5B8C\u6210\u6700\u7EC8\u7684\u76EE\u6807\u5427"
   cards: []
   item: {fileID: 11400000, guid: bef60ababf24097419a9e7c093f1aba8, type: 2}
-  count: 99999
+  count: 1
