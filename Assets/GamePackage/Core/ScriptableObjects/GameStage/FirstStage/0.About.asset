@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a3299e1efc53a41bd651b4bf977e79, type: 3}
   m_Name: 0.About
   m_EditorClassIdentifier: 
-  desc: "\u8FD9\u4E00\u9636\u6BB5\u7684\u4EFB\u52A1\u8FD8\u6CA1\u5199"
+  desc: "\u4ee5\u5236\u4f5c\u51fa\u53d8\u901f\u7bb1\u4e3a\u6700\u7ec8\u76ee\u6807\u5427"
   cards: []
