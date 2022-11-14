@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1430,7 +1430,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u7531MeGame\u56E2\u961F\u5236\u4F5C\uFF0C\u5DE5\u7A0B\u8BAD\u7EC3\u5927\u8D5B2021\u5E74\u6BD4\u8D5B\u4F5C\u54C1"
+  m_text: "\u4E2A\u4EBA\u4E3B\u9875: www.gscience.cc"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 609087e99f10f974385bd9aff7cc043a, type: 2}
   m_sharedMaterial: {fileID: -2537452672929896907, guid: 609087e99f10f974385bd9aff7cc043a,
